@@ -69,7 +69,7 @@ const Login = () => {
             Log in to your account
           </Typography>
           <form className={classes.form} onSubmit={handleLogin}>
-            <Grid container spacing={2}>
+            <Grid container spacing={3}>
               <Grid item xs={12}>
                 <TextField required fullWidth label="Your email" variant="outlined" type="email" name="email" onChange={handleUserInput} value={loginUser.email} />
               </Grid>

@@ -102,7 +102,7 @@ const Signup = () => {
             Create an account
           </Typography>
           <form className={classes.form} onSubmit={handleSignup}>
-            <Grid container spacing={2}>
+            <Grid container spacing={4}>
               <Grid item xs={12}>
                 <TextField required fullWidth label="Your email" variant="outlined" type="email" name="email" onChange={handleUserInput} value={signupUser.email} /> 
               </Grid>
