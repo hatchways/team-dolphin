@@ -54,7 +54,6 @@ const signIn = asyncHandler(async (req, res) => {
     })
   } else {
     res.status(401).json({message: 'Invalid email or password'})
-    // throw new Error('Invalid email or password')
   }
 })
 
@@ -72,7 +71,6 @@ const allUsers = asyncHandler(async (req, res) => {
     res.json(users)
   } else {
     res.status(401).json({message: 'No users in DB !'})
-    // throw new Error()
   }
 })
 

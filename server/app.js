@@ -3,7 +3,6 @@ const express = require("express");
 const { join } = require("path");
 const cookieParser = require("cookie-parser");
 const logger = require("morgan");
-// const bodyParser = require('body-parser')
 const connectDB = require('./config/dbtest')
 
 const { notFound, errorHandler } = require('./middlewares/errorMiddleware')
@@ -19,7 +18,6 @@ connectDB()
 
 app.use(logger("dev"));
 app.use(express.json()) // to accept JSON data in the body
-// app.use(bodyParser.json())
 app.use(json());
 app.use(urlencoded({ extended: false }));
 app.use(cookieParser());
