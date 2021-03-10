@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
-import { Typography, Button, Paper, TextField, Grid } from "@material-ui/core";
+import { Typography, Button, Paper, TextField, Grid, Snackbar } from "@material-ui/core";
+import { Alert } from "@material-ui/lab";
 
 import { makeStyles } from "@material-ui/core/styles";
 import AppBarNotLoggedIn from '../layout/AppBarNotLoggedIn';
@@ -11,26 +12,28 @@ const cta = {
   buttonName: "LOGIN",
 }
 
+const isLongEnough = (password) => {
+  if (password.length === 0) return true; // just so the input field doesn't appear red at first
+  return password.length >= 6
+}
+
+const isMatch = (password1, password2) => {
+  return password1 === password2
+}
+
 const useStyles = makeStyles((theme) => ({
   root: {
     height: "100vh",
-    display: "flex",
-    flexDirection: "column",
   },
   grow: {
     flexGrow: 1,
   },
   signupCard: {
     width: "40%",
-    margin: "auto",
+    margin: "5rem auto",
     padding: "3rem 0",
     display: "flex",
     flexDirection: "column",
-    alignItems: "center",
-  },
-  flex: {
-    display: "flex",
-    justifyContent: "center",
     alignItems: "center",
   },
   form: {
@@ -55,7 +58,9 @@ const Signup = () => {
     password2: "",
   })
 
-  const [errors, setErrors] = useState([])
+  const [errors, setErrors] = useState(false)
+
+  const [snackbarOpen, setSnackbarOpen] = useState(false)
 
   const handleUserInput = (e) => {
     setSignupUser({
@@ -67,17 +72,28 @@ const Signup = () => {
   const handleSignup = (e) => {
     e.preventDefault();
 
-    if(signupUser.password !== signupUser.password2) {
-      return setErrors([...errors, "Passwords must match"])
+    if(errors) {
+      return setSnackbarOpen(true)
     }
+
+    
 
     console.log("sign up successful")
   }
 
+  useEffect(() => {
+    const { password, password2 } = signupUser
+    if(!isLongEnough(password) || !isMatch(password, password2)) {
+      setErrors(true)
+    } else {
+      setErrors(false)
+    }
+  }, [signupUser])
+
   return (
     <div className={classes.root}>
       <AppBarNotLoggedIn cta={cta} />
-      <div className={`${classes.grow} ${classes.flex}`}>
+      <div className={`${classes.grow}`}>
         <Paper className={classes.signupCard} elevation={3}>
           <Typography variant="h3" align="center">
             <b>Let's Get Started! </b>
@@ -94,15 +110,20 @@ const Signup = () => {
                 <TextField required fullWidth label="Company name" variant="outlined" name="companyName" onChange={handleUserInput} value={signupUser.companyName} />
               </Grid>
               <Grid item xs={12}>
-                <TextField required fullWidth label="Password" variant="outlined" type="password" name="password" onChange={handleUserInput} value={signupUser.password} error={signupUser.password.length < 6 && signupUser.password.length !== 0} helperText="Password must be at least 6 characters" />
+                <TextField required fullWidth label="Password" variant="outlined" type="password" name="password" onChange={handleUserInput} value={signupUser.password} error={!isLongEnough(signupUser.password)}  helperText={!isLongEnough(signupUser.password) ? "Password must be at least 6 characters" : ""} />
               </Grid>
               <Grid item xs={12}>
-                <TextField required fullWidth label="Confirm password" variant="outlined" type="password" name="password2" onChange={handleUserInput} error={signupUser.password !== signupUser.password2} value={signupUser.password2} />
+                <TextField required fullWidth label="Confirm password" variant="outlined" type="password" name="password2" onChange={handleUserInput} value={signupUser.password2} error={!isMatch(signupUser.password, signupUser.password2)} helperText={!isMatch(signupUser.password, signupUser.password2) ? "Passwords must be the same" : ""} />
               </Grid>    
             </Grid>
             <Button variant="contained" color="primary" type="submit" className={`${classes.button} ${classes.signupButton}`}>Create</Button>
           </form>
         </Paper>
+        <Snackbar open={snackbarOpen} onClose={false}>
+          <Alert onClose={() => setSnackbarOpen(false)} severity="error">
+            Please review the form
+          </Alert>
+        </Snackbar>
       </div>
     </div>
   )

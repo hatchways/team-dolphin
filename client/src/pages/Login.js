@@ -13,23 +13,16 @@ const cta = {
 const useStyles = makeStyles((theme) => ({
   root: {
     height: "100vh",
-    display: "flex",
-    flexDirection: "column",
   },
   grow: {
     flexGrow: 1,
   },
   loginCard: {
     width: "40%",
-    margin: "auto",
+    margin: "5rem auto",
     padding: "3rem 0",
     display: "flex",
     flexDirection: "column",
-    alignItems: "center",
-  },
-  flex: {
-    display: "flex",
-    justifyContent: "center",
     alignItems: "center",
   },
   form: {
@@ -67,7 +60,7 @@ const Login = () => {
   return (
     <div className={classes.root}>
       <AppBarNotLoggedIn cta={cta} />
-      <div className={`${classes.grow} ${classes.flex}`}>
+      <div className={`${classes.grow}`}>
         <Paper className={classes.loginCard} elevation={3}>
           <Typography variant="h3" align="center">
             <b>Welcome back!</b>
