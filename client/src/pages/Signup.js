@@ -119,7 +119,7 @@ const Signup = () => {
             <Button variant="contained" color="primary" type="submit" className={`${classes.button} ${classes.signupButton}`}>Create</Button>
           </form>
         </Paper>
-        <Snackbar open={snackbarOpen} onClose={false}>
+        <Snackbar open={snackbarOpen}>
           <Alert onClose={() => setSnackbarOpen(false)} severity="error">
             Please review the form
           </Alert>
