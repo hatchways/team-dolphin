@@ -5,7 +5,7 @@ const User = require('../models/userModel')
 
 
 // @desc    Register a new user
-// @route   POST /api/users/signup
+// @route   POST /api/users/auth/signup
 // @access  Public
 const signUp = asyncHandler(async (req, res) => {
   const { name, email, password } = req.body
@@ -51,7 +51,7 @@ const signUp = asyncHandler(async (req, res) => {
 
 
 // @desc    Auth user & get token
-// @route   POST /api/users/signin
+// @route   POST /api/users/auth/signin
 // @access  Public
 const signIn = asyncHandler(async (req, res) => {
   const { email, password } = req.body
@@ -81,7 +81,7 @@ const signIn = asyncHandler(async (req, res) => {
 
 // @desc    Get all users
 // @route   GET /api/users/allusers
-// @access  Public ///// TO BE DELETED !!!
+// @access  Public ///// Should be deleted before sending to PROD
 const allUsers = asyncHandler(async (req, res) => {
 
   const users = await User.find({})
