@@ -1,25 +1,39 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 
-import { Typography, Button, Paper, TextField, Grid, Snackbar } from "@material-ui/core";
+import {
+  Typography,
+  Button,
+  Paper,
+  TextField,
+  Grid,
+  Snackbar,
+} from "@material-ui/core";
+
 import { Alert } from "@material-ui/lab";
 
 import { makeStyles } from "@material-ui/core/styles";
-import AppBarNotLoggedIn from '../layout/AppBarNotLoggedIn';
+import AppBarNotLoggedIn from "../layout/AppBarNotLoggedIn";
 
 const cta = {
   description: "Already have an account?",
   href: "/login",
   buttonName: "LOGIN",
-}
+};
 
 const isLongEnough = (password) => {
   if (password.length === 0) return true; // just so the input field doesn't appear red at first
-  return password.length >= 6
-}
+  return password.length >= 6;
+};
 
-const isMatch = (password1, password2) => {
-  return password1 === password2
-}
+const isMatch = (password1, passwordMatch) => {
+  return password1 === passwordMatch;
+};
+
+const validateEmail = (email) => {
+  if (email.length === 0) return true; // just so the input field doesn't appear red at first
+  const re = /\S+@\S+\.\S+/;
+  return re.test(email);
+};
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -39,14 +53,14 @@ const useStyles = makeStyles((theme) => ({
   form: {
     width: "60%",
     textAlign: "center",
-    marginTop: theme.spacing(5)
+    marginTop: theme.spacing(5),
   },
   signupButton: {
     margin: theme.spacing(5, 0),
     borderRadius: "30px",
     padding: "1rem 3rem",
   },
-}))
+}));
 
 const Signup = () => {
   const classes = useStyles();
@@ -55,40 +69,41 @@ const Signup = () => {
     email: "",
     companyName: "",
     password: "",
-    password2: "",
-  })
+    passwordMatch: "",
+  });
 
-  const [errors, setErrors] = useState(false)
+  const [errors, setErrors] = useState(false);
 
-  const [snackbarOpen, setSnackbarOpen] = useState(false)
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
 
   const handleUserInput = (e) => {
     setSignupUser({
       ...signupUser,
       [e.target.name]: e.target.value,
-    })
-  }
+    });
+  };
 
   const handleSignup = (e) => {
     e.preventDefault();
 
-    if(errors) {
-      return setSnackbarOpen(true)
+    if (errors) {
+      return setSnackbarOpen(true);
     }
-
-    
-
-    console.log("sign up successful")
-  }
+  };
 
   useEffect(() => {
-    const { password, password2 } = signupUser
-    if(!isLongEnough(password) || !isMatch(password, password2)) {
-      setErrors(true)
+    const { email, password, passwordMatch } = signupUser;
+
+    if (
+      !validateEmail(email) ||
+      !isLongEnough(password) ||
+      !isMatch(password, passwordMatch)
+    ) {
+      setErrors(true);
     } else {
-      setErrors(false)
+      setErrors(false);
     }
-  }, [signupUser])
+  }, [signupUser]);
 
   return (
     <div className={classes.root}>
@@ -104,19 +119,80 @@ const Signup = () => {
           <form className={classes.form} onSubmit={handleSignup}>
             <Grid container spacing={4}>
               <Grid item xs={12}>
-                <TextField required fullWidth label="Your email" variant="outlined" type="email" name="email" onChange={handleUserInput} value={signupUser.email} /> 
+                <TextField
+                  required
+                  fullWidth
+                  label="Your email"
+                  variant="outlined"
+                  type="email"
+                  name="email"
+                  onChange={handleUserInput}
+                  value={signupUser.email}
+                  error={!validateEmail(signupUser.email)}
+                  helperText={
+                    !validateEmail(signupUser.email)
+                      ? "Invalid email format"
+                      : ""
+                  }
+                />
               </Grid>
               <Grid item xs={12}>
-                <TextField required fullWidth label="Company name" variant="outlined" name="companyName" onChange={handleUserInput} value={signupUser.companyName} />
+                <TextField
+                  required
+                  fullWidth
+                  label="Company name"
+                  variant="outlined"
+                  name="companyName"
+                  onChange={handleUserInput}
+                  value={signupUser.companyName}
+                />
               </Grid>
               <Grid item xs={12}>
-                <TextField required fullWidth label="Password" variant="outlined" type="password" name="password" onChange={handleUserInput} value={signupUser.password} error={!isLongEnough(signupUser.password)}  helperText={!isLongEnough(signupUser.password) ? "Password must be at least 6 characters" : ""} />
+                <TextField
+                  required
+                  fullWidth
+                  label="Password"
+                  variant="outlined"
+                  type="password"
+                  name="password"
+                  onChange={handleUserInput}
+                  value={signupUser.password}
+                  error={!isLongEnough(signupUser.password)}
+                  helperText={
+                    !isLongEnough(signupUser.password)
+                      ? "Password must be at least 6 characters"
+                      : ""
+                  }
+                />
               </Grid>
               <Grid item xs={12}>
-                <TextField required fullWidth label="Confirm password" variant="outlined" type="password" name="password2" onChange={handleUserInput} value={signupUser.password2} error={!isMatch(signupUser.password, signupUser.password2)} helperText={!isMatch(signupUser.password, signupUser.password2) ? "Passwords must be the same" : ""} />
-              </Grid>    
+                <TextField
+                  required
+                  fullWidth
+                  label="Confirm password"
+                  variant="outlined"
+                  type="password"
+                  name="passwordMatch"
+                  onChange={handleUserInput}
+                  value={signupUser.passwordMatch}
+                  error={
+                    !isMatch(signupUser.password, signupUser.passwordMatch)
+                  }
+                  helperText={
+                    !isMatch(signupUser.password, signupUser.passwordMatch)
+                      ? "Passwords must be the same"
+                      : ""
+                  }
+                />
+              </Grid>
             </Grid>
-            <Button variant="contained" color="primary" type="submit" className={`${classes.button} ${classes.signupButton}`}>Create</Button>
+            <Button
+              variant="contained"
+              color="primary"
+              type="submit"
+              className={`${classes.button} ${classes.signupButton}`}>
+              Create
+            </Button>
           </form>
         </Paper>
         <Snackbar open={snackbarOpen}>
@@ -126,7 +202,7 @@ const Signup = () => {
         </Snackbar>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Signup
+export default Signup;

@@ -3,13 +3,12 @@ import { MuiThemeProvider } from "@material-ui/core";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 
 import { theme } from "./themes/theme";
-import LandingPage from "./pages/Landing";
 import Signup from "./pages/Signup";
 import Login from "./pages/Login";
 
 import "./App.css";
 
-import { Redirect } from "react-router-dom"
+import { Redirect } from "react-router-dom";
 
 function App() {
   return (
