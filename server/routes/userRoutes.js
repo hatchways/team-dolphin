@@ -7,9 +7,9 @@ const { signUp,
 const protect = require('../middlewares/authMiddleware')
 
 
-router.route('/signup').post(signUp)
-router.post('/signin', signIn)
-router.get('/allusers', allUsers)
+router.post('/auth/signin', signIn)
+router.post('/auth/signup', signUp)
+router.get('/allusers', allUsers) // For testing purposes - To be deleted in Production
 router.route('/profile').get(protect, getUserProfile)
 
 

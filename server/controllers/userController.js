@@ -16,21 +16,34 @@ const signUp = asyncHandler(async (req, res) => {
     res.status(404).json({message: 'User already exists'})
   }
 
-  const user = await User.create({
-    name,
-    email,
-    password,
-  })
+  const regex = /\w{6,}/gm
+  const validPassword = regex.test(password)
 
-  if(user) {
-    res.status(201).json({
-      _id: user._id,
-      name: user.name,
-      email: user.email,
-      token: generateToken(user._id)
+  if(validPassword) {
+    const user = await User.create({
+      name,
+      email,
+      password,
     })
+
+    if(user) {
+      const token = generateToken(user._id)
+      res.cookie('dolphinToken', {token}, {
+        maxAge: 3600,
+        httpOnly: true,
+        secure: false // should be true in Production !
+      })
+      res.status(201).json({
+          _id: user._id,
+          name: user.name,
+          email: user.email,
+          token,
+      })
+    } else {
+        res.status(400).json('Invalid user data')
+    }
   } else {
-    res.status(400).json('Invalid user data')
+    res.status(400).json('Invalid password')
   }
 })
 
@@ -46,11 +59,17 @@ const signIn = asyncHandler(async (req, res) => {
   const user = await User.findOne({ email })
 
   if(user && (await user.matchPassword(password))) {
-    res.json({
+    const token = generateToken(user._id)
+    res.cookie('dolphinToken', {token}, {
+      maxAge: 3600,
+      httpOnly: true,
+      secure: false // should be true in Production !
+    })
+    res.status(201).json({
       _id: user._id,
       name: user.name,
       email: user.email,
-      token: generateToken(user._id)
+      token,
     })
   } else {
     res.status(401).json({message: 'Invalid email or password'})
