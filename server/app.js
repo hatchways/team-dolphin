@@ -10,11 +10,30 @@ const { notFound, errorHandler } = require('./middlewares/errorMiddleware')
 const indexRouter = require("./routes/index");
 const pingRouter = require("./routes/ping");
 const userRouter = require("./routes/userRoutes");
+const mongoose = require("mongoose");
+
+const connectDB = async () => {
+  try {
+    const conn = await mongoose.connect(process.env.MONGO_URI, {
+      useUnifiedTopology: true,
+      useNewUrlParser: true,
+      useCreateIndex: true,
+      useFindAndModify: false
+    })
+
+    console.log(`MongoDB Connected: ${conn.connection.host}`)
+  } catch (error) {
+    console.error(`Error: ${error.message}`)
+    process.exit(1)
+  }
+}
+
+connectDB();
 
 const { json, urlencoded } = express;
 
 var app = express();
-connectDB()
+
 
 app.use(logger("dev"));
 app.use(express.json()) // to accept JSON data in the body
