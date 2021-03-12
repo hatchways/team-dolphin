@@ -3,9 +3,8 @@ const express = require("express");
 const { join } = require("path");
 const cookieParser = require("cookie-parser");
 const logger = require("morgan");
-const connectDB = require('./config/dbtest')
 
-const { notFound, errorHandler } = require('./middlewares/errorMiddleware')
+const { notFound, errorHandler } = require("./middlewares/errorMiddleware");
 
 const indexRouter = require("./routes/index");
 const pingRouter = require("./routes/ping");
@@ -18,15 +17,15 @@ const connectDB = async () => {
       useUnifiedTopology: true,
       useNewUrlParser: true,
       useCreateIndex: true,
-      useFindAndModify: false
-    })
+      useFindAndModify: false,
+    });
 
-    console.log(`MongoDB Connected: ${conn.connection.host}`)
+    console.log(`MongoDB Connected: ${conn.connection.host}`);
   } catch (error) {
-    console.error(`Error: ${error.message}`)
-    process.exit(1)
+    console.error(`Error: ${error.message}`);
+    process.exit(1);
   }
-}
+};
 
 connectDB();
 
@@ -34,9 +33,8 @@ const { json, urlencoded } = express;
 
 var app = express();
 
-
 app.use(logger("dev"));
-app.use(express.json()) // to accept JSON data in the body
+app.use(express.json()); // to accept JSON data in the body
 app.use(json());
 app.use(urlencoded({ extended: false }));
 app.use(cookieParser());
