@@ -53,7 +53,7 @@ const SettingTab = () => {
           wrapper: classes.wrapper,
           selected: classes.selected,
         }}
-        to="/setting/company"
+        to={"/setting/company"}
         component={Link}
       />
       <Tab
