@@ -55,7 +55,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const CompanySetting = () => {
+const SettingCompany = () => {
   const classes = useStyles();
 
   const [company, setCompany] = useState("Company ABC");
@@ -166,4 +166,4 @@ const CompanySetting = () => {
   );
 };
 
-export default CompanySetting;
+export default SettingCompany;
