@@ -1,9 +1,7 @@
 import React from "react";
 import { MuiThemeProvider } from "@material-ui/core";
 import { BrowserRouter, Route } from "react-router-dom";
-
 import { theme } from "./themes/theme";
-import LandingPage from "./pages/Landing";
 import HomePage from "./pages/HomePage";
 import SettingPage from "./pages/SettingPage";
 
@@ -13,9 +11,8 @@ function App() {
   return (
     <MuiThemeProvider theme={theme}>
       <BrowserRouter>
-        {/* <Route path="/" component={LandingPage} /> */}
         <Route path="/" component={HomePage} exact />
-        <Route path="/setting" component={SettingPage}  />
+        <Route path="/setting" component={SettingPage} />
       </BrowserRouter>
     </MuiThemeProvider>
   );

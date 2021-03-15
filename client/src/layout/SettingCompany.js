@@ -57,14 +57,14 @@ const useStyles = makeStyles((theme) => ({
 
 const SettingCompany = () => {
   const classes = useStyles();
-
+  // eslint-disable-next-line
   const [company, setCompany] = useState("Company ABC");
-  const [value, setValue] = useState("");
+  // const [value, setValue] = useState("");
 
-  const updateHandler = () => {
-    setCompany(value);
-    setValue("");
-  };
+  // const updateHandler = () => {
+  //   setCompany(value);
+  //   setValue("");
+  // };
 
   // handle subscriber info update submit
   const submitHandler = (e) => {
@@ -98,19 +98,19 @@ const SettingCompany = () => {
                 classes={{ input: classes.input, root: classes.inputBase }}
                 endAdornment={
                   <InputAdornment position="end">
-                    <Button
+                    {/* <Button
                       variant="text"
                       onClick={() => setCompany("")}
                       className={classes.buttonRemove}
                     >
                       REMOVE
-                    </Button>
+                    </Button> */}
                   </InputAdornment>
                 }
                 inputProps={{ "aria-label": "Company name" }}
               />
             </FormControl>
-            <FormControl className={classes.inputBox} focused>
+            {/* <FormControl className={classes.inputBox} focused>
               <InputLabel htmlFor="add-company-name"></InputLabel>
               <InputBase
                 id="add-company-name"
@@ -133,7 +133,7 @@ const SettingCompany = () => {
                 }
                 inputProps={{ "aria-label": "Company name" }}
               />
-            </FormControl>
+            </FormControl> */}
             <FormControl
               className={classes.inputBox}
               style={{ marginTop: "10vh" }}
