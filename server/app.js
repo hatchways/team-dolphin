@@ -43,11 +43,8 @@ app.use(express.static(join(__dirname, "public")));
 
 app.use("/", indexRouter);
 app.use("/ping", pingRouter);
-<<<<<<< HEAD
 app.use("/api/mentions", mentionRouter);
-=======
 app.use("/api/users", userRouter);
->>>>>>> dev
 
 // catch 404 and forward to error handler
 app.use(notFound);
