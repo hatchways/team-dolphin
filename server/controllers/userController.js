@@ -26,15 +26,11 @@ const signUp = asyncHandler(async (req, res) => {
 
     if (user) {
       const token = generateToken(user._id);
-      res.cookie(
-        "dolphinToken",
-        { token },
-        {
-          maxAge: 3600,
-          httpOnly: true,
-          secure: false, // should be true in Production !
-        }
-      );
+      res.cookie("dolphinToken", token, {
+        maxAge: 3600,
+        httpOnly: true,
+        secure: false, // should be true in Production !
+      });
       res.status(201).json({
         _id: user._id,
         name: user.name,
@@ -42,10 +38,10 @@ const signUp = asyncHandler(async (req, res) => {
         token,
       });
     } else {
-      res.status(400).json("Invalid user data");
+      res.status(400).json({ message: "Invalid user data" });
     }
   } else {
-    res.status(400).json("Invalid password");
+    res.status(400).json({ message: "Invalid password" });
   }
 });
 
@@ -59,15 +55,11 @@ const signIn = asyncHandler(async (req, res) => {
 
   if (user && (await user.matchPassword(password))) {
     const token = generateToken(user._id);
-    res.cookie(
-      "dolphinToken",
-      { token },
-      {
-        maxAge: 3600,
-        httpOnly: true,
-        secure: false, // should be true in Production !
-      }
-    );
+    res.cookie("dolphinToken", token, {
+      maxAge: 3600,
+      httpOnly: true,
+      secure: false, // should be true in Production !
+    });
     res.status(201).json({
       _id: user._id,
       name: user.name,
