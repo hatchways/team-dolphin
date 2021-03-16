@@ -1,7 +1,9 @@
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const users = require("./data/users");
+const mentions = require("./data/mentions");
 const User = require("./models/userModel");
+const Mention = require("./models/mentionModel");
 
 dotenv.config();
 
@@ -26,7 +28,9 @@ connectDB();
 const importData = async () => {
   try {
     await User.deleteMany();
+    await Mention.deleteMany();
     await User.insertMany(users);
+    await Mention.insertMany(mentions);
     console.log("##### Data Imported!");
     process.exit();
   } catch (error) {
@@ -38,6 +42,7 @@ const importData = async () => {
 const destroyData = async () => {
   try {
     await User.deleteMany();
+    await Mention.deleteMany();
     console.log("##### Data Destroyed!");
     process.exit();
   } catch (error) {
@@ -51,3 +56,7 @@ if (process.argv[2] === "-d") {
 } else {
   importData();
 }
+
+// cd server
+// npm run data:import
+// npm run dev

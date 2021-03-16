@@ -5,6 +5,7 @@ const {
   signIn,
   getUserProfile,
 } = require("../controllers/userController");
+
 const protect = require("../middlewares/authMiddleware");
 
 router.post("/auth/signin", signIn);

@@ -1,11 +1,6 @@
 const mongoose = require("mongoose");
 
 const mentionSchema = mongoose.Schema({
-  user: {
-    type: mongoose.Schema.Types.ObjectId,
-    required: true,
-    ref: "User",
-  },
   content: {
     type: String,
     required: true,
@@ -20,7 +15,7 @@ const mentionSchema = mongoose.Schema({
   },
   image: {
     type: String,
-    // We might want to add a default ?
+    required: true,
   },
   date: {
     type: Date,

@@ -16,6 +16,15 @@ const userSchema = mongoose.Schema(
       type: String,
       required: true,
     },
+    platforms: {
+      reddit: { type: Boolean, required: true, default: true },
+      twitter: { type: Boolean, required: true, default: true },
+      facebook: { type: Boolean, required: true, default: true },
+      amazon: { type: Boolean, required: true, default: false },
+      forbes: { type: Boolean, required: true, default: false },
+      shopify: { type: Boolean, required: true, default: false },
+      businessinsider: { type: Boolean, required: true, default: false },
+    },
   },
   {
     timestamps: true,
