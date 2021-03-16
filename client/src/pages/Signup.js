@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useHistory } from "react-router-dom";
 
 import {
   Typography,
@@ -13,6 +14,8 @@ import { Alert } from "@material-ui/lab";
 
 import { makeStyles } from "@material-ui/core/styles";
 import AppBarNotLoggedIn from "../layout/AppBarNotLoggedIn";
+
+import axios from "axios";
 
 const cta = {
   description: "Already have an account?",
@@ -29,7 +32,7 @@ const isMatch = (password1, passwordMatch) => {
   return password1 === passwordMatch;
 };
 
-const validateEmail = (email) => {
+const isValidEmail = (email) => {
   if (email.length === 0) return true; // just so the input field doesn't appear red at first
   const re = /\S+@\S+\.\S+/;
   return re.test(email);
@@ -63,6 +66,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Signup = () => {
+  let history = useHistory();
   const classes = useStyles();
 
   const [signupUser, setSignupUser] = useState({
@@ -72,7 +76,8 @@ const Signup = () => {
     passwordMatch: "",
   });
 
-  const [errors, setErrors] = useState(false);
+  const [formErrors, setFormErrors] = useState(false);
+  const [errorMessage, setErrorMessage] = useState(null);
 
   const [snackbarOpen, setSnackbarOpen] = useState(false);
 
@@ -86,22 +91,37 @@ const Signup = () => {
   const handleSignup = (e) => {
     e.preventDefault();
 
-    if (errors) {
+    if (formErrors) {
+      setErrorMessage("Please review the form");
       return setSnackbarOpen(true);
     }
+
+    axios
+      .post("/api/users/auth/signup", {
+        email: signupUser.email,
+        name: signupUser.companyName,
+        password: signupUser.password,
+      })
+      .then((res) => {
+        history.push("/dashboard");
+      })
+      .catch((err) => {
+        setSnackbarOpen(true);
+        setErrorMessage(err.response.data.message);
+      });
   };
 
   useEffect(() => {
     const { email, password, passwordMatch } = signupUser;
 
     if (
-      !validateEmail(email) ||
+      !isValidEmail(email) ||
       !isLongEnough(password) ||
       !isMatch(password, passwordMatch)
     ) {
-      setErrors(true);
+      setFormErrors(true);
     } else {
-      setErrors(false);
+      setFormErrors(false);
     }
   }, [signupUser]);
 
@@ -128,9 +148,9 @@ const Signup = () => {
                   name="email"
                   onChange={handleUserInput}
                   value={signupUser.email}
-                  error={!validateEmail(signupUser.email)}
+                  error={!isValidEmail(signupUser.email)}
                   helperText={
-                    !validateEmail(signupUser.email)
+                    !isValidEmail(signupUser.email)
                       ? "Invalid email format"
                       : ""
                   }
@@ -197,7 +217,7 @@ const Signup = () => {
         </Paper>
         <Snackbar open={snackbarOpen}>
           <Alert onClose={() => setSnackbarOpen(false)} severity="error">
-            Please review the form
+            {errorMessage}
           </Alert>
         </Snackbar>
       </div>
