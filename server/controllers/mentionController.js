@@ -7,20 +7,21 @@ const Mention = require("../models/mentionModel");
 const getMentions = asyncHandler(async (req, res) => {
   const { user } = req;
   try {
-    const activePlatforms = [];
-    for (const [key, value] of Object.entries(user.platforms)) {
-      if (value) {
-        activePlatforms.push(key);
-      }
-    }
-    if (activePlatforms[0] === "$init") {
-      activePlatforms.shift();
-    }
 
     //////////////////////////////////////////////////////////////////////
     // ///////////// Still working on getting mentions pertaining ////////
     // ///////////// to a selected platforms /////////////////////////////
     //////////////////////////////////////////////////////////////////////
+    // const activePlatforms = [];
+    // for (const [key, value] of Object.entries(user.platforms)) {
+    //   if (value) {
+    //     activePlatforms.push(key);
+    //   }
+    // }
+    // if (activePlatforms[0] === "$init") {
+    //   activePlatforms.shift();
+    // }
+    //
     // let allMentions = []
     // activePlatforms.forEach( async (platform) => {
     //   console.log(platform)
