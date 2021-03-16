@@ -21,7 +21,7 @@ const searchRecursive = async (term, after = "", posts = []) => {
         });
       });
       if (res.data.data.after) {
-        searchRecursive(term, res.data.data.after, posts);
+        return searchRecursive(term, res.data.data.after, posts);
       }
     }
   } catch (error) {
