@@ -1,43 +1,16 @@
+const axios = require("axios");
 const ENDPOINT = "http://www.reddit.com/r/all/search.json";
 
-// const Reddit = {
-//   search(term, limit) {
-//     fetch(`${ENDPOINT}?q=${term}&limit=${limit}`)
-//       .then((res) => {
-//         if (res.ok) return res.json();
-//         throw Error("Request failed");
-//       })
-//       .then((res) => {
-//         console.log(res.data);
-//         return res.data.children.map((post) => ({
-//           content: post.data.url,
-//           title: post.data.title,
-//           platform: "reddit",
-//           image: post.data.thumbnail, // "self" or "default" if no thumbnail link
-//           date: new Date(post.data.created * 1000),
-//           popularity: post.data.ups,
-//         }));
-//       })
-//       .catch((err) => {
-//         console.log(err.message);
-//       });
-//   },
-// };
+const searchRecursive = async (term, after = "", posts = []) => {
+  if (posts.length >= 100) return posts;
 
-const searchRecursive = (term, after, posts) => {
-  if (posts.length >= 100) return;
+  let url = `${ENDPOINT}?q=${term}` + (after ? `&after=${after}` : "");
 
-  let url =
-    `http://www.reddit.com/r/all/search.json?q=${term}` +
-    (after ? `&after=${after}` : "");
+  try {
+    const res = await axios.get(url);
 
-  fetch(url)
-    .then((res) => {
-      if (res.ok) return res.json();
-      else throw Error("Request failed");
-    })
-    .then((res) => {
-      res.data.children.forEach((post) => {
+    if (res.status === 200) {
+      res.data.data.children.forEach((post) => {
         posts.push({
           content: post.data.url,
           title: post.data.title,
@@ -47,10 +20,13 @@ const searchRecursive = (term, after, posts) => {
           popularity: post.data.ups,
         });
       });
-      if (res.data.after) {
-        searchRecursive(term, res.data.after, posts);
+      if (res.data.data.after) {
+        searchRecursive(term, res.data.data.after, posts);
       }
-    });
+    }
+  } catch (error) {
+    console.log(error);
+  }
 };
 
-export default searchRecursive;
+module.exports = { searchRecursive };
