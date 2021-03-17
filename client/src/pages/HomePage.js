@@ -1,6 +1,7 @@
 import React from "react";
 import AppBarLoggedIn from "../layout/AppBarLoggedIn";
 import Mention from "../layout/Mention";
+import MentionList from "../layout/MentionList";
 import { Grid } from "@material-ui/core";
 
 const HomePage = () => {
@@ -16,8 +17,11 @@ const HomePage = () => {
     <>
       <AppBarLoggedIn />
       <Grid container style={{ backgroundColor: "#fff", height: "100vh" }}>
-        <Grid item xs></Grid>
+        <Grid item xs>
+          <MentionList />
+        </Grid>
         <Grid item xs={7} style={{ backgroundColor: "#FAFBFF" }} align="right">
+          <Mention mention={mentionData} />
           <Mention mention={mentionData} />
         </Grid>
         <Grid item xs={2} style={{ backgroundColor: "#FAFBFF" }}></Grid>
