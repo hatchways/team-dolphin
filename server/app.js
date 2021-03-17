@@ -8,6 +8,7 @@ const { notFound, errorHandler } = require("./middlewares/errorMiddleware");
 
 const indexRouter = require("./routes/index");
 const pingRouter = require("./routes/ping");
+const mentionRouter = require("./routes/mentionRoutes");
 const userRouter = require("./routes/userRoutes");
 const mongoose = require("mongoose");
 
@@ -42,6 +43,7 @@ app.use(express.static(join(__dirname, "public")));
 
 app.use("/", indexRouter);
 app.use("/ping", pingRouter);
+app.use("/api/mentions", mentionRouter);
 app.use("/api/users", userRouter);
 
 // catch 404 and forward to error handler
