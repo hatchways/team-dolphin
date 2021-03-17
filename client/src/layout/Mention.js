@@ -1,73 +1,105 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect } from "react";
 import {
   Typography,
   Card,
   CardContent,
   CardMedia,
-  CardHeader,
+  Box,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSmile } from "@fortawesome/free-regular-svg-icons";
 
 const useStyles = makeStyles((theme) => ({
   root: {
+    backgroundColor: theme.palette.common.white,
     display: "flex",
     alignItems: "center",
     marginRight: theme.spacing(3),
+    marginTop: theme.spacing(3),
     width: "80%",
-    height: "12em",
+    height: "10em",
+    borderRadius: theme.shape.borderRadius * 2,
+    boxShadow: "0px 0px 2px 0px rgba(0,0,0,0.3)",
+    "&:hover": {
+      boxShadow: "0px 0px 4px 1px rgba(0,0,0,0.3)",
+    },
   },
   media: {
-    height: "10em",
-    width: "10em",
+    minHeight: "8em",
+    minWidth: "8em",
     marginLeft: "1em",
     border: "1px solid black",
   },
   content: {
+    padding: theme.spacing(3),
     display: "flex",
     flexDirection: "column",
     textAlign: "left",
   },
-  header: {
-    paddingTop: "2px",
-    paddingBottom: "2px",
-  },
-  title: {
-    fontWeight: 500,
-    fontSize: 18,
-  },
   subtitle: {
     color: "#d2d2d2",
-    paddingTop: "2px",
     fontWeight: 400,
     fontSize: 15,
   },
   text: {
-    paddingTop: "2px",
-    color: "#949494",
+    color: theme.palette.text.secondary,
+  },
+  customBox: {
+    display: "-webkit-box",
+    boxOrient: "vertical",
+    lineClamp: 2,
+    wordBreak: "break-all",
+    overflow: "hidden",
+  },
+  icon: {
+    alignSelf: "start",
+    padding: theme.spacing(2),
+    color: theme.palette.primary.main,
   },
 }));
 
 const Mention = ({ mention }) => {
   const classes = useStyles();
+  const keyword = "DolphinCorp";
+  const regex = new RegExp(`${keyword}`, "i");
+
+  useEffect(() => {
+    function highlight(title) {
+      title.innerHTML = title.innerHTML.replace(
+        regex,
+        `<span style="color: #536dfe">${keyword}</span>`
+      );
+    }
+    highlight(document.querySelector("#contentTitle"));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [keyword]);
 
   return (
     <Card className={classes.root}>
-      <CardMedia image={mention.image} className={classes.media} />
-      <div className={classes.content}>
-        <CardHeader
-          title={mention.title}
-          subheader={mention.platform}
-          classes={{
-            title: classes.title,
-            root: classes.header,
-            subheader: classes.subtitle,
-          }}
-        />
-        <CardContent classes={{ root: classes.text }}>
-          <Typography>{mention.content}</Typography>
-        </CardContent>
-      </div>
+      <CardMedia
+        image={mention.image}
+        className={classes.media}
+        title="mention cover"
+      />
+      <CardContent className={classes.content}>
+        <Typography id="contentTitle" variant="h6" gutterBottom>
+          {mention.title}
+        </Typography>
+        <Typography
+          vairant="subtitle1"
+          className={classes.subtitle}
+          gutterBottom
+        >
+          {mention.platform}
+        </Typography>
+        <Box component="div" classes={{ root: classes.customBox }}>
+          <Typography vairant="caption" className={classes.text} gutterBottom>
+            {mention.content}
+          </Typography>
+        </Box>
+      </CardContent>
+      <FontAwesomeIcon icon={faSmile} className={classes.icon} size="lg" />
     </Card>
   );
 };

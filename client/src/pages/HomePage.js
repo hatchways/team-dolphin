@@ -9,7 +9,7 @@ const HomePage = () => {
     platform: "reddit",
     image: "https://upload.wikimedia.org/wikipedia/fr/f/fc/Reddit-alien.png",
     content:
-      "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nis...",
+      "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisUt enim ad minim veniam, quis nostrud exercitation ullamco laboris nisquis nostrud exercitation ullamco laboris nisUt eni",
   };
 
   return (
@@ -17,10 +17,10 @@ const HomePage = () => {
       <AppBarLoggedIn />
       <Grid container style={{ backgroundColor: "#fff", height: "100vh" }}>
         <Grid item xs></Grid>
-        <Grid item xs={7} style={{ backgroundColor: "#F0F3FE" }} align="right">
+        <Grid item xs={7} style={{ backgroundColor: "#FAFBFF" }} align="right">
           <Mention mention={mentionData} />
         </Grid>
-        <Grid item xs={2} style={{ backgroundColor: "#F0F3FE" }}></Grid>
+        <Grid item xs={2} style={{ backgroundColor: "#FAFBFF" }}></Grid>
       </Grid>
     </>
   );
