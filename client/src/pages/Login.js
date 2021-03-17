@@ -1,8 +1,19 @@
-import { Typography, Button, Paper, Grid, TextField } from "@material-ui/core";
-import React, { useState } from "react";
+import {
+  Typography,
+  Button,
+  Paper,
+  Grid,
+  TextField,
+  Snackbar,
+} from "@material-ui/core";
+import { Alert } from "@material-ui/lab";
+import React, { useState, useEffect } from "react";
+import { useHistory } from "react-router-dom";
 import AppBarNotLoggedIn from "../layout/AppBarNotLoggedIn";
 
 import { makeStyles } from "@material-ui/core/styles";
+
+import axios from "axios";
 
 const cta = {
   description: "Don't have an account?",
@@ -38,12 +49,17 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Login = () => {
+  let history = useHistory();
   const classes = useStyles();
 
   const [loginUser, setLoginUser] = useState({
     email: "",
     password: "",
   });
+
+  const [errorMessage, setErrorMessage] = useState(null);
+
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
 
   const handleUserInput = (e) => {
     setLoginUser({
@@ -54,6 +70,16 @@ const Login = () => {
 
   const handleLogin = (e) => {
     e.preventDefault();
+
+    axios
+      .post("/api/users/auth/signin", loginUser)
+      .then((res) => {
+        history.push("/dashboard");
+      })
+      .catch((err) => {
+        setSnackbarOpen(true);
+        setErrorMessage(err.response.data.message);
+      });
   };
 
   return (
@@ -68,7 +94,7 @@ const Login = () => {
             Log in to your account
           </Typography>
           <form className={classes.form} onSubmit={handleLogin}>
-            <Grid container spacing={3}>
+            <Grid container spacing={4}>
               <Grid item xs={12}>
                 <TextField
                   required
@@ -103,6 +129,11 @@ const Login = () => {
             </Button>
           </form>
         </Paper>
+        <Snackbar open={snackbarOpen}>
+          <Alert onClose={() => setSnackbarOpen(false)} severity="error">
+            {errorMessage}
+          </Alert>
+        </Snackbar>
       </div>
     </div>
   );
