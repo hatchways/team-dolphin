@@ -7,6 +7,7 @@ import HomePage from "./pages/HomePage";
 import SettingPage from "./pages/SettingPage";
 import Signup from "./pages/Signup";
 import Login from "./pages/Login";
+import Dashboard from "./pages/Dashboard";
 import "./App.css";
 import { Redirect } from "react-router-dom";
 
@@ -23,6 +24,7 @@ function App() {
             <Route path="/setting" component={SettingPage} />
             <Route path="/signup" component={Signup} />
             <Route path="/login" component={Login} />
+            <Route path="/dashboard" component={Dashboard} />
           </Switch>
         </BrowserRouter>
       </MuiThemeProvider>
