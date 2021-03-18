@@ -17,10 +17,10 @@ const HomePage = () => {
   const classes = useStyles();
   const mentionDatas = [
     {
-      title: "PayPal invested $400 in DolphinCorp",
+      title: "PayPal invested $400 in DolphinCorp PayPal invested $400",
       id: 1,
       platform: "Reddit",
-      image: "https://upload.wikimedia.org/wikipedia/fr/f/fc/Reddit-alien.png",
+      image: "https://picsum.photos/100",
       content:
         "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisUt enim ad minim veniam, quis nostrud exercitation ullamco laboris nisquis nostrud exercitation ullamco laboris nisUt eni",
     },
@@ -28,7 +28,7 @@ const HomePage = () => {
       title: "PayPal invested $800 in DolphinCorp",
       id: 2,
       platform: "Facebook",
-      image: "https://upload.wikimedia.org/wikipedia/fr/f/fc/Reddit-alien.png",
+      image: "https://picsum.photos/200/300",
       content:
         "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisUt enim ad minim veniam, quis nostrud exercitation ullamco laboris nisquis nostrud exercitation ullamco laboris nisUt eni",
     },
@@ -36,7 +36,7 @@ const HomePage = () => {
       title: "invested $400 in DolphinCorp",
       id: 3,
       platform: "Twitter",
-      image: "https://upload.wikimedia.org/wikipedia/fr/f/fc/Reddit-alien.png",
+      image: "https://picsum.photos/200",
       content:
         "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisUt enim ad minim veniam, quis nostrud exercitation ullamco laboris nisquis nostrud exercitation ullamco laboris nisUt eni",
     },
@@ -44,7 +44,7 @@ const HomePage = () => {
       title: "invested $400 in DolphinCorp",
       id: 4,
       platform: "Twitter",
-      image: "https://upload.wikimedia.org/wikipedia/fr/f/fc/Reddit-alien.png",
+      image: "https://picsum.photos/400",
       content:
         "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisUt enim ad minim veniam, quis nostrud exercitation ullamco laboris nisquis nostrud exercitation ullamco laboris nisUt eni",
     },

@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import {
-  Switch,
   List,
   ListItem,
   Divider,
@@ -10,7 +9,7 @@ import {
   Typography,
   ListItemSecondaryAction,
 } from "@material-ui/core";
-import { makeStyles, withStyles } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 import reddit from "../utils/images/reddit-logo.png";
 import twitter from "../utils/images/twitter-logo.png";
 import facebook from "../utils/images/facebook-logo.png";
@@ -18,6 +17,7 @@ import amazon from "../utils/images/amazon-logo.png";
 import forbes from "../utils/images/forbes-logo.png";
 import shopify from "../utils/images/shopify-logo.png";
 import business_insider from "../utils/images/BI-logo.png";
+import { CustomizedSwitch } from "./CustomizedSwitch";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -28,51 +28,6 @@ const useStyles = makeStyles((theme) => ({
     marginLeft: theme.spacing(2),
   },
 }));
-
-const CustomizedSwitch = withStyles((theme) => ({
-  root: {
-    width: 50,
-    height: 25,
-    padding: 0,
-    marginRight: theme.spacing(2),
-  },
-  switchBase: {
-    padding: 3,
-    "&$checked": {
-      transform: "translateX(23px)",
-      color: theme.palette.common.white,
-      "& + $track": {
-        backgroundColor: theme.palette.primary.main,
-        opacity: 1,
-      },
-    },
-  },
-  thumb: {
-    width: 20,
-    height: 20,
-  },
-  track: {
-    borderRadius: 25 / 2,
-    border: "none",
-    backgroundColor: "#bdc7d4",
-    opacity: 1,
-  },
-  checked: {},
-}))(({ classes, ...props }) => {
-  return (
-    <Switch
-      disableRipple
-      classes={{
-        root: classes.root,
-        switchBase: classes.switchBase,
-        thumb: classes.thumb,
-        track: classes.track,
-        checked: classes.checked,
-      }}
-      {...props}
-    />
-  );
-});
 
 const MentionList = () => {
   const classes = useStyles();
