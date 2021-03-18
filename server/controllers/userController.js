@@ -27,7 +27,7 @@ const signUp = asyncHandler(async (req, res) => {
     if (user) {
       const token = generateToken(user._id);
       res.cookie("dolphinToken", token, {
-        maxAge: 3600,
+        maxAge: 3600000,
         httpOnly: true,
         secure: false, // should be true in Production !
       });
@@ -82,6 +82,7 @@ const getUserProfile = asyncHandler(async (req, res) => {
       _id: user._id,
       name: user.name,
       email: user.email,
+      platforms: user.platforms,
     });
   } else {
     res.status(404);
