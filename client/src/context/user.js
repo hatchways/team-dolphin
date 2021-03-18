@@ -4,8 +4,16 @@ import axios from "axios";
 
 const UserContext = createContext();
 
+const checkAuth = async () => {
+  const res = await axios.get("/api/users/me", {
+    withCredentials: true,
+  });
+  if (res.status === 200) return true;
+  return false;
+};
+
 const initialState = {
-  user: {},
+  isAuthenticated: checkAuth(),
 };
 
 const UserProvider = ({ children }) => {

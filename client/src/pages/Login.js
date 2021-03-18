@@ -62,7 +62,11 @@ const Login = () => {
 
   const [snackbarOpen, setSnackbarOpen] = useState(false);
 
-  const { setUser } = useContext(UserContext);
+  const { setUser, isAuthenticated } = useContext(UserContext);
+
+  useEffect(() => {
+    if (isAuthenticated) history.push("/");
+  }, []);
 
   const handleUserInput = (e) => {
     setLoginUser({
@@ -78,7 +82,7 @@ const Login = () => {
       .post("/api/users/auth/signin", loginUser)
       .then((res) => {
         setUser(res.data.email, res.data.name);
-        history.push("/dashboard");
+        history.push("/");
       })
       .catch((err) => {
         setSnackbarOpen(true);
