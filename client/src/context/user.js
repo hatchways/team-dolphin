@@ -21,6 +21,22 @@ const UserProvider = ({ children }) => {
     });
   };
 
+  useEffect(() => {
+    const authenticate = async () => {
+      try {
+        const res = await axios.get("/api/users/me", {
+          withCredentials: true,
+        });
+        setUser(res.data.email, res.data.name);
+      } catch (error) {
+        console.log("error");
+        // TODO: redirect to /login
+      }
+    };
+
+    authenticate();
+  }, []);
+
   return (
     <UserContext.Provider value={{ ...state, setUser }}>
       {children}
