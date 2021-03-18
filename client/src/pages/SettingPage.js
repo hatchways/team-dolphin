@@ -17,8 +17,10 @@ const useStyles = makeStyles((theme) => ({
   },
   rightPanel: {
     paddingTop: theme.spacing(8),
-    paddingLeft: theme.spacing(8),
+    paddingLeft: theme.spacing(20),
     backgroundColor: "#FAFBFF",
+    height: "90vh",
+    overflow: "hidden",
   },
   icon: {
     color: theme.palette.primary.main,
