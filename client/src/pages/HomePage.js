@@ -17,7 +17,7 @@ const HomePage = () => {
   const classes = useStyles();
   const mentionDatas = [
     {
-      title: "PayPal invested $400 in DolphinCorp dsadasdasdfa",
+      title: "PayPal invested $400 in DolphinCorp",
       id: 1,
       platform: "Reddit",
       image: "https://upload.wikimedia.org/wikipedia/fr/f/fc/Reddit-alien.png",

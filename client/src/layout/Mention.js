@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import {
   Typography,
   Card,
@@ -16,7 +16,6 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     alignItems: "center",
     marginRight: theme.spacing(3),
-    // marginTop: theme.spacing(3),
     marginBottom: theme.spacing(2),
     width: "80%",
     height: "10em",
@@ -73,11 +72,8 @@ const Mention = ({ mention }) => {
         className={classes.media}
         title="mention cover"
       />
-      {console.log(mention.title.search(regex))}
-      {console.log(mention.title.substring(0, 24))}
-      {console.log(mention.title.substring(24 + keyword.length))}
       <CardContent className={classes.content}>
-        <Typography className="contentTitle" variant="h6" gutterBottom>
+        <Typography variant="h6" gutterBottom>
           {mention.title.substring(0, indexK)}
           <span style={{ color: "#536dfe" }}>{keyword}</span>
           {mention.title.substring(indexK + keyword.length)}
