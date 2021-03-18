@@ -1,8 +1,15 @@
 const Mention = require("../models/mentionModel");
 
 // @desc    Get Mentions
-// @route   GET /api/mentions?platforms=xxx&keyword=xxx&sort=xxx
+// @route   GET /api/mentions
 // @access  Private
+
+/**
+ * @param {string} platforms - list of selected platforms seperated by coma
+ * @param {string} keyword - keyword entered by user in UI
+ * @param {string} sort - either "popularity" for most popular or "date" for most recent
+ */
+
 const getMentions = async (req, res) => {
   try {
     const { platforms, keyword, sort } = req.query;
@@ -29,7 +36,7 @@ const getMentions = async (req, res) => {
       if (!keyword) {
         filteredMentions = [...allMentions];
       } else {
-        const keywordRegex = new RegExp(String.raw`${keyword}`);
+        const keywordRegex = new RegExp(String.raw`${keyword.toLowerCase()}`);
         allMentions.forEach((mention) => {
           if (
             keywordRegex.test(mention.title.toLowerCase()) ||
@@ -67,7 +74,6 @@ const getMentions = async (req, res) => {
             filteredMentions.find((mention) => item[0] === mention._id)
           );
       }
-      console.log(sortedMentions.length);
       res.json({ mentions: sortedMentions });
     }
   } catch (error) {
