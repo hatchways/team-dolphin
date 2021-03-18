@@ -13,7 +13,7 @@ const checkAuth = async () => {
 };
 
 const initialState = {
-  isAuthenticated: checkAuth(),
+  isAuthenticated: checkAuth() ? true : false,
 };
 
 const UserProvider = ({ children }) => {
@@ -47,7 +47,6 @@ const UserProvider = ({ children }) => {
         setUser(res.data.email, res.data.name);
       } catch (error) {
         console.log("error");
-        // TODO: redirect to /login
       }
     };
 

@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext } from "react";
 import { UserContext } from "../context/user";
 import { makeStyles } from "@material-ui/core/styles";
 import { IconButton, InputBase } from "@material-ui/core";
@@ -53,7 +53,7 @@ const SearchBox = () => {
         classes={{ input: classes.input }}
         className={classes.inputBase}
         inputProps={{ "aria-label": "Company name" }}
-        onChange={debounce((e) => setSearchTerm(e.target.value), 1000)}
+        onChange={debounce((e) => setSearchTerm(e.target.value), 1000)} // wait 1 sec after typing to set
       />
       <IconButton
         type="submit"

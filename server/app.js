@@ -37,7 +37,6 @@ var app = express();
 app.use(logger("dev"));
 app.use(express.json()); // to accept JSON data in the body
 app.use(json());
-// app.use(cors({ credentials: true, origin: "http://localhost:3000" }));
 app.use(urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(join(__dirname, "public")));

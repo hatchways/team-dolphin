@@ -12,7 +12,6 @@ import { Redirect } from "react-router-dom";
 
 function App() {
   const { isAuthenticated } = useContext(UserContext);
-  console.log(isAuthenticated);
 
   return (
     <MuiThemeProvider theme={theme}>
@@ -22,7 +21,7 @@ function App() {
             exact
             path="/"
             render={(props) =>
-              isAuthenticated ? <HomePage /> : <Redirect to="/login" />
+              isAuthenticated === true ? <HomePage /> : <Redirect to="/login" />
             }
           />
           <Route path="/setting" component={SettingPage} />
