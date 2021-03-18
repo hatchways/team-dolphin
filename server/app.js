@@ -3,6 +3,7 @@ const express = require("express");
 const { join } = require("path");
 const cookieParser = require("cookie-parser");
 const logger = require("morgan");
+const cors = require("cors");
 
 const { notFound, errorHandler } = require("./middlewares/errorMiddleware");
 

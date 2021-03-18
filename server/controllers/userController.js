@@ -27,7 +27,8 @@ const signUp = asyncHandler(async (req, res) => {
     if (user) {
       const token = generateToken(user._id);
       res.cookie("dolphinToken", token, {
-        maxAge: 3600,
+        maxAge: 3600000,
+        sameSite: "none",
         httpOnly: true,
         secure: false, // should be true in Production !
       });
@@ -56,7 +57,7 @@ const signIn = asyncHandler(async (req, res) => {
   if (user && (await user.matchPassword(password))) {
     const token = generateToken(user._id);
     res.cookie("dolphinToken", token, {
-      maxAge: 3600,
+      maxAge: 3600000,
       httpOnly: true,
       secure: false, // should be true in Production !
     });
@@ -75,18 +76,7 @@ const signIn = asyncHandler(async (req, res) => {
 // @route   GET /api/users/profile
 // @access  Private
 const getUserProfile = asyncHandler(async (req, res) => {
-  const user = await User.findById(req.user._id);
-
-  if (user) {
-    res.json({
-      _id: user._id,
-      name: user.name,
-      email: user.email,
-    });
-  } else {
-    res.status(404);
-    throw new Error("User not found");
-  }
+  res.json(req.user);
 });
 
 module.exports = { signUp, signIn, getUserProfile };
