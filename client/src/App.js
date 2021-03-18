@@ -25,7 +25,6 @@ function App() {
               isAuthenticated ? <HomePage /> : <Redirect to="/login" />
             }
           />
-
           <Route path="/setting" component={SettingPage} />
           <Route path="/signup" component={Signup} />
           <Route path="/login" component={Login} />

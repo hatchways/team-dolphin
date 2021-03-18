@@ -29,6 +29,15 @@ const UserProvider = ({ children }) => {
     });
   };
 
+  const setSearchTerm = (searchTerm) => {
+    dispatch({
+      type: "SET_SEARCH_TERM",
+      payload: {
+        searchTerm,
+      },
+    });
+  };
+
   useEffect(() => {
     const authenticate = async () => {
       try {
@@ -46,7 +55,7 @@ const UserProvider = ({ children }) => {
   }, []);
 
   return (
-    <UserContext.Provider value={{ ...state, setUser }}>
+    <UserContext.Provider value={{ ...state, setUser, setSearchTerm }}>
       {children}
     </UserContext.Provider>
   );
