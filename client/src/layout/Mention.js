@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Typography,
   Card,
@@ -16,7 +16,8 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     alignItems: "center",
     marginRight: theme.spacing(3),
-    marginTop: theme.spacing(3),
+    // marginTop: theme.spacing(3),
+    marginBottom: theme.spacing(2),
     width: "80%",
     height: "10em",
     borderRadius: theme.shape.borderRadius * 2,
@@ -63,17 +64,7 @@ const Mention = ({ mention }) => {
   const classes = useStyles();
   const keyword = "DolphinCorp";
   const regex = new RegExp(`${keyword}`, "i");
-
-  useEffect(() => {
-    function highlight(title) {
-      title.innerHTML = title.innerHTML.replace(
-        regex,
-        `<span style="color: #536dfe">${keyword}</span>`
-      );
-    }
-    highlight(document.querySelector("#contentTitle"));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [keyword]);
+  const indexK = mention.title.search(regex);
 
   return (
     <Card className={classes.root}>
@@ -82,9 +73,14 @@ const Mention = ({ mention }) => {
         className={classes.media}
         title="mention cover"
       />
+      {console.log(mention.title.search(regex))}
+      {console.log(mention.title.substring(0, 24))}
+      {console.log(mention.title.substring(24 + keyword.length))}
       <CardContent className={classes.content}>
-        <Typography id="contentTitle" variant="h6" gutterBottom>
-          {mention.title}
+        <Typography className="contentTitle" variant="h6" gutterBottom>
+          {mention.title.substring(0, indexK)}
+          <span style={{ color: "#536dfe" }}>{keyword}</span>
+          {mention.title.substring(indexK + keyword.length)}
         </Typography>
         <Typography
           vairant="subtitle1"
