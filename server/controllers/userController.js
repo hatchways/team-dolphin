@@ -1,11 +1,12 @@
-const asyncHandler = require("express-async-handler");
 const generateToken = require("../config/generateToken");
 const User = require("../models/userModel");
+const Mention = require("../models/mentionModel"); // Added for Co-op Midterm Presentation
+const { searchRecursive } = require("../utils/reddit"); // Added for Co-op Midterm Presentation
 
 // @desc    Register a new user
 // @route   POST /api/users/auth/signup
 // @access  Public
-const signUp = asyncHandler(async (req, res) => {
+const signUp = async (req, res) => {
   const { name, email, password } = req.body;
 
   const userAlreadyRegistered = await User.findOne({ email });
@@ -27,15 +28,31 @@ const signUp = asyncHandler(async (req, res) => {
     if (user) {
       const token = generateToken(user._id);
       res.cookie("dolphinToken", token, {
-        maxAge: 3600,
+        maxAge: 600000,
         httpOnly: true,
         secure: false, // should be true in Production !
       });
+
+      // Added for Co-op Midterm Presentation
+      // To be handled later on by BullMQ
+      const addMentionsToDB = async () => {
+        try {
+          const posts = await searchRecursive(user.name);
+          await Mention.deleteMany();
+          await Mention.insertMany(posts);
+        } catch (error) {
+          console.log(error.message);
+        }
+      };
+
+      // Added for Co-op Midterm Presentation
+      // To be handled later on by BullMQ
+      await addMentionsToDB();
+
       res.status(201).json({
         _id: user._id,
         name: user.name,
         email: user.email,
-        token,
       });
     } else {
       res.status(400).json({ message: "Invalid user data" });
@@ -43,12 +60,12 @@ const signUp = asyncHandler(async (req, res) => {
   } else {
     res.status(400).json({ message: "Invalid password" });
   }
-});
+};
 
 // @desc    Auth user & get token
 // @route   POST /api/users/auth/signin
 // @access  Public
-const signIn = asyncHandler(async (req, res) => {
+const signIn = async (req, res) => {
   const { email, password } = req.body;
 
   const user = await User.findOne({ email });
@@ -56,25 +73,41 @@ const signIn = asyncHandler(async (req, res) => {
   if (user && (await user.matchPassword(password))) {
     const token = generateToken(user._id);
     res.cookie("dolphinToken", token, {
-      maxAge: 3600,
+      maxAge: 600000,
       httpOnly: true,
       secure: false, // should be true in Production !
     });
+
+    // Added for Co-op Midterm Presentation
+    // To be handled later on by BullMQ
+    const addMentionsToDB = async () => {
+      try {
+        const posts = await searchRecursive(user.name);
+        await Mention.deleteMany();
+        await Mention.insertMany(posts);
+      } catch (error) {
+        console.log(error.message);
+      }
+    };
+
+    // Added for Co-op Midterm Presentation
+    // To be handled later on by BullMQ
+    await addMentionsToDB();
+
     res.status(201).json({
       _id: user._id,
       name: user.name,
       email: user.email,
-      token,
     });
   } else {
     res.status(401).json({ message: "Invalid email or password" });
   }
-});
+};
 
 // @desc    Get user profile
 // @route   GET /api/users/profile
 // @access  Private
-const getUserProfile = asyncHandler(async (req, res) => {
+const getUserProfile = async (req, res) => {
   const user = await User.findById(req.user._id);
 
   if (user) {
@@ -87,6 +120,6 @@ const getUserProfile = asyncHandler(async (req, res) => {
     res.status(404);
     throw new Error("User not found");
   }
-});
+};
 
 module.exports = { signUp, signIn, getUserProfile };

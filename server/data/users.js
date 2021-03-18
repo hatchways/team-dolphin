@@ -2,17 +2,17 @@ const bcrypt = require('bcryptjs')
 
 const users = [
   {
-    name: 'ArcturusCorp',
+    name: 'Airbus',
     email: 'philippe@dolphin.com',
     password: bcrypt.hashSync('123456', 10),
   },
   {
-    name: 'MercuryCorp',
+    name: 'Stripe',
     email: 'aidan@dolphin.com',
     password: bcrypt.hashSync('123456', 10),
   },
   {
-    name: 'JupiterCorp',
+    name: 'Amazon',
     email: 'alan@dolphin.com',
     password: bcrypt.hashSync('123456', 10),
   },
