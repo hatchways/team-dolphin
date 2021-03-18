@@ -6,62 +6,70 @@ const Mention = require("../models/mentionModel");
 const getMentions = async (req, res) => {
   try {
     const { platforms, keyword, sort } = req.query;
-    const platformsArray = platforms.split(",");
+    if (!platforms) {
+      res.status(201).json({ mentions: [] });
+    } else {
+      const platformsArray = platforms.split(",");
 
-    // Fetching Mentions pertaining to selected platforms
-    const fetchMentions = (array) => {
-      const allMentions = [];
-      for (const platform of array) {
-        const mentions = Mention.find({ platform });
-        allMentions.push(mentions);
+      // Fetching Mentions pertaining to selected platforms
+      const fetchMentions = (array) => {
+        const allMentions = [];
+        for (const platform of array) {
+          const mentions = Mention.find({ platform });
+          allMentions.push(mentions);
+        }
+        return allMentions;
+      };
+
+      const result = await Promise.all(fetchMentions(platformsArray));
+      const allMentions = result.flat();
+
+      // filter by keyword
+      let filteredMentions = [];
+      if (!keyword) {
+        filteredMentions = [...allMentions];
+      } else {
+        const keywordRegex = new RegExp(String.raw`${keyword}`);
+        allMentions.forEach((mention) => {
+          if (
+            keywordRegex.test(mention.title.toLowerCase()) ||
+            keywordRegex.test(mention.content.toLowerCase())
+          ) {
+            filteredMentions.push(mention);
+          }
+        });
       }
-      return allMentions;
-    };
 
-    const result = await Promise.all(fetchMentions(platformsArray));
-    const allMentions = result.flat();
+      // sort by selector
+      let sortedMentions = [];
 
-    // filter by keyword
-    const keywordRegex = new RegExp(String.raw`${keyword}`);
-    const filteredMentions = [];
-    allMentions.forEach((mention) => {
-      if (
-        keywordRegex.test(mention.title.toLowerCase()) ||
-        keywordRegex.test(mention.content.toLowerCase())
-      ) {
-        filteredMentions.push(mention);
+      switch (sort) {
+        case "popularity":
+          const tempPopSorted = filteredMentions
+            .map((mention) => {
+              return [mention._id, mention.popularity];
+            })
+            .sort((a, b) => b[1] - a[1]);
+
+          sortedMentions = tempPopSorted.map((item) =>
+            filteredMentions.find((mention) => item[0] === mention._id)
+          );
+
+          break;
+        default:
+          const tempDateSorted = filteredMentions
+            .map((mention) => {
+              return [mention._id, Date.parse(mention.date)];
+            })
+            .sort((a, b) => b[1] - a[1]);
+
+          sortedMentions = tempDateSorted.map((item) =>
+            filteredMentions.find((mention) => item[0] === mention._id)
+          );
       }
-    });
-
-    // sort by selector
-    let sortedMentions = [];
-
-    switch (sort) {
-      case "popularity":
-        const tempPopSorted = filteredMentions
-          .map((mention) => {
-            return [mention._id, mention.popularity];
-          })
-          .sort((a, b) => b[1] - a[1]);
-
-        sortedMentions = tempPopSorted.map((item) =>
-          filteredMentions.find((mention) => item[0] === mention._id)
-        );
-
-        break;
-      default:
-        const tempDateSorted = filteredMentions
-          .map((mention) => {
-            return [mention._id, Date.parse(mention.date)];
-          })
-          .sort((a, b) => b[1] - a[1]);
-
-        sortedMentions = tempDateSorted.map((item) =>
-          filteredMentions.find((mention) => item[0] === mention._id)
-        );
+      console.log(sortedMentions.length);
+      res.json({ mentions: sortedMentions });
     }
-
-    res.json({ mentions: sortedMentions });
   } catch (error) {
     res.status(400).json({ message: "something went wrong" });
   }
