@@ -1,13 +1,15 @@
 import React, { useEffect, useState, useContext } from "react";
 import AppBarLoggedIn from "../layout/AppBarLoggedIn";
 import Mention from "../layout/Mention";
-import { Grid } from "@material-ui/core";
+import { Grid, Typography, Box } from "@material-ui/core";
 import axios from "axios";
 import { UserContext } from "../context/user";
+import { makeStyles } from "@material-ui/core/styles";
+import MentionList from "../layout/MentionList";
 
-const HomePage = ({ history }) => {
+const HomePage = () => {
   const [mentionDatas, setMentionDatas] = useState([]);
-
+  const classes = useStyles();
   const { isAuth, user } = useContext(UserContext);
 
   useEffect(() => {
@@ -30,12 +32,27 @@ const HomePage = ({ history }) => {
     // fetchMentions();
   }, []);
 
+  const useStyles = makeStyles((theme) => ({
+    box: {
+      alignItems: "center",
+      margin: theme.spacing(6, 3, 4, 0),
+      width: "80%",
+    },
+  }));
+
   return (
     <>
       <AppBarLoggedIn />
       <Grid container style={{ backgroundColor: "#fff", height: "100vh" }}>
-        <Grid item xs></Grid>
+        <Grid item xs>
+          <MentionList />
+        </Grid>
         <Grid item xs={7} style={{ backgroundColor: "#FAFBFF" }} align="right">
+          <Box className={classes.box}>
+            <Typography variant="h3" align="left">
+              My mentions
+            </Typography>
+          </Box>
           {mentionDatas.map((mentionData) => (
             <Mention key={mentionData._id} mention={mentionData} />
           ))}
