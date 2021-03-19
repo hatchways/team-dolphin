@@ -8,7 +8,7 @@ const searchRecursive = async (term, after = "", posts = []) => {
 
   const image = (image) => {  
     if(image === "default" || image === "self") {
-      return "https://i2.wp.com/www.feverbee.com/wp-content/uploads/2015/06/reddit-logo-jpg.jpg?ssl=1"
+      return "https://i.imgflip.com/1f0hdj.jpg"
     } else {
       return image
     }
