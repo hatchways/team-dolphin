@@ -1,30 +1,41 @@
-import React from "react";
+import React, { useEffect, useState, useContext } from "react";
 import AppBarLoggedIn from "../layout/AppBarLoggedIn";
 import Mention from "../layout/Mention";
 import { Grid } from "@material-ui/core";
+import axios from "axios";
+import { UserContext } from "../context/user";
 
-const HomePage = ({ match }) => {
-  const mentionDatas = [
-    {
-      title: "PayPal invested $400 in DolphinCorp",
-      id: 1,
-      platform: "Reddit",
-      image: "https://upload.wikimedia.org/wikipedia/fr/f/fc/Reddit-alien.png",
-      content:
-        "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisUt enim ad minim veniam, quis nostrud exercitation ullamco laboris nisquis nostrud exercitation ullamco laboris nisUt eni",
-    },
-  ];
+const HomePage = ({ history }) => {
+  const [mentionDatas, setMentionDatas] = useState([]);
 
-  const k = match.params;
+  const { isAuth, user } = useContext(UserContext);
+
+  useEffect(() => {
+    isAuth().then((res) => {
+      if (!res) {
+        history.push("/login");
+      }
+    });
+  }, []);
+
+  // useEffect(() => {
+  //   async function fetchMyAPI() {
+  //     let response = await axios.get("api/mentions");
+  //     console.log(response.data);
+  //     setMentionDatas(response.data);
+  //   }
+
+  //   fetchMyAPI();
+  // });
+
   return (
     <>
       <AppBarLoggedIn />
-      {console.log(k)}
       <Grid container style={{ backgroundColor: "#fff", height: "100vh" }}>
         <Grid item xs></Grid>
         <Grid item xs={7} style={{ backgroundColor: "#FAFBFF" }} align="right">
           {mentionDatas.map((mentionData) => (
-            <Mention key={mentionData.id} mention={mentionData} />
+            <Mention key={mentionData._id} mention={mentionData} />
           ))}
         </Grid>
         <Grid item xs={2} style={{ backgroundColor: "#FAFBFF" }}></Grid>

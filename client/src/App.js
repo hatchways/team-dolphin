@@ -9,6 +9,7 @@ import Signup from "./pages/Signup";
 import Login from "./pages/Login";
 import "./App.css";
 import { Redirect } from "react-router-dom";
+import { UserProvider } from "./context/user";
 
 function App() {
   const { isAuthenticated } = useContext(UserContext);
@@ -17,16 +18,19 @@ function App() {
     <MuiThemeProvider theme={theme}>
       <BrowserRouter>
         <Switch>
-          <Route
+          {/* <Route
             exact
             path="/"
             render={(props) =>
               isAuthenticated === true ? <HomePage /> : <Redirect to="/login" />
             }
-          />
-          <Route path="/setting" component={SettingPage} />
-          <Route path="/signup" component={Signup} />
-          <Route path="/login" component={Login} />
+          /> */}
+          <UserProvider>
+            <Route exact path="/" component={HomePage} />
+            <Route path="/setting" component={SettingPage} />
+            <Route path="/signup" component={Signup} />
+            <Route path="/login" component={Login} />
+          </UserProvider>
         </Switch>
       </BrowserRouter>
     </MuiThemeProvider>

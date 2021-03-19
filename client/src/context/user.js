@@ -4,16 +4,17 @@ import axios from "axios";
 
 const UserContext = createContext();
 
-const checkAuth = async () => {
-  const res = await axios.get("/api/users/me", {
-    withCredentials: true,
-  });
-  if (res.status === 200) return true;
-  return false;
-};
+// const checkAuth = async () => {
+//   const res = await axios.get("/api/users/me", {
+//     withCredentials: true,
+//   });
+//   if (res.status === 200) return true;
+//   return false;
+// };
 
 const initialState = {
-  isAuthenticated: checkAuth() ? true : false,
+  isAuthenticated: false,
+  user: [],
 };
 
 const UserProvider = ({ children }) => {
@@ -38,23 +39,35 @@ const UserProvider = ({ children }) => {
     });
   };
 
-  useEffect(() => {
-    const authenticate = async () => {
-      try {
-        const res = await axios.get("/api/users/me", {
-          withCredentials: true,
-        });
-        setUser(res.data.email, res.data.name);
-      } catch (error) {
-        console.log("error");
-      }
-    };
+  // useEffect(() => {
+  //   const authenticate = async () => {
+  //     try {
+  //       const res = await axios.get("/api/users/me", {
+  //         withCredentials: true,
+  //       });
+  //       setUser(res.data.email, res.data.name);
+  //     } catch (error) {
+  //       console.log("error");
+  //     }
+  //   };
 
-    authenticate();
-  }, []);
+  //   authenticate();
+  // }, []);
+
+  async function isAuth() {
+    try {
+      const res = await axios.get("/api/users/me", {
+        withCredentials: true,
+      });
+      setUser(res.data.email, res.data.name);
+      return res.status === 200;
+    } catch (err) {
+      return false;
+    }
+  }
 
   return (
-    <UserContext.Provider value={{ ...state, setUser, setSearchTerm }}>
+    <UserContext.Provider value={{ ...state, setUser, setSearchTerm, isAuth }}>
       {children}
     </UserContext.Provider>
   );

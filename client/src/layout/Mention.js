@@ -75,7 +75,7 @@ const Mention = ({ mention }) => {
       <CardContent className={classes.content}>
         <Typography variant="h6" gutterBottom>
           {mention.title.substring(0, indexK)}
-          <span style={{ color: "#536dfe" }}>{keyword}</span>
+          {/* <span style={{ color: "#536dfe" }}>{keyword}</span> */}
           {mention.title.substring(indexK + keyword.length)}
         </Typography>
         <Typography

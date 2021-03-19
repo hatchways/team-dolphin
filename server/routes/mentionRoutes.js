@@ -3,6 +3,6 @@ const router = express.Router();
 const { getMentions } = require("../controllers/mentionController");
 const protect = require("../middlewares/authMiddleware");
 
-router.get("/", protect, getMentions);
+router.get("/", getMentions);
 
 module.exports = router;
