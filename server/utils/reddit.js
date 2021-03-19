@@ -6,13 +6,13 @@ const searchRecursive = async (term, after = "", posts = []) => {
 
   let url = `${ENDPOINT}?q=${term}` + (after ? `&after=${after}` : "");
 
-  const image = (image) => {  
-    if(image === "default" || image === "self") {
-      return "https://i.imgflip.com/1f0hdj.jpg"
+  const image = (image) => {
+    if (image === "default" || image === "self") {
+      return "https://i.imgflip.com/1f0hdj.jpg";
     } else {
-      return image
+      return image;
     }
-  }
+  };
 
   try {
     const res = await axios.get(url);
@@ -23,7 +23,7 @@ const searchRecursive = async (term, after = "", posts = []) => {
           content: post.data.url,
           title: post.data.title,
           platform: "reddit",
-          image: image(post.data.thumbnail), 
+          image: image(post.data.thumbnail),
           date: new Date(post.data.created * 1000),
           popularity: post.data.ups,
         });
