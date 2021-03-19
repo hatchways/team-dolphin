@@ -3,6 +3,7 @@ const express = require("express");
 const { join } = require("path");
 const cookieParser = require("cookie-parser");
 const logger = require("morgan");
+const cors = require("cors");
 
 const { notFound, errorHandler } = require("./middlewares/errorMiddleware");
 
@@ -51,5 +52,38 @@ app.use(notFound);
 
 // error handler
 app.use(errorHandler);
+
+// test redis
+// to start redis server in background
+// run "redis-server --daemonize yes"
+// to stop the server running "redis-cli shutdown"
+const redis = require("redis");
+const client = redis.createClient({
+  host: process.env.REDIS_HOST,
+  port: process.env.REDIS_PORT,
+});
+client.on("error", (err) => {
+  console.log("Error " + err);
+});
+
+client.on("ready", function () {
+  console.log("redis is running");
+});
+
+// test bull
+var Queue = require("bull");
+
+const myFirstQueue = new Queue("my-first-queue", {
+  redis: { port: process.env.REDIS_PORT, host: process.env.REDIS_HOST },
+});
+
+// job producer
+const job = myFirstQueue.add();
+
+// job consumer
+myFirstQueue.process(function (job, done) {
+  // call done when finished
+  done(console.log(`Job with id ${job.id} has been completed`));
+});
 
 module.exports = app;

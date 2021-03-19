@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useHistory } from "react-router-dom";
+import { UserContext } from "../context/user";
 
 import {
   Typography,
@@ -81,6 +82,12 @@ const Signup = () => {
 
   const [snackbarOpen, setSnackbarOpen] = useState(false);
 
+  const { setUser, isAuthenticated } = useContext(UserContext);
+
+  useEffect(() => {
+    if (isAuthenticated) history.push("/");
+  }, []);
+
   const handleUserInput = (e) => {
     setSignupUser({
       ...signupUser,
@@ -103,7 +110,8 @@ const Signup = () => {
         password: signupUser.password,
       })
       .then((res) => {
-        history.push("/dashboard");
+        setUser(res.data.email, res.data.name);
+        history.push("/");
       })
       .catch((err) => {
         setSnackbarOpen(true);

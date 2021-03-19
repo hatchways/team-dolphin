@@ -36,7 +36,7 @@ const getMentions = async (req, res) => {
       if (!keyword) {
         filteredMentions = [...allMentions];
       } else {
-        const keywordRegex = new RegExp(String.raw`${keyword}`);
+        const keywordRegex = new RegExp(String.raw`${keyword.toLowerCase()}`);
         allMentions.forEach((mention) => {
           if (
             keywordRegex.test(mention.title.toLowerCase()) ||
@@ -74,7 +74,6 @@ const getMentions = async (req, res) => {
             filteredMentions.find((mention) => item[0] === mention._id)
           );
       }
-      console.log(sortedMentions.length);
       res.json({ mentions: sortedMentions });
     }
   } catch (error) {
