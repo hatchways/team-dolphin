@@ -80,13 +80,6 @@ const Mention = ({ mention }) => {
         title="mention cover"
       />
       <CardContent className={classes.content}>
-<<<<<<< HEAD
-        <Typography variant="h6" gutterBottom>
-          {mention.title.substring(0, indexK)}
-          {/* <span style={{ color: "#536dfe" }}>{keyword}</span> */}
-          {mention.title.substring(indexK + keyword.length)}
-        </Typography>
-=======
         <Box component="div" className={classes.titleBox}>
           <Typography variant="h6" gutterBottom>
             {mention.title.substring(0, indexK)}
@@ -94,7 +87,6 @@ const Mention = ({ mention }) => {
             {mention.title.substring(indexK + keyword.length)}
           </Typography>
         </Box>
->>>>>>> dev
         <Typography
           vairant="subtitle1"
           className={classes.subtitle}

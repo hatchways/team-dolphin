@@ -80,7 +80,6 @@ const signIn = async (req, res) => {
   }
 };
 
-
 // @desc    Get user profile
 // @route   GET /api/users/profile
 // @access  Private

@@ -7,7 +7,15 @@ import { UserContext } from "../context/user";
 import { makeStyles } from "@material-ui/core/styles";
 import MentionList from "../layout/MentionList";
 
-const HomePage = () => {
+const useStyles = makeStyles((theme) => ({
+  box: {
+    alignItems: "center",
+    margin: theme.spacing(6, 3, 4, 0),
+    width: "80%",
+  },
+}));
+
+const HomePage = ({ history }) => {
   const [mentionDatas, setMentionDatas] = useState([]);
   const classes = useStyles();
   const { isAuth, user } = useContext(UserContext);
@@ -18,27 +26,14 @@ const HomePage = () => {
         history.push("/login");
       }
     });
-    const config = {
-      headers: {
-        Authorization: `Bearer ${user.token}`,
-      },
-    };
     async function fetchMentions() {
-      let res = await axios.get("api/mentions", config);
-      // console.log(res.data);
-      // setMentionDatas(response.data);
+      let respond = await axios.get("api/mentions?platforms=reddit");
+      console.log(respond.data);
+      setMentionDatas(respond.data.mentions);
     }
 
-    // fetchMentions();
+    fetchMentions();
   }, []);
-
-  const useStyles = makeStyles((theme) => ({
-    box: {
-      alignItems: "center",
-      margin: theme.spacing(6, 3, 4, 0),
-      width: "80%",
-    },
-  }));
 
   return (
     <>

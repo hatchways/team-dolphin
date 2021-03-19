@@ -81,7 +81,6 @@ const Login = () => {
     axios
       .post("/api/users/auth/signin", loginUser)
       .then((res) => {
-        console.log(res);
         setUser(res.data.email, res.data.name);
         history.push("/");
       })
