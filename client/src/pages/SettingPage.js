@@ -17,8 +17,10 @@ const useStyles = makeStyles((theme) => ({
   },
   rightPanel: {
     paddingTop: theme.spacing(8),
-    paddingLeft: theme.spacing(8),
+    paddingLeft: theme.spacing(20),
     backgroundColor: "#FAFBFF",
+    height: "90vh",
+    overflow: "hidden",
   },
   icon: {
     color: theme.palette.primary.main,
@@ -34,7 +36,7 @@ const SettingPage = () => {
       <AppBarLoggedIn />
       <BrowserRouter>
         <Grid container>
-          <Grid item xs={4} className={classes.leftPanel}>
+          <Grid item xs={3} className={classes.leftPanel}>
             <Typography variant="h3" align="left">
               Settings
               <FontAwesomeIcon
@@ -45,7 +47,7 @@ const SettingPage = () => {
             </Typography>
             <SettingTab />
           </Grid>
-          <Grid item xs={8} className={classes.rightPanel}>
+          <Grid item xs={9} className={classes.rightPanel}>
             <Switch>
               <Route exact path="/setting" component={SettingCompany}></Route>
               <Route path="/setting/company" component={SettingCompany}></Route>
