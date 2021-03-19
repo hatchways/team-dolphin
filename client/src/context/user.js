@@ -4,27 +4,21 @@ import axios from "axios";
 
 const UserContext = createContext();
 
-const checkAuth = async () => {
-  const res = await axios.get("/api/users/me", {
-    withCredentials: true,
-  });
-  if (res.status === 200) return true;
-  return false;
-};
-
 const initialState = {
-  isAuthenticated: checkAuth() ? true : false,
+  isAuthenticated: null,
+  user: {},
+  searchTerm: "",
 };
 
 const UserProvider = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
-  const setUser = (email, name) => {
+  const setUser = (isAuthenticated, user) => {
     dispatch({
       type: "SET_USER",
       payload: {
-        email,
-        name,
+        isAuthenticated,
+        user,
       },
     });
   };
@@ -38,18 +32,18 @@ const UserProvider = ({ children }) => {
     });
   };
 
-  useEffect(() => {
-    const authenticate = async () => {
-      try {
-        const res = await axios.get("/api/users/me", {
-          withCredentials: true,
-        });
-        setUser(res.data.email, res.data.name);
-      } catch (error) {
-        console.log("error");
-      }
-    };
+  const authenticate = async () => {
+    try {
+      const res = await axios.get("/api/users/me", {
+        withCredentials: true,
+      });
+      setUser(true, { email: res.data.email, name: res.data.name });
+    } catch (error) {
+      setUser(false, {});
+    }
+  };
 
+  useEffect(() => {
     authenticate();
   }, []);
 

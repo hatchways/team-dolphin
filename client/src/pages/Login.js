@@ -62,11 +62,7 @@ const Login = () => {
 
   const [snackbarOpen, setSnackbarOpen] = useState(false);
 
-  const { setUser, isAuthenticated } = useContext(UserContext);
-
-  useEffect(() => {
-    if (isAuthenticated) history.push("/");
-  }, []);
+  const { setUser, isAuthenticated, loading } = useContext(UserContext);
 
   const handleUserInput = (e) => {
     setLoginUser({
@@ -89,6 +85,14 @@ const Login = () => {
         setErrorMessage(err.response.data.message);
       });
   };
+
+  if (isAuthenticated === null) {
+    return <div>Loading...</div>;
+  }
+
+  if (isAuthenticated) {
+    history.push("/");
+  }
 
   return (
     <div className={classes.root}>

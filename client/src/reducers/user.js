@@ -1,7 +1,11 @@
 const reducer = (state, action) => {
   switch (action.type) {
     case "SET_USER":
-      return { ...state, isAuthenticated: true, user: action.payload };
+      return {
+        ...state,
+        isAuthenticated: action.payload.isAuthenticated,
+        user: action.payload.user,
+      };
     case "SET_SEARCH_TERM":
       return {
         ...state,

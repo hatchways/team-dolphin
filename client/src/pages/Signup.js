@@ -84,10 +84,6 @@ const Signup = () => {
 
   const { setUser, isAuthenticated } = useContext(UserContext);
 
-  useEffect(() => {
-    if (isAuthenticated) history.push("/");
-  }, []);
-
   const handleUserInput = (e) => {
     setSignupUser({
       ...signupUser,
@@ -132,6 +128,14 @@ const Signup = () => {
       setFormErrors(false);
     }
   }, [signupUser]);
+
+  if (isAuthenticated === null) {
+    return <div>Loading...</div>;
+  }
+
+  if (isAuthenticated) {
+    history.push("/");
+  }
 
   return (
     <div className={classes.root}>
