@@ -9,6 +9,7 @@ import {
 import { makeStyles } from "@material-ui/core/styles";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSmile } from "@fortawesome/free-regular-svg-icons";
+import redditLogo from "../utils/images/reddit-logo.png"
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -67,6 +68,15 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+  const image = (image) => {
+    if (image === "default" || image === "self") {
+      return redditLogo;
+    } else {
+      return image;
+    }
+  };
+
+
 const Mention = ({ mention }) => {
   const classes = useStyles();
   const keyword = "DolphinCorp";
@@ -76,7 +86,7 @@ const Mention = ({ mention }) => {
   return (
     <Card className={classes.root}>
       <CardMedia
-        image={mention.image}
+        image={image(mention.image)}
         className={classes.media}
         title="mention cover"
       />

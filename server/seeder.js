@@ -1,7 +1,6 @@
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const users = require("./data/users");
-const mentions = require("./data/mentions");
 const User = require("./models/userModel");
 const Mention = require("./models/mentionModel");
 
@@ -30,7 +29,6 @@ const importData = async () => {
     await User.deleteMany();
     await Mention.deleteMany();
     await User.insertMany(users);
-    await Mention.insertMany(mentions);
     console.log("##### Data Imported!");
     process.exit();
   } catch (error) {
