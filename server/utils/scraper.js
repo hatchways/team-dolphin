@@ -4,9 +4,9 @@ const { searchRecursive } = require("../utils/reddit"); // Added for Co-op Midte
 
       // Added for Co-op Midterm Presentation
       // To be handled later on by BullMQ
-      const addMentionsToDB = async () => {
+      const addMentionsToDB = async (company) => {
         try {
-          const posts = await searchRecursive(user.name);
+          const posts = await searchRecursive(company);
           await Mention.deleteMany();
           await Mention.insertMany(posts);
         } catch (error) {
