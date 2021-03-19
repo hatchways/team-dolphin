@@ -43,12 +43,22 @@ const UserProvider = ({ children }) => {
     }
   };
 
+  async function getMentions() {
+    try {
+      const res = await axios.get("/api/mentions?platforms=reddit");
+      return res.data.mentions;
+    } catch (err) {
+      return `message: ${err}`;
+    }
+  }
+
   useEffect(() => {
     authenticate();
   }, []);
 
   return (
-    <UserContext.Provider value={{ ...state, setUser, setSearchTerm }}>
+    <UserContext.Provider
+      value={{ ...state, setUser, setSearchTerm, getMentions }}>
       {children}
     </UserContext.Provider>
   );

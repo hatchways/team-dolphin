@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import AppBarLoggedIn from "../layout/AppBarLoggedIn";
 import { Grid, Typography, Box } from "@material-ui/core";
 import { UserContext } from "../context/user";
@@ -18,7 +18,12 @@ const useStyles = makeStyles((theme) => ({
 const HomePage = () => {
   let history = useHistory();
   const classes = useStyles();
-  const { isAuthenticated } = useContext(UserContext);
+  const [mentionDatas, setMentionDatas] = useState([]);
+  const { isAuthenticated, getMentions } = useContext(UserContext);
+
+  useEffect(() => {
+    getMentions().then((data) => setMentionDatas(data));
+  }, [getMentions]);
 
   if (isAuthenticated === null) {
     return <p>Loading...</p>;
@@ -42,7 +47,7 @@ const HomePage = () => {
             </Typography>
           </Box>
           {mentionDatas.map((mentionData) => (
-            <Mention key={mentionData.id} mention={mentionData} />
+            <Mention key={mentionData._id} mention={mentionData} />
           ))}
         </Grid>
         <Grid item xs={2} style={{ backgroundColor: "#FAFBFF" }}></Grid>

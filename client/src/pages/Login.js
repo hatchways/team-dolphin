@@ -77,7 +77,7 @@ const Login = () => {
     axios
       .post("/api/users/auth/signin", loginUser)
       .then((res) => {
-        setUser(res.data.email, res.data.name);
+        setUser(true, { email: res.data.email, name: res.data.name });
         history.push("/");
       })
       .catch((err) => {

@@ -106,7 +106,7 @@ const Signup = () => {
         password: signupUser.password,
       })
       .then((res) => {
-        setUser(res.data.email, res.data.name);
+        setUser(true, { email: res.data.email, name: res.data.name });
         history.push("/");
       })
       .catch((err) => {

@@ -55,6 +55,7 @@ const useStyles = makeStyles((theme) => ({
   icon: {
     alignSelf: "start",
     padding: theme.spacing(2),
+    marginLeft: "auto",
     color: theme.palette.primary.main,
   },
   titleBox: {
@@ -82,16 +83,16 @@ const Mention = ({ mention }) => {
       <CardContent className={classes.content}>
         <Box component="div" className={classes.titleBox}>
           <Typography variant="h6" gutterBottom>
-            {mention.title.substring(0, indexK)}
+            {/* {mention.title.substring(0, indexK)}
             <span style={{ color: "#536dfe" }}>{keyword}</span>
-            {mention.title.substring(indexK + keyword.length)}
+            {mention.title.substring(indexK + keyword.length)} */}
+            {mention.title}
           </Typography>
         </Box>
         <Typography
           vairant="subtitle1"
           className={classes.subtitle}
-          gutterBottom
-        >
+          gutterBottom>
           {mention.platform}
         </Typography>
         <Box component="div" classes={{ root: classes.customBox }}>
