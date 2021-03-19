@@ -1,7 +1,6 @@
 const generateToken = require("../config/generateToken");
 const User = require("../models/userModel");
-const Mention = require("../models/mentionModel"); // Added for Co-op Midterm Presentation
-const { searchRecursive } = require("../utils/reddit"); // Added for Co-op Midterm Presentation
+const { addMentionsToDB } = require("../utils/scraper"); // Added for Co-op Midterm Presentation
 
 // @desc    Register a new user
 // @route   POST /api/users/auth/signup
@@ -33,18 +32,6 @@ const signUp = async (req, res) => {
         httpOnly: true,
         secure: false, // should be true in Production !
       });
-
-      // Added for Co-op Midterm Presentation
-      // To be handled later on by BullMQ
-      const addMentionsToDB = async () => {
-        try {
-          const posts = await searchRecursive(user.name);
-          await Mention.deleteMany();
-          await Mention.insertMany(posts);
-        } catch (error) {
-          console.log(error.message);
-        }
-      };
 
       // Added for Co-op Midterm Presentation
       // To be handled later on by BullMQ
@@ -81,18 +68,6 @@ const signIn = async (req, res) => {
 
     // Added for Co-op Midterm Presentation
     // To be handled later on by BullMQ
-    const addMentionsToDB = async () => {
-      try {
-        const posts = await searchRecursive(user.name);
-        await Mention.deleteMany();
-        await Mention.insertMany(posts);
-      } catch (error) {
-        console.log(error.message);
-      }
-    };
-
-    // Added for Co-op Midterm Presentation
-    // To be handled later on by BullMQ
     await addMentionsToDB();
 
     res.status(201).json({
@@ -105,14 +80,12 @@ const signIn = async (req, res) => {
   }
 };
 
+
 // @desc    Get user profile
 // @route   GET /api/users/profile
 // @access  Private
-// @desc    Get user profile
-// @route   GET /api/users/profile
-// @access  Private
-const getUserProfile = asyncHandler(async (req, res) => {
+const getUserProfile = async (req, res) => {
   res.json(req.user);
-});
+};
 
 module.exports = { signUp, signIn, getUserProfile };

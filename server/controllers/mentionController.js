@@ -1,5 +1,6 @@
 const Mention = require("../models/mentionModel");
 
+
 // @desc    Get Mentions
 // @route   GET /api/mentions
 // @access  Private
