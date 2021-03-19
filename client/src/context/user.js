@@ -59,6 +59,7 @@ const UserProvider = ({ children }) => {
       const res = await axios.get("/api/users/me", {
         withCredentials: true,
       });
+      console.log(res);
       setUser(res.data.email, res.data.name);
       return res.status === 200;
     } catch (err) {

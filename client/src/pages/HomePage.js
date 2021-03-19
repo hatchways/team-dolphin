@@ -16,17 +16,19 @@ const HomePage = ({ history }) => {
         history.push("/login");
       }
     });
+    const config = {
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
+    };
+    async function fetchMentions() {
+      let res = await axios.get("api/mentions", config);
+      // console.log(res.data);
+      // setMentionDatas(response.data);
+    }
+
+    // fetchMentions();
   }, []);
-
-  // useEffect(() => {
-  //   async function fetchMyAPI() {
-  //     let response = await axios.get("api/mentions");
-  //     console.log(response.data);
-  //     setMentionDatas(response.data);
-  //   }
-
-  //   fetchMyAPI();
-  // });
 
   return (
     <>

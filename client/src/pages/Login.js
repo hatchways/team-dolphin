@@ -81,6 +81,7 @@ const Login = () => {
     axios
       .post("/api/users/auth/signin", loginUser)
       .then((res) => {
+        console.log(res);
         setUser(res.data.email, res.data.name);
         history.push("/");
       })
@@ -132,7 +133,8 @@ const Login = () => {
               variant="contained"
               color="primary"
               type="submit"
-              className={`${classes.button} ${classes.loginButton}`}>
+              className={`${classes.button} ${classes.loginButton}`}
+            >
               LOG IN
             </Button>
           </form>
