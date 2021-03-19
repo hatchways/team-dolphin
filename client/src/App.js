@@ -8,12 +8,8 @@ import SettingPage from "./pages/SettingPage";
 import Signup from "./pages/Signup";
 import Login from "./pages/Login";
 import "./App.css";
-import { Redirect } from "react-router-dom";
 
 function App() {
-  const { isAuthenticated } = useContext(UserContext);
-  // console.log(isAuthenticated);
-
   return (
     <MuiThemeProvider theme={theme}>
       <BrowserRouter>

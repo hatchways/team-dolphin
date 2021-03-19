@@ -1,8 +1,7 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext } from "react";
 import AppBarLoggedIn from "../layout/AppBarLoggedIn";
 import { Grid, Typography, Box } from "@material-ui/core";
 import { UserContext } from "../context/user";
-import axios from "axios";
 import { useHistory } from "react-router-dom";
 import Mention from "../layout/Mention";
 import MentionList from "../layout/MentionList";
@@ -19,11 +18,7 @@ const useStyles = makeStyles((theme) => ({
 const HomePage = () => {
   let history = useHistory();
   const classes = useStyles();
-  const { searchTerm, loading, isAuthenticated } = useContext(UserContext);
-
-  // useEffect(() => {
-  //   axios.get(`/api/mentions?keyword=${searchTerm}`)
-  // }, [searchTerm])
+  const { isAuthenticated } = useContext(UserContext);
 
   if (isAuthenticated === null) {
     return <p>Loading...</p>;
