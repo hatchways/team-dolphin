@@ -11,6 +11,7 @@ import React, { useState, useEffect, useContext } from "react";
 import { useHistory } from "react-router-dom";
 import { UserContext } from "../context/user";
 import AppBarNotLoggedIn from "../layout/AppBarNotLoggedIn";
+import Spinner from "../layout/Spinner";
 
 import { makeStyles } from "@material-ui/core/styles";
 
@@ -62,7 +63,9 @@ const Login = () => {
 
   const [snackbarOpen, setSnackbarOpen] = useState(false);
 
-  const { setUser, isAuthenticated, loading } = useContext(UserContext);
+  const { setUser, isAuthenticated, loading, authenticate, user } = useContext(
+    UserContext
+  );
 
   const handleUserInput = (e) => {
     setLoginUser({
@@ -78,6 +81,7 @@ const Login = () => {
       .post("/api/users/auth/signin", loginUser)
       .then((res) => {
         setUser(true, { email: res.data.email, name: res.data.name });
+        // localStorage.setItem("isAuthenticated", JSON.stringify(true));
         history.push("/");
       })
       .catch((err) => {
@@ -86,13 +90,12 @@ const Login = () => {
       });
   };
 
-  if (isAuthenticated === null) {
-    return <div>Loading...</div>;
-  }
-
-  if (isAuthenticated) {
-    history.push("/");
-  }
+  useEffect(() => {
+    authenticate();
+    if (isAuthenticated) {
+      history.push("/");
+    }
+  }, [isAuthenticated]);
 
   return (
     <div className={classes.root}>

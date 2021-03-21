@@ -6,6 +6,7 @@ import { useHistory } from "react-router-dom";
 import Mention from "../layout/Mention";
 import MentionList from "../layout/MentionList";
 import { makeStyles } from "@material-ui/core/styles";
+import Spinner from "../layout/Spinner";
 
 const useStyles = makeStyles((theme) => ({
   box: {
@@ -19,19 +20,22 @@ const HomePage = () => {
   let history = useHistory();
   const classes = useStyles();
   const [mentionDatas, setMentionDatas] = useState([]);
-  const { isAuthenticated, getMentions } = useContext(UserContext);
+  const {
+    isAuthenticated,
+    getMentions,
+    dispatch,
+    loading,
+    authenticate,
+    error,
+  } = useContext(UserContext);
 
   useEffect(() => {
-    getMentions().then((data) => setMentionDatas(data));
-  }, [getMentions]);
+    authenticate();
+    console.log(error);
+    getMentions().then((data) => (error ? null : setMentionDatas(data)));
+  }, [isAuthenticated]);
 
-  if (isAuthenticated === null) {
-    return <p>Loading...</p>;
-  }
-
-  if (isAuthenticated === false) {
-    history.push("/login");
-  }
+  if (loading) return <Spinner />;
 
   return (
     <>

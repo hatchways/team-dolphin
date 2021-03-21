@@ -1,11 +1,13 @@
-import React, { createContext, useReducer, useEffect } from "react";
+import React, { createContext, useReducer } from "react";
 import reducer from "../reducers/user";
 import axios from "axios";
 
 const UserContext = createContext();
 
 const initialState = {
-  isAuthenticated: null,
+  isAuthenticated: false,
+  loading: false,
+  error: null,
   user: {},
   searchTerm: "",
 };
@@ -15,7 +17,7 @@ const UserProvider = ({ children }) => {
 
   const setUser = (isAuthenticated, user) => {
     dispatch({
-      type: "SET_USER",
+      type: "LOGIN_SUCCESS",
       payload: {
         isAuthenticated,
         user,
@@ -32,13 +34,27 @@ const UserProvider = ({ children }) => {
     });
   };
 
+  const setLoading = () => {
+    dispatch({
+      type: "SET_LOADING",
+    });
+  };
+
   const authenticate = async () => {
     try {
+      setLoading();
       const res = await axios.get("/api/users/me", {
         withCredentials: true,
       });
       setUser(true, { email: res.data.email, name: res.data.name });
     } catch (error) {
+      console.log(error.response.data.message);
+      dispatch({
+        type: "LOGIN_ERROR",
+        payload: {
+          error: error.response,
+        },
+      });
       setUser(false, {});
     }
   };
@@ -52,13 +68,16 @@ const UserProvider = ({ children }) => {
     }
   }
 
-  useEffect(() => {
-    authenticate();
-  }, []);
-
   return (
     <UserContext.Provider
-      value={{ ...state, setUser, setSearchTerm, getMentions }}>
+      value={{
+        ...state,
+        setUser,
+        setSearchTerm,
+        getMentions,
+        authenticate,
+        dispatch,
+      }}>
       {children}
     </UserContext.Provider>
   );
