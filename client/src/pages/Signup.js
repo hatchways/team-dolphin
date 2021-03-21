@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useHistory } from "react-router-dom";
 import { UserContext } from "../context/user";
+import { register } from "../actions/userActions";
 
 import {
   Typography,
@@ -82,7 +83,7 @@ const Signup = () => {
 
   const [snackbarOpen, setSnackbarOpen] = useState(false);
 
-  const { setUser, isAuthenticated } = useContext(UserContext);
+  const { setUser, isAuthenticated, dispatch } = useContext(UserContext);
 
   const handleUserInput = (e) => {
     setSignupUser({
@@ -91,7 +92,7 @@ const Signup = () => {
     });
   };
 
-  const handleSignup = (e) => {
+  const handleSignup = async (e) => {
     e.preventDefault();
 
     if (formErrors) {
@@ -99,20 +100,17 @@ const Signup = () => {
       return setSnackbarOpen(true);
     }
 
-    axios
-      .post("/api/users/auth/signup", {
+    try {
+      await register(dispatch, {
         email: signupUser.email,
         name: signupUser.companyName,
         password: signupUser.password,
-      })
-      .then((res) => {
-        setUser(true, { email: res.data.email, name: res.data.name });
-        history.push("/");
-      })
-      .catch((err) => {
-        setSnackbarOpen(true);
-        setErrorMessage(err.response.data.message);
       });
+      history.push("/");
+    } catch (err) {
+      setSnackbarOpen(true);
+      setErrorMessage(err.response.data.message);
+    }
   };
 
   useEffect(() => {

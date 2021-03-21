@@ -1,11 +1,11 @@
 const reducer = (state, action) => {
   switch (action.type) {
-    case "REQUEST_LOGIN":
+    case "USER_REQUEST":
       return {
         ...state,
         loading: true,
       };
-    case "LOGIN_SUCCESS":
+    case "SET_USER":
       return {
         ...state,
         isAuthenticated: action.payload.isAuthenticated,
@@ -23,7 +23,7 @@ const reducer = (state, action) => {
         user: {},
         isAuthenticated: false,
       };
-    case "LOGIN_ERROR":
+    case "SET_ERROR":
       return {
         ...state,
         loading: false,

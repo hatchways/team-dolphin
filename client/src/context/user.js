@@ -17,7 +17,7 @@ const UserProvider = ({ children }) => {
 
   const setUser = (isAuthenticated, user) => {
     dispatch({
-      type: "LOGIN_SUCCESS",
+      type: "SET_USER",
       payload: {
         isAuthenticated,
         user,
@@ -50,7 +50,7 @@ const UserProvider = ({ children }) => {
     } catch (error) {
       console.log(error.response.data.message);
       dispatch({
-        type: "LOGIN_ERROR",
+        type: "SET_ERROR",
         payload: {
           error: error.response,
         },

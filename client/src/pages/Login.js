@@ -11,6 +11,7 @@ import React, { useState, useEffect, useContext } from "react";
 import { useHistory } from "react-router-dom";
 import { UserContext } from "../context/user";
 import AppBarNotLoggedIn from "../layout/AppBarNotLoggedIn";
+import { login } from "../actions/userActions";
 import Spinner from "../layout/Spinner";
 
 import { makeStyles } from "@material-ui/core/styles";
@@ -63,9 +64,14 @@ const Login = () => {
 
   const [snackbarOpen, setSnackbarOpen] = useState(false);
 
-  const { setUser, isAuthenticated, loading, authenticate, user } = useContext(
-    UserContext
-  );
+  const {
+    setUser,
+    isAuthenticated,
+    loading,
+    authenticate,
+    user,
+    dispatch,
+  } = useContext(UserContext);
 
   const handleUserInput = (e) => {
     setLoginUser({
@@ -74,20 +80,16 @@ const Login = () => {
     });
   };
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
 
-    axios
-      .post("/api/users/auth/signin", loginUser)
-      .then((res) => {
-        setUser(true, { email: res.data.email, name: res.data.name });
-        // localStorage.setItem("isAuthenticated", JSON.stringify(true));
-        history.push("/");
-      })
-      .catch((err) => {
-        setSnackbarOpen(true);
-        setErrorMessage(err.response.data.message);
-      });
+    try {
+      await login(dispatch, loginUser);
+    } catch (err) {
+      console.log(err);
+      setSnackbarOpen(true);
+      setErrorMessage(err.response.data.message);
+    }
   };
 
   useEffect(() => {
