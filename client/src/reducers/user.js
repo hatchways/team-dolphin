@@ -8,9 +8,10 @@ const reducer = (state, action) => {
     case "SET_USER":
       return {
         ...state,
-        isAuthenticated: action.payload.isAuthenticated,
+        isAuthenticated: true,
         user: action.payload.user,
         loading: false,
+        error: null,
       };
     case "SET_SEARCH_TERM":
       return {

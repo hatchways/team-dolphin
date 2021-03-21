@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useHistory } from "react-router-dom";
 import { UserContext } from "../context/user";
-import { register } from "../actions/userActions";
+import { register } from "../actions/user";
 
 import {
   Typography,

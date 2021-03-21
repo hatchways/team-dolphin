@@ -7,6 +7,7 @@ import Mention from "../layout/Mention";
 import MentionList from "../layout/MentionList";
 import { makeStyles } from "@material-ui/core/styles";
 import Spinner from "../layout/Spinner";
+import { authenticate } from "../actions/user";
 
 const useStyles = makeStyles((theme) => ({
   box: {
@@ -20,17 +21,12 @@ const HomePage = () => {
   let history = useHistory();
   const classes = useStyles();
   const [mentionDatas, setMentionDatas] = useState([]);
-  const {
-    isAuthenticated,
-    getMentions,
-    dispatch,
-    loading,
-    authenticate,
-    error,
-  } = useContext(UserContext);
+  const { isAuthenticated, getMentions, dispatch, loading, error } = useContext(
+    UserContext
+  );
 
   useEffect(() => {
-    authenticate();
+    authenticate(dispatch);
     console.log(error);
     getMentions().then((data) => (error ? null : setMentionDatas(data)));
   }, [isAuthenticated]);
