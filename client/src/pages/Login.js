@@ -13,6 +13,7 @@ import { UserContext } from "../context/user";
 import AppBarNotLoggedIn from "../layout/AppBarNotLoggedIn";
 import { login } from "../actions/user";
 import Spinner from "../layout/Spinner";
+import { authenticate } from "../actions/user";
 
 import { makeStyles } from "@material-ui/core/styles";
 
@@ -64,15 +65,9 @@ const Login = () => {
 
   const [snackbarOpen, setSnackbarOpen] = useState(false);
 
-  const {
-    setUser,
-    isAuthenticated,
-    loading,
-    authenticate,
-    user,
-    dispatch,
-    error,
-  } = useContext(UserContext);
+  const { isAuthenticated, loading, user, dispatch, error } = useContext(
+    UserContext
+  );
 
   const handleUserInput = (e) => {
     setLoginUser({
@@ -94,12 +89,12 @@ const Login = () => {
     }
   };
 
-  // useEffect(() => {
-  //   authenticate(dispatch);
-  //   if (isAuthenticated) {
-  //     history.push("/");
-  //   }
-  // }, [isAuthenticated]);
+  useEffect(() => {
+    authenticate(dispatch);
+    if (isAuthenticated) {
+      history.push("/");
+    }
+  }, [isAuthenticated]);
 
   return (
     <div className={classes.root}>
