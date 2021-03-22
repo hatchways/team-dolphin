@@ -6,7 +6,7 @@ import Mention from "../layout/Mention";
 import MentionList from "../layout/MentionList";
 import { makeStyles } from "@material-ui/core/styles";
 import Spinner from "../layout/Spinner";
-import { authenticate } from "../actions/user";
+import { getMentions } from "../hooks/getMentions";
 
 const useStyles = makeStyles((theme) => ({
   box: {
@@ -19,11 +19,11 @@ const useStyles = makeStyles((theme) => ({
 const HomePage = () => {
   const classes = useStyles();
   const [mentionDatas, setMentionDatas] = useState([]);
-  const { getMentions, loading, error } = useContext(UserContext);
+  const { loading, error, searchTerm } = useContext(UserContext);
 
   useEffect(() => {
-    getMentions().then((data) => setMentionDatas(data));
-  }, []);
+    getMentions(searchTerm).then((data) => setMentionDatas(data));
+  }, [searchTerm]);
 
   if (loading) return <Spinner />;
 
