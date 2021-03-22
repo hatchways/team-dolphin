@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useHistory } from "react-router-dom";
 import { UserContext } from "../context/user";
-import { register } from "../actions/user";
+import { register, validateRegistration } from "../actions/user";
 
 import {
   Typography,
@@ -79,11 +79,10 @@ const Signup = () => {
   });
 
   const [formErrors, setFormErrors] = useState(false);
-  const [errorMessage, setErrorMessage] = useState(null);
 
   const [snackbarOpen, setSnackbarOpen] = useState(false);
 
-  const { setUser, isAuthenticated, dispatch } = useContext(UserContext);
+  const { isAuthenticated, dispatch, error } = useContext(UserContext);
 
   const handleUserInput = (e) => {
     setSignupUser({
@@ -96,7 +95,7 @@ const Signup = () => {
     e.preventDefault();
 
     if (formErrors) {
-      setErrorMessage("Please review the form");
+      validateRegistration(dispatch);
       return setSnackbarOpen(true);
     }
 
@@ -109,7 +108,6 @@ const Signup = () => {
       history.push("/");
     } catch (err) {
       setSnackbarOpen(true);
-      setErrorMessage(err.response.data.message);
     }
   };
 
@@ -219,7 +217,7 @@ const Signup = () => {
         </Paper>
         <Snackbar open={snackbarOpen}>
           <Alert onClose={() => setSnackbarOpen(false)} severity="error">
-            {errorMessage}
+            {error}
           </Alert>
         </Snackbar>
       </div>

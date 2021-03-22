@@ -18,13 +18,21 @@ export const login = async (dispatch, payload) => {
       },
     });
   } catch (err) {
-    console.log("RETURN");
     dispatch({
       type: "SET_ERROR",
       payload: { error: err.response.data.message },
     });
-    return err;
+    throw err;
   }
+};
+
+export const validateRegistration = (dispatch) => {
+  dispatch({
+    type: "SET_ERROR",
+    payload: {
+      error: "Please review the form",
+    },
+  });
 };
 
 // Register User Action
@@ -51,7 +59,7 @@ export const register = async (dispatch, payload) => {
       type: "SET_ERROR",
       payload: { error: err.response.data.message },
     });
-    return err;
+    throw err;
   }
 };
 

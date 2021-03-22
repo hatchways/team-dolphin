@@ -27,7 +27,6 @@ const HomePage = () => {
 
   useEffect(() => {
     authenticate(dispatch);
-    console.log(error);
     getMentions().then((data) => (error ? null : setMentionDatas(data)));
   }, [isAuthenticated]);
 
@@ -46,9 +45,10 @@ const HomePage = () => {
               My mentions
             </Typography>
           </Box>
-          {mentionDatas.map((mentionData) => (
-            <Mention key={mentionData._id} mention={mentionData} />
-          ))}
+          {!error &&
+            mentionDatas.map((mentionData) => (
+              <Mention key={mentionData._id} mention={mentionData} />
+            ))}
         </Grid>
         <Grid item xs={2} style={{ backgroundColor: "#FAFBFF" }}></Grid>
       </Grid>

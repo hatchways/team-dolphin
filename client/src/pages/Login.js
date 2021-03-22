@@ -11,9 +11,8 @@ import React, { useState, useEffect, useContext } from "react";
 import { useHistory } from "react-router-dom";
 import { UserContext } from "../context/user";
 import AppBarNotLoggedIn from "../layout/AppBarNotLoggedIn";
-import { login } from "../actions/user";
+import { login, authenticate } from "../actions/user";
 import Spinner from "../layout/Spinner";
-import { authenticate } from "../actions/user";
 
 import { makeStyles } from "@material-ui/core/styles";
 
@@ -61,8 +60,6 @@ const Login = () => {
     password: "",
   });
 
-  const [errorMessage, setErrorMessage] = useState(null);
-
   const [snackbarOpen, setSnackbarOpen] = useState(false);
 
   const { isAuthenticated, loading, user, dispatch, error } = useContext(
@@ -81,11 +78,9 @@ const Login = () => {
 
     try {
       await login(dispatch, loginUser);
-      history.push("/");
     } catch (err) {
       console.log("ERROR: ", err);
       setSnackbarOpen(true);
-      setErrorMessage(err.response.data.message);
     }
   };
 
@@ -145,7 +140,7 @@ const Login = () => {
         </Paper>
         <Snackbar open={snackbarOpen}>
           <Alert onClose={() => setSnackbarOpen(false)} severity="error">
-            {errorMessage}
+            {error}
           </Alert>
         </Snackbar>
       </div>
