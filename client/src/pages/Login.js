@@ -12,11 +12,8 @@ import { useHistory } from "react-router-dom";
 import { UserContext } from "../context/user";
 import AppBarNotLoggedIn from "../layout/AppBarNotLoggedIn";
 import { login, authenticate } from "../actions/user";
-import Spinner from "../layout/Spinner";
 
 import { makeStyles } from "@material-ui/core/styles";
-
-import axios from "axios";
 
 const cta = {
   description: "Don't have an account?",
@@ -62,9 +59,7 @@ const Login = () => {
 
   const [snackbarOpen, setSnackbarOpen] = useState(false);
 
-  const { isAuthenticated, loading, user, dispatch, error } = useContext(
-    UserContext
-  );
+  const { isAuthenticated, dispatch, error } = useContext(UserContext);
 
   const handleUserInput = (e) => {
     setLoginUser({
@@ -85,6 +80,7 @@ const Login = () => {
   };
 
   useEffect(() => {
+    // is this redirect needed?
     authenticate(dispatch);
     if (isAuthenticated) {
       history.push("/");

@@ -2,7 +2,6 @@ import React, { useContext, useEffect, useState } from "react";
 import AppBarLoggedIn from "../layout/AppBarLoggedIn";
 import { Grid, Typography, Box } from "@material-ui/core";
 import { UserContext } from "../context/user";
-import { useHistory } from "react-router-dom";
 import Mention from "../layout/Mention";
 import MentionList from "../layout/MentionList";
 import { makeStyles } from "@material-ui/core/styles";
@@ -18,7 +17,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const HomePage = () => {
-  let history = useHistory();
   const classes = useStyles();
   const [mentionDatas, setMentionDatas] = useState([]);
   const { isAuthenticated, getMentions, dispatch, loading, error } = useContext(

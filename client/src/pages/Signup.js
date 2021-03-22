@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useHistory } from "react-router-dom";
 import { UserContext } from "../context/user";
-import { register, validateRegistration } from "../actions/user";
+import { register, validateRegistration, authenticate } from "../actions/user";
 
 import {
   Typography,
@@ -16,8 +16,6 @@ import { Alert } from "@material-ui/lab";
 
 import { makeStyles } from "@material-ui/core/styles";
 import AppBarNotLoggedIn from "../layout/AppBarNotLoggedIn";
-
-import axios from "axios";
 
 const cta = {
   description: "Already have an account?",
@@ -110,6 +108,14 @@ const Signup = () => {
       setSnackbarOpen(true);
     }
   };
+
+  useEffect(() => {
+    // is this redirect needed?
+    authenticate(dispatch);
+    if (isAuthenticated) {
+      history.push("/");
+    }
+  }, [isAuthenticated]);
 
   useEffect(() => {
     const { email, password, passwordMatch } = signupUser;
