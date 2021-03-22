@@ -1,5 +1,5 @@
 import React, { useContext, useEffect } from "react";
-import { authenticate } from "../actions/user";
+import { authenticate, setRedirect } from "../actions/user";
 import { UserContext } from "../context/user";
 
 const PagesWrapper = ({ children }) => {
