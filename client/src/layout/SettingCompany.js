@@ -96,7 +96,7 @@ const SettingCompany = () => {
               <InputBase
                 id="filled-company-name"
                 placeholder="Company name"
-                value={user ? user.name : company}
+                value={user.name}
                 fullWidth
                 classes={{ input: classes.input, root: classes.inputBase }}
                 endAdornment={
@@ -147,7 +147,7 @@ const SettingCompany = () => {
                 placeholder="subscribed email"
                 fullWidth
                 type="email"
-                defaultValue={user ? user.email : company}
+                value={user.email}
                 classes={{ input: classes.input, root: classes.inputBase }}
                 inputProps={{ "aria-label": "subscribed email" }}
               />
