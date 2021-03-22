@@ -9,14 +9,14 @@ const reducer = (state, action) => {
       return {
         ...state,
         isAuthenticated: true,
-        user: action.payload.user,
+        user: action.payload,
         loading: false,
         error: null,
       };
     case "SET_SEARCH_TERM":
       return {
         ...state,
-        searchTerm: action.payload.searchTerm,
+        searchTerm: action.payload,
       };
     case "LOGOUT":
       return {
@@ -28,7 +28,7 @@ const reducer = (state, action) => {
       return {
         ...state,
         loading: false,
-        error: action.payload.error,
+        error: action.payload,
       };
     default:
       return state;

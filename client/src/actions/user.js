@@ -11,16 +11,14 @@ export const login = async (dispatch, payload) => {
     dispatch({
       type: "SET_USER",
       payload: {
-        user: {
-          email: res.data.email,
-          name: res.data.name,
-        },
+        email: res.data.email,
+        name: res.data.name,
       },
     });
   } catch (err) {
     dispatch({
       type: "SET_ERROR",
-      payload: { error: err.response.data.message },
+      payload: err.response.data.message,
     });
     throw err;
   }
@@ -29,9 +27,7 @@ export const login = async (dispatch, payload) => {
 export const validateRegistration = (dispatch) => {
   dispatch({
     type: "SET_ERROR",
-    payload: {
-      error: "Please review the form",
-    },
+    payload: "Please review the form",
   });
 };
 
@@ -48,16 +44,14 @@ export const register = async (dispatch, payload) => {
     dispatch({
       type: "SET_USER",
       payload: {
-        user: {
-          email: res.data.email,
-          name: res.data.name,
-        },
+        email: res.data.email,
+        name: res.data.name,
       },
     });
   } catch (err) {
     dispatch({
       type: "SET_ERROR",
-      payload: { error: err.response.data.message },
+      payload: err.response.data.message,
     });
     throw err;
   }
@@ -76,25 +70,23 @@ export const authenticate = async (dispatch) => {
     dispatch({
       type: "SET_USER",
       payload: {
-        user: { email: res.data.email, name: res.data.name },
+        email: res.data.email,
+        name: res.data.name,
       },
     });
   } catch (error) {
     dispatch({
       type: "SET_ERROR",
-      payload: {
-        error: error.response.data.message,
-      },
+      payload: error.response.data.message,
     });
+    throw error;
   }
 };
 
 export const setSearchTerm = (dispatch, searchTerm) => {
   dispatch({
     type: "SET_SEARCH_TERM",
-    payload: {
-      searchTerm,
-    },
+    payload: searchTerm,
   });
 };
 

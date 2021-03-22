@@ -19,14 +19,11 @@ const useStyles = makeStyles((theme) => ({
 const HomePage = () => {
   const classes = useStyles();
   const [mentionDatas, setMentionDatas] = useState([]);
-  const { isAuthenticated, getMentions, dispatch, loading, error } = useContext(
-    UserContext
-  );
+  const { getMentions, loading, error } = useContext(UserContext);
 
   useEffect(() => {
-    authenticate(dispatch);
-    getMentions().then((data) => (error ? null : setMentionDatas(data)));
-  }, [isAuthenticated]);
+    getMentions().then((data) => setMentionDatas(data));
+  }, []);
 
   if (loading) return <Spinner />;
 

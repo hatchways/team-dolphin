@@ -28,7 +28,6 @@ const signUp = async (req, res) => {
       const token = generateToken(user._id);
       res.cookie("dolphinToken", token, {
         maxAge: 3600000,
-        // sameSite: "none",
         httpOnly: true,
         secure: false, // should be true in Production !
       });

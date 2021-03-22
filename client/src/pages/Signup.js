@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useHistory } from "react-router-dom";
 import { UserContext } from "../context/user";
-import { register, validateRegistration, authenticate } from "../actions/user";
+import { register, validateRegistration } from "../actions/user";
 
 import {
   Typography,
@@ -110,8 +110,6 @@ const Signup = () => {
   };
 
   useEffect(() => {
-    // is this redirect needed?
-    authenticate(dispatch);
     if (isAuthenticated) {
       history.push("/");
     }

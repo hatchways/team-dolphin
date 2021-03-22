@@ -6,6 +6,7 @@ import HomePage from "./pages/HomePage";
 import SettingPage from "./pages/SettingPage";
 import Signup from "./pages/Signup";
 import Login from "./pages/Login";
+import PagesWrapper from "./pages/PagesWrapper";
 import "./App.css";
 
 function App() {
@@ -13,10 +14,12 @@ function App() {
     <MuiThemeProvider theme={theme}>
       <BrowserRouter>
         <Switch>
-          <Route exact path="/" component={HomePage} />
-          <Route path="/setting" component={SettingPage} />
-          <Route path="/signup" component={Signup} />
-          <Route path="/login" component={Login} />
+          <PagesWrapper>
+            <Route exact path="/" component={HomePage} />
+            <Route path="/setting" component={SettingPage} />
+            <Route path="/signup" component={Signup} />
+            <Route path="/login" component={Login} />
+          </PagesWrapper>
         </Switch>
       </BrowserRouter>
     </MuiThemeProvider>

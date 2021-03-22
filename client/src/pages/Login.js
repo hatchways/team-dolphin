@@ -11,7 +11,7 @@ import React, { useState, useEffect, useContext } from "react";
 import { useHistory } from "react-router-dom";
 import { UserContext } from "../context/user";
 import AppBarNotLoggedIn from "../layout/AppBarNotLoggedIn";
-import { login, authenticate } from "../actions/user";
+import { login } from "../actions/user";
 
 import { makeStyles } from "@material-ui/core/styles";
 
@@ -73,15 +73,13 @@ const Login = () => {
 
     try {
       await login(dispatch, loginUser);
+      history.push("/");
     } catch (err) {
-      console.log("ERROR: ", err);
       setSnackbarOpen(true);
     }
   };
 
   useEffect(() => {
-    // is this redirect needed?
-    authenticate(dispatch);
     if (isAuthenticated) {
       history.push("/");
     }
