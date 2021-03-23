@@ -19,10 +19,10 @@ const useStyles = makeStyles((theme) => ({
 const HomePage = () => {
   const classes = useStyles();
   const [mentionDatas, setMentionDatas] = useState(null);
-  const { dispatch, error, searchTerm } = useContext(UserContext);
+  const { dispatch, error, searchTerm, user } = useContext(UserContext);
 
   useEffect(() => {
-    getMentions(dispatch, searchTerm)
+    getMentions(dispatch, searchTerm, user.platforms)
       .then((data) => setMentionDatas(data))
       .catch((err) => alert("Cookie expired. Please log in again"));
   }, [searchTerm]);

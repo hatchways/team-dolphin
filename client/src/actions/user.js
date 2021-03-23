@@ -13,6 +13,7 @@ export const login = async (dispatch, payload) => {
       payload: {
         email: res.data.email,
         name: res.data.name,
+        platforms: res.data.platforms,
       },
     });
   } catch (err) {
@@ -46,6 +47,7 @@ export const register = async (dispatch, payload) => {
       payload: {
         email: res.data.email,
         name: res.data.name,
+        platforms: res.data.platforms,
       },
     });
   } catch (err) {
@@ -72,12 +74,30 @@ export const authenticate = async (dispatch) => {
       payload: {
         email: res.data.email,
         name: res.data.name,
+        platforms: res.data.platforms,
       },
     });
   } catch (error) {
     dispatch({
       type: "SET_ERROR",
       payload: error.response.data.message,
+    });
+    throw error;
+  }
+};
+
+export const setPlatforms = async (dispatch, platforms) => {
+  dispatch({
+    type: "SET_PLATFORMS",
+    payload: platforms,
+  });
+
+  try {
+    const res = await axios.patch("/api/users/platforms", platforms);
+    return res;
+  } catch (error) {
+    dispatch({
+      type: "LOGOUT",
     });
     throw error;
   }
