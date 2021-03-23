@@ -19,10 +19,12 @@ const useStyles = makeStyles((theme) => ({
 const HomePage = () => {
   const classes = useStyles();
   const [mentionDatas, setMentionDatas] = useState(null);
-  const { error, searchTerm } = useContext(UserContext);
+  const { dispatch, error, searchTerm } = useContext(UserContext);
 
   useEffect(() => {
-    getMentions(searchTerm).then((data) => setMentionDatas(data));
+    getMentions(dispatch, searchTerm)
+      .then((data) => setMentionDatas(data))
+      .catch((err) => alert("Cookie expired. Please log in again"));
   }, [searchTerm]);
 
   if (mentionDatas === null) return <Spinner />;
