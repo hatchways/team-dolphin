@@ -6,7 +6,7 @@ import Mention from "../layout/Mention";
 import MentionList from "../layout/MentionList";
 import { makeStyles } from "@material-ui/core/styles";
 import Spinner from "../layout/Spinner";
-import { authenticate } from "../actions/user";
+import { getMentions } from "../hooks/getMentions";
 
 const useStyles = makeStyles((theme) => ({
   box: {
@@ -18,14 +18,16 @@ const useStyles = makeStyles((theme) => ({
 
 const HomePage = () => {
   const classes = useStyles();
-  const [mentionDatas, setMentionDatas] = useState([]);
-  const { getMentions, loading, error } = useContext(UserContext);
+  const [mentionDatas, setMentionDatas] = useState(null);
+  const { dispatch, error, searchTerm } = useContext(UserContext);
 
   useEffect(() => {
-    getMentions().then((data) => setMentionDatas(data));
-  }, []);
+    getMentions(dispatch, searchTerm)
+      .then((data) => setMentionDatas(data))
+      .catch((err) => alert("Cookie expired. Please log in again"));
+  }, [searchTerm]);
 
-  if (loading) return <Spinner />;
+  if (mentionDatas === null) return <Spinner />;
 
   return (
     <>
@@ -40,10 +42,13 @@ const HomePage = () => {
               My mentions
             </Typography>
           </Box>
-          {!error &&
+          {!error && mentionDatas.length > 0 ? (
             mentionDatas.map((mentionData) => (
               <Mention key={mentionData._id} mention={mentionData} />
-            ))}
+            ))
+          ) : (
+            <div>No results found</div>
+          )}
         </Grid>
         <Grid item xs={2} style={{ backgroundColor: "#FAFBFF" }}></Grid>
       </Grid>

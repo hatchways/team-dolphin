@@ -1,6 +1,5 @@
 import React, { createContext, useReducer } from "react";
 import reducer from "../reducers/user";
-import axios from "axios";
 
 const UserContext = createContext();
 
@@ -15,20 +14,10 @@ const initialState = {
 const UserProvider = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
-  async function getMentions() {
-    try {
-      const res = await axios.get("/api/mentions?platforms=reddit");
-      return res.data.mentions;
-    } catch (err) {
-      return `message: ${err}`;
-    }
-  }
-
   return (
     <UserContext.Provider
       value={{
         ...state,
-        getMentions,
         dispatch,
       }}>
       {children}
