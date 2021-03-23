@@ -19,20 +19,40 @@ const HomePage = () => {
   const classes = useStyles();
 
   const [hasMore, setHasMore] = useState(false);
-  const [mockData, setMockData] = useState([]);
+  const [page, setPage] = useState(0);
+  const [mentions, setMentions] = useState([]);
 
   const loadFunc = () => {
-    const fetchMockData = async () => {
-      // const result = await axios('/api/mentions?platforms=reddit', config);
-      // console.log(result.data.nbHits);
-      // setMockData(result.data.mentions);
+    const fetchMentions = async (pageStart) => {
+      const result = await axios(
+        `/api/mentions?platforms=reddit&page=${pageStart}`,
+        config
+      );
+      console.log('########## DATA #############');
+      console.log(result.data);
 
-      const result = await axios('https://jsonplaceholder.typicode.com/photos');
-      console.log(result.data.length);
-      console.log(result.data[0]);
-      setMockData(result.data);
+      console.log('########## hasMore #############');
+      console.log(hasMore);
+      console.log('########## page #############');
+      console.log(page);
+      setMentions((prev) => {
+        return [...prev, result.data.mentions].flat();
+      });
+      setPage((prev) => {
+        if (result.data.nextPage) {
+          return result.data.nextPage;
+        } else {
+          return prev;
+        }
+      });
+      setHasMore(result.data.nextPage ? true : false);
+
+      // const result = await axios('https://jsonplaceholder.typicode.com/photos');
+      // console.log(result.data.length);
+      // console.log(result.data[0]);
+      // setMentions(result.data);
     };
-    fetchMockData();
+    fetchMentions(page);
   };
 
   const config = {
@@ -65,9 +85,8 @@ const HomePage = () => {
                 Loading ...
               </div>
             }
-            useWindow={false}
           >
-            {mockData.map((item, index) => (
+            {mentions.map((item, index) => (
               <li key={index}>
                 {index}: {item.title}
               </li>

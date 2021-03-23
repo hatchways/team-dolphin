@@ -1,6 +1,6 @@
 const generateToken = require('../config/generateToken');
 const User = require('../models/userModel');
-// const { addMentionsToDB } = require("../utils/scraper"); // Added for Co-op Midterm Presentation
+const { addMentionsToDB } = require('../utils/scraper'); // Added for Co-op Midterm Presentation
 
 // @desc    Register a new user
 // @route   POST /api/users/auth/signup
@@ -35,7 +35,7 @@ const signUp = async (req, res) => {
 
       // Added for Co-op Midterm Presentation
       // To be handled later on by BullMQ
-      // await addMentionsToDB(user.name);
+      await addMentionsToDB(user.name);
 
       res.status(201).json({
         _id: user._id,
@@ -68,7 +68,7 @@ const signIn = async (req, res) => {
 
     // Added for Co-op Midterm Presentation
     // To be handled later on by BullMQ
-    // await addMentionsToDB(user.name);
+    await addMentionsToDB(user.name);
 
     res.status(201).json({
       _id: user._id,
