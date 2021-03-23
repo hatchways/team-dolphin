@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useHistory } from "react-router-dom";
 import { UserContext } from "../context/user";
+import { register, validateRegistration } from "../actions/user";
 
 import {
   Typography,
@@ -15,8 +16,6 @@ import { Alert } from "@material-ui/lab";
 
 import { makeStyles } from "@material-ui/core/styles";
 import AppBarNotLoggedIn from "../layout/AppBarNotLoggedIn";
-
-import axios from "axios";
 
 const cta = {
   description: "Already have an account?",
@@ -78,15 +77,10 @@ const Signup = () => {
   });
 
   const [formErrors, setFormErrors] = useState(false);
-  const [errorMessage, setErrorMessage] = useState(null);
 
   const [snackbarOpen, setSnackbarOpen] = useState(false);
 
-  const { setUser, isAuthenticated } = useContext(UserContext);
-
-  useEffect(() => {
-    if (isAuthenticated) history.push("/");
-  }, []);
+  const { isAuthenticated, dispatch, error } = useContext(UserContext);
 
   const handleUserInput = (e) => {
     setSignupUser({
@@ -95,29 +89,31 @@ const Signup = () => {
     });
   };
 
-  const handleSignup = (e) => {
+  const handleSignup = async (e) => {
     e.preventDefault();
 
     if (formErrors) {
-      setErrorMessage("Please review the form");
+      validateRegistration(dispatch);
       return setSnackbarOpen(true);
     }
 
-    axios
-      .post("/api/users/auth/signup", {
+    try {
+      await register(dispatch, {
         email: signupUser.email,
         name: signupUser.companyName,
         password: signupUser.password,
-      })
-      .then((res) => {
-        setUser(res.data.email, res.data.name);
-        history.push("/");
-      })
-      .catch((err) => {
-        setSnackbarOpen(true);
-        setErrorMessage(err.response.data.message);
       });
+      history.push("/");
+    } catch (err) {
+      setSnackbarOpen(true);
+    }
   };
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      history.push("/");
+    }
+  }, [isAuthenticated]);
 
   useEffect(() => {
     const { email, password, passwordMatch } = signupUser;
@@ -225,7 +221,7 @@ const Signup = () => {
         </Paper>
         <Snackbar open={snackbarOpen}>
           <Alert onClose={() => setSnackbarOpen(false)} severity="error">
-            {errorMessage}
+            {error}
           </Alert>
         </Snackbar>
       </div>

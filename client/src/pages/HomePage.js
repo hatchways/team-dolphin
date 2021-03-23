@@ -1,11 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import AppBarLoggedIn from '../layout/AppBarLoggedIn';
-// import Mention from '../layout/Mention';
-import MentionList from '../layout/MentionList';
-import InfiniteScroll from 'react-infinite-scroller';
 import { Grid, Typography, Box } from '@material-ui/core';
+import { UserContext } from '../context/user';
+import Mention from '../layout/Mention';
+import MentionList from '../layout/MentionList';
 import { makeStyles } from '@material-ui/core/styles';
-import axios from 'axios';
+import Spinner from '../layout/Spinner';
+import { getMentions } from '../hooks/getMentions';
 
 const useStyles = makeStyles((theme) => ({
   box: {
@@ -17,51 +18,16 @@ const useStyles = makeStyles((theme) => ({
 
 const HomePage = () => {
   const classes = useStyles();
-
-  const [hasMore, setHasMore] = useState(false);
-  const [page, setPage] = useState(0);
-  const [mentions, setMentions] = useState([]);
-
-  const loadFunc = () => {
-    const fetchMentions = async (pageStart) => {
-      const result = await axios(
-        `/api/mentions?platforms=reddit&page=${pageStart}`,
-        config
-      );
-      console.log('########## DATA #############');
-      console.log(result.data);
-
-      console.log('########## hasMore #############');
-      console.log(hasMore);
-      console.log('########## page #############');
-      console.log(page);
-      setMentions((prev) => {
-        return [...prev, result.data.mentions].flat();
-      });
-      setPage((prev) => {
-        if (result.data.nextPage) {
-          return result.data.nextPage;
-        } else {
-          return prev;
-        }
-      });
-      setHasMore(result.data.nextPage ? true : false);
-
-      // const result = await axios('https://jsonplaceholder.typicode.com/photos');
-      // console.log(result.data.length);
-      // console.log(result.data[0]);
-      // setMentions(result.data);
-    };
-    fetchMentions(page);
-  };
-
-  const config = {
-    headers: { 'Access-Control-Allow-Origin': '*' },
-  };
+  const [mentionDatas, setMentionDatas] = useState(null);
+  const { dispatch, error, searchTerm } = useContext(UserContext);
 
   useEffect(() => {
-    loadFunc();
-  }, []);
+    getMentions(dispatch, searchTerm)
+      .then((data) => setMentionDatas(data))
+      .catch((err) => alert('Cookie expired. Please log in again'));
+  }, [searchTerm]);
+
+  if (mentionDatas === null) return <Spinner />;
 
   return (
     <>
@@ -76,22 +42,13 @@ const HomePage = () => {
               My mentions
             </Typography>
           </Box>
-          <InfiniteScroll
-            pageStart={0}
-            loadMore={loadFunc}
-            hasMore={hasMore}
-            loader={
-              <div className='loader' key={0}>
-                Loading ...
-              </div>
-            }
-          >
-            {mentions.map((item, index) => (
-              <li key={index}>
-                {index}: {item.title}
-              </li>
-            ))}
-          </InfiniteScroll>
+          {!error && mentionDatas.length > 0 ? (
+            mentionDatas.map((mentionData) => (
+              <Mention key={mentionData._id} mention={mentionData} />
+            ))
+          ) : (
+            <div>No results found</div>
+          )}
         </Grid>
         <Grid item xs={2} style={{ backgroundColor: '#FAFBFF' }}></Grid>
       </Grid>
