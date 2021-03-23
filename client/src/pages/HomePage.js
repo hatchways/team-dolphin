@@ -1,9 +1,12 @@
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
 import AppBarLoggedIn from "../layout/AppBarLoggedIn";
+import { Grid, Typography, Box } from "@material-ui/core";
+import { UserContext } from "../context/user";
 import Mention from "../layout/Mention";
 import MentionList from "../layout/MentionList";
-import { Grid, Typography, Box } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
+import Spinner from "../layout/Spinner";
+import { authenticate } from "../actions/user";
 
 const useStyles = makeStyles((theme) => ({
   box: {
@@ -15,40 +18,14 @@ const useStyles = makeStyles((theme) => ({
 
 const HomePage = () => {
   const classes = useStyles();
-  const mentionDatas = [
-    {
-      title: "PayPal invested $400 in DolphinCorp PayPal invested $400",
-      id: 1,
-      platform: "Reddit",
-      image: "https://picsum.photos/100",
-      content:
-        "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisUt enim ad minim veniam, quis nostrud exercitation ullamco laboris nisquis nostrud exercitation ullamco laboris nisUt eni",
-    },
-    {
-      title: "PayPal invested $800 in DolphinCorp",
-      id: 2,
-      platform: "Facebook",
-      image: "https://picsum.photos/200/300",
-      content:
-        "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisUt enim ad minim veniam, quis nostrud exercitation ullamco laboris nisquis nostrud exercitation ullamco laboris nisUt eni",
-    },
-    {
-      title: "invested $400 in DolphinCorp",
-      id: 3,
-      platform: "Twitter",
-      image: "https://picsum.photos/200",
-      content:
-        "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisUt enim ad minim veniam, quis nostrud exercitation ullamco laboris nisquis nostrud exercitation ullamco laboris nisUt eni",
-    },
-    {
-      title: "invested $400 in DolphinCorp",
-      id: 4,
-      platform: "Twitter",
-      image: "https://picsum.photos/400",
-      content:
-        "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisUt enim ad minim veniam, quis nostrud exercitation ullamco laboris nisquis nostrud exercitation ullamco laboris nisUt eni",
-    },
-  ];
+  const [mentionDatas, setMentionDatas] = useState([]);
+  const { getMentions, loading, error } = useContext(UserContext);
+
+  useEffect(() => {
+    getMentions().then((data) => setMentionDatas(data));
+  }, []);
+
+  if (loading) return <Spinner />;
 
   return (
     <>
@@ -63,9 +40,10 @@ const HomePage = () => {
               My mentions
             </Typography>
           </Box>
-          {mentionDatas.map((mentionData) => (
-            <Mention key={mentionData.id} mention={mentionData} />
-          ))}
+          {!error &&
+            mentionDatas.map((mentionData) => (
+              <Mention key={mentionData._id} mention={mentionData} />
+            ))}
         </Grid>
         <Grid item xs={2} style={{ backgroundColor: "#FAFBFF" }}></Grid>
       </Grid>

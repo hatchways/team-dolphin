@@ -11,10 +11,9 @@ import React, { useState, useEffect, useContext } from "react";
 import { useHistory } from "react-router-dom";
 import { UserContext } from "../context/user";
 import AppBarNotLoggedIn from "../layout/AppBarNotLoggedIn";
+import { login } from "../actions/user";
 
 import { makeStyles } from "@material-ui/core/styles";
-
-import axios from "axios";
 
 const cta = {
   description: "Don't have an account?",
@@ -58,15 +57,9 @@ const Login = () => {
     password: "",
   });
 
-  const [errorMessage, setErrorMessage] = useState(null);
-
   const [snackbarOpen, setSnackbarOpen] = useState(false);
 
-  const { setUser, isAuthenticated } = useContext(UserContext);
-
-  useEffect(() => {
-    if (isAuthenticated) history.push("/");
-  }, []);
+  const { isAuthenticated, dispatch, error } = useContext(UserContext);
 
   const handleUserInput = (e) => {
     setLoginUser({
@@ -75,20 +68,22 @@ const Login = () => {
     });
   };
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
 
-    axios
-      .post("/api/users/auth/signin", loginUser)
-      .then((res) => {
-        setUser(res.data.email, res.data.name);
-        history.push("/");
-      })
-      .catch((err) => {
-        setSnackbarOpen(true);
-        setErrorMessage(err.response.data.message);
-      });
+    try {
+      await login(dispatch, loginUser);
+      history.push("/");
+    } catch (err) {
+      setSnackbarOpen(true);
+    }
   };
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      history.push("/");
+    }
+  }, [isAuthenticated]);
 
   return (
     <div className={classes.root}>
@@ -139,7 +134,7 @@ const Login = () => {
         </Paper>
         <Snackbar open={snackbarOpen}>
           <Alert onClose={() => setSnackbarOpen(false)} severity="error">
-            {errorMessage}
+            {error}
           </Alert>
         </Snackbar>
       </div>

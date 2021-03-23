@@ -28,7 +28,6 @@ const signUp = async (req, res) => {
       const token = generateToken(user._id);
       res.cookie("dolphinToken", token, {
         maxAge: 3600000,
-        sameSite: "none",
         httpOnly: true,
         secure: false, // should be true in Production !
       });
@@ -79,7 +78,6 @@ const signIn = async (req, res) => {
     res.status(401).json({ message: "Invalid email or password" });
   }
 };
-
 
 // @desc    Get user profile
 // @route   GET /api/users/profile
