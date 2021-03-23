@@ -8,7 +8,7 @@ import {
 } from "@material-ui/core";
 import { Alert } from "@material-ui/lab";
 import React, { useState, useEffect, useContext } from "react";
-import { useHistory } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 import { UserContext } from "../context/user";
 import AppBarNotLoggedIn from "../layout/AppBarNotLoggedIn";
 import { login } from "../actions/user";
@@ -49,6 +49,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Login = () => {
+  let location = useLocation();
+  let { from } = location.state || { from: { pathname: "/" } };
   let history = useHistory();
   const classes = useStyles();
 
@@ -73,7 +75,6 @@ const Login = () => {
 
     try {
       await login(dispatch, loginUser);
-      history.push("/");
     } catch (err) {
       setSnackbarOpen(true);
     }
@@ -81,7 +82,7 @@ const Login = () => {
 
   useEffect(() => {
     if (isAuthenticated) {
-      history.push("/");
+      history.replace(from);
     }
   }, [isAuthenticated]);
 

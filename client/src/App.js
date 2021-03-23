@@ -8,6 +8,7 @@ import Signup from "./pages/Signup";
 import Login from "./pages/Login";
 import PagesWrapper from "./pages/PagesWrapper";
 import "./App.css";
+import PrivateRoute from "./pages/PrivateRoute";
 
 function App() {
   return (
@@ -15,8 +16,8 @@ function App() {
       <BrowserRouter>
         <Switch>
           <PagesWrapper>
-            <Route exact path="/" component={HomePage} />
-            <Route path="/setting" component={SettingPage} />
+            <PrivateRoute exact path="/" component={HomePage} />
+            <PrivateRoute path="/setting" component={SettingPage} />
             <Route path="/signup" component={Signup} />
             <Route path="/login" component={Login} />
           </PagesWrapper>
