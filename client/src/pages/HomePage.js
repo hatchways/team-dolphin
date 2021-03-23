@@ -18,14 +18,14 @@ const useStyles = makeStyles((theme) => ({
 
 const HomePage = () => {
   const classes = useStyles();
-  const [mentionDatas, setMentionDatas] = useState([]);
-  const { loading, error, searchTerm } = useContext(UserContext);
+  const [mentionDatas, setMentionDatas] = useState(null);
+  const { error, searchTerm } = useContext(UserContext);
 
   useEffect(() => {
     getMentions(searchTerm).then((data) => setMentionDatas(data));
   }, [searchTerm]);
 
-  if (loading) return <Spinner />;
+  if (mentionDatas === null) return <Spinner />;
 
   return (
     <>
@@ -40,10 +40,13 @@ const HomePage = () => {
               My mentions
             </Typography>
           </Box>
-          {!error &&
+          {!error && mentionDatas.length > 0 ? (
             mentionDatas.map((mentionData) => (
               <Mention key={mentionData._id} mention={mentionData} />
-            ))}
+            ))
+          ) : (
+            <div>No results found</div>
+          )}
         </Grid>
         <Grid item xs={2} style={{ backgroundColor: "#FAFBFF" }}></Grid>
       </Grid>
