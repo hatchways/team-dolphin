@@ -9,6 +9,7 @@ import Login from "./pages/Login";
 import PagesWrapper from "./pages/PagesWrapper";
 import "./App.css";
 import PrivateRoute from "./pages/PrivateRoute";
+import SortToggle from "./layout/SortToggle";
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
             <PrivateRoute path="/setting" component={SettingPage} />
             <Route path="/signup" component={Signup} />
             <Route path="/login" component={Login} />
+            <Route path="/testingmaterial" component={SortToggle} />
           </PagesWrapper>
         </Switch>
       </BrowserRouter>
