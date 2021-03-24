@@ -32,7 +32,7 @@ const connectDB = async () => {
 
 connectDB();
 
-connectRedis();
+connectRedis(); // if error, try start redis server in background
 
 handleTaskQueues();
 
