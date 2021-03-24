@@ -50,10 +50,10 @@ const SearchBox = () => {
   return (
     <div className={classes.search}>
       <InputBase
-        placeholder="Company name"
+        placeholder="Search for a keyword"
         classes={{ input: classes.input }}
         className={classes.inputBase}
-        inputProps={{ "aria-label": "Company name" }}
+        inputProps={{ "aria-label": "Keyword" }}
         onChange={debounce(
           (e) => setSearchTerm(dispatch, e.target.value),
           1000
