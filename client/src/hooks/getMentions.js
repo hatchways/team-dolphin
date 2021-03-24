@@ -1,10 +1,10 @@
 import axios from 'axios';
 
-export const getMentions = async (dispatch, keyword, page) => {
+export const getMentions = async (dispatch, keyword, page = 1) => {
   try {
     const url = `/api/mentions?platforms=reddit${
       keyword ? '&keyword=' + keyword : ''
-    }&page=${page ? page : '1'}`;
+    }&page=${page}`;
 
     const res = await axios.get(url);
 

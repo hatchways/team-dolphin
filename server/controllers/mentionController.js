@@ -18,6 +18,7 @@ const getMentions = async (req, res) => {
       res.status(201).json({ mentions: [] });
     } else {
       const platformsArray = platforms.split(',');
+      const sortOption = sort ? sort : 'date';
       const dataPage = page ? parseInt(req.query.page) : 1;
       const limit = 20;
       const startIndex = (dataPage - 1) * limit;
@@ -26,17 +27,31 @@ const getMentions = async (req, res) => {
       let previousPage;
 
       // Fetching Mentions pertaining to selected platforms
-      const fetchMentions = (array) => {
-        const allMentions = [];
-        for (const platform of array) {
-          const mentions = Mention.find({ platform });
-          allMentions.push(mentions);
-        }
-        return allMentions;
+      // Sorting handled by MongoDB
+
+      const fetchMentions = async () => {
+        const getPlatformsObject = (array) => {
+          const platforms = [];
+          array.map((platform) => platforms.push({ platform }));
+          return platforms;
+        };
+
+        const getSortOption = (option) => {
+          if (option === 'date') {
+            return { date: -1 };
+          } else {
+            return { popularity: -1 };
+          }
+        };
+
+        const results = await Mention.find({
+          $or: [...getPlatformsObject(platformsArray)],
+        }).sort(getSortOption(sortOption));
+
+        return results;
       };
 
-      const result = await Promise.all(fetchMentions(platformsArray));
-      const allMentions = result.flat();
+      const allMentions = await fetchMentions();
 
       // filter by keyword
       let filteredMentions = [];
@@ -54,34 +69,6 @@ const getMentions = async (req, res) => {
         });
       }
 
-      // sort by selector
-      let sortedMentions = [];
-
-      switch (sort) {
-        case 'popularity':
-          const tempPopSorted = filteredMentions
-            .map((mention) => {
-              return [mention._id, mention.popularity];
-            })
-            .sort((a, b) => b[1] - a[1]);
-
-          sortedMentions = tempPopSorted.map((item) =>
-            filteredMentions.find((mention) => item[0] === mention._id)
-          );
-
-          break;
-        default:
-          const tempDateSorted = filteredMentions
-            .map((mention) => {
-              return [mention._id, Date.parse(mention.date)];
-            })
-            .sort((a, b) => b[1] - a[1]);
-
-          sortedMentions = tempDateSorted.map((item) =>
-            filteredMentions.find((mention) => item[0] === mention._id)
-          );
-      }
-
       if (endIndex < allMentions.length) {
         nextPage = dataPage + 1;
       }
@@ -90,10 +77,10 @@ const getMentions = async (req, res) => {
         previousPage = dataPage - 1;
       }
 
-      const paginatedMentions = sortedMentions.slice(startIndex, endIndex);
+      const paginatedMentions = allMentions.slice(startIndex, endIndex);
 
       res.json({
-        nbHits: sortedMentions.length,
+        nbHits: allMentions.length,
         hitsPerPage: 20,
         page: dataPage,
         nextPage,
