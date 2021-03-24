@@ -5,9 +5,6 @@ export const getMentions = async (dispatch, keyword, platforms, page = 1) => {
 
   let platformsString = platformsArray.join();
 
-  // if (platformsArray.length === 0) platformsString = "";
-  // else platformsString = platformsArray.join();
-
   try {
     const url = `/api/mentions?platforms=${platformsString}${
       keyword ? "&keyword=" + keyword : ""
