@@ -1,5 +1,5 @@
-import React, { createContext, useReducer } from "react";
-import reducer from "../reducers/user";
+import React, { createContext, useReducer } from 'react';
+import reducer from '../reducers/user';
 
 const UserContext = createContext();
 
@@ -8,7 +8,7 @@ const initialState = {
   loading: false,
   error: null,
   user: {},
-  searchTerm: "",
+  searchTerm: '',
 };
 
 const UserProvider = ({ children }) => {
@@ -19,7 +19,8 @@ const UserProvider = ({ children }) => {
       value={{
         ...state,
         dispatch,
-      }}>
+      }}
+    >
       {children}
     </UserContext.Provider>
   );
