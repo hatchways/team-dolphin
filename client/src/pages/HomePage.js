@@ -42,6 +42,7 @@ const HomePage = () => {
       .then((data) => {
         setMentionDatas(data.mentions);
         setHasMore(data.nextPage ? true : false);
+        console.log(data);
       })
       .catch((err) => alert("Cookie expired. Please log in again"));
   }, [searchTerm, user.platforms]);
