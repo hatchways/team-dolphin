@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext } from "react";
 import {
   List,
   ListItem,
@@ -18,6 +18,8 @@ import forbes from "../utils/images/forbes-logo.png";
 import shopify from "../utils/images/shopify-logo.png";
 import business_insider from "../utils/images/BI-logo.png";
 import { CustomizedSwitch } from "./CustomizedSwitch";
+import { UserContext } from "../context/user";
+import { setPlatforms } from "../actions/user";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -32,18 +34,13 @@ const useStyles = makeStyles((theme) => ({
 const MentionList = () => {
   const classes = useStyles();
 
-  const [state, setState] = useState({
-    checkedReddit: true,
-    checkedTwitter: true,
-    checkedFacebook: true,
-    checkedAmazon: false,
-    checkedForbes: false,
-    checkedShopify: false,
-    checkedBusinessInsider: false,
-  });
+  const { user, dispatch } = useContext(UserContext);
 
-  const handleChange = (event) => {
-    setState({ ...state, [event.target.name]: event.target.checked });
+  const togglePlatform = (event) => {
+    setPlatforms(dispatch, {
+      ...user.platforms,
+      [event.target.name]: event.target.checked,
+    }).catch((err) => alert("Cookie expired. Please log in again"));
   };
 
   return (
@@ -55,97 +52,97 @@ const MentionList = () => {
         <ListItemText primary={<Typography variant="h4">Reddit</Typography>} />
         <ListItemSecondaryAction>
           <CustomizedSwitch
-            checked={state.checkedReddit}
-            onChange={handleChange}
-            name="checkedReddit"
+            checked={user.platforms.reddit}
+            onChange={togglePlatform}
+            name="reddit"
           />
         </ListItemSecondaryAction>
       </ListItem>
       <Divider variant="middle" light />
       <ListItem className={classes.listItem}>
         <ListItemAvatar>
-          <Avatar alt="reddit" src={twitter} />
+          <Avatar alt="twitter" src={twitter} />
         </ListItemAvatar>
         <ListItemText primary={<Typography variant="h4">Twitter</Typography>} />
         <ListItemSecondaryAction>
           <CustomizedSwitch
-            checked={state.checkedTwitter}
-            onChange={handleChange}
-            name="checkedTwitter"
+            checked={user.platforms.twitter}
+            onChange={togglePlatform}
+            name="twitter"
           />
         </ListItemSecondaryAction>
       </ListItem>
       <Divider variant="middle" light />
       <ListItem className={classes.listItem}>
         <ListItemAvatar>
-          <Avatar alt="reddit" src={facebook} />
+          <Avatar alt="facebook" src={facebook} />
         </ListItemAvatar>
         <ListItemText
           primary={<Typography variant="h4">Facebook</Typography>}
         />
         <ListItemSecondaryAction>
           <CustomizedSwitch
-            checked={state.checkedFacebook}
-            onChange={handleChange}
-            name="checkedFacebook"
+            checked={user.platforms.facebook}
+            onChange={togglePlatform}
+            name="facebook"
           />
         </ListItemSecondaryAction>
       </ListItem>
       <Divider variant="middle" light />
       <ListItem className={classes.listItem}>
         <ListItemAvatar>
-          <Avatar alt="reddit" src={amazon} />
+          <Avatar alt="amazon" src={amazon} />
         </ListItemAvatar>
         <ListItemText primary={<Typography variant="h4">Amazon</Typography>} />
         <ListItemSecondaryAction>
           <CustomizedSwitch
-            checked={state.checkedAmazon}
-            onChange={handleChange}
-            name="checkedAmazon"
+            checked={user.platforms.amazon}
+            onChange={togglePlatform}
+            name="amazon"
           />
         </ListItemSecondaryAction>
       </ListItem>
       <Divider variant="middle" light />
       <ListItem className={classes.listItem}>
         <ListItemAvatar>
-          <Avatar alt="reddit" src={forbes} />
+          <Avatar alt="forbes" src={forbes} />
         </ListItemAvatar>
         <ListItemText primary={<Typography variant="h4">Forbes</Typography>} />
         <ListItemSecondaryAction>
           <CustomizedSwitch
-            checked={state.checkedForbes}
-            onChange={handleChange}
-            name="checkedForbes"
+            checked={user.platforms.forbes}
+            onChange={togglePlatform}
+            name="forbes"
           />
         </ListItemSecondaryAction>
       </ListItem>
       <Divider variant="middle" light />
       <ListItem className={classes.listItem}>
         <ListItemAvatar>
-          <Avatar alt="reddit" src={shopify} />
+          <Avatar alt="shopify" src={shopify} />
         </ListItemAvatar>
         <ListItemText primary={<Typography variant="h4">Shopify</Typography>} />
         <ListItemSecondaryAction>
           <CustomizedSwitch
-            checked={state.checkedShopify}
-            onChange={handleChange}
-            name="checkedShopify"
+            checked={user.platforms.shopify}
+            onChange={togglePlatform}
+            name="shopify"
           />
         </ListItemSecondaryAction>
       </ListItem>
       <Divider variant="middle" light />
       <ListItem className={classes.listItem}>
         <ListItemAvatar>
-          <Avatar alt="reddit" src={business_insider} />
+          <Avatar alt="businessinsider" src={business_insider} />
         </ListItemAvatar>
         <ListItemText
           primary={<Typography variant="h4">Business Insider</Typography>}
         />
         <ListItemSecondaryAction>
           <CustomizedSwitch
-            checked={state.checkedBusinessInsider}
-            onChange={handleChange}
-            name="checkedBusinessInsider"
+            checked={user.platforms.businessinsider}
+            onChange={togglePlatform}
+            name="businessinsider"
           />
         </ListItemSecondaryAction>
       </ListItem>
