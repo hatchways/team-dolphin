@@ -69,6 +69,7 @@ const getMentions = async (req, res) => {
           }
         });
       }
+      // after setting filteredMentions, nothing is done with it
 
       if (endIndex < allMentions.length) {
         nextPage = dataPage + 1;
