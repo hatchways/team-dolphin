@@ -7,6 +7,8 @@ import MentionList from "../layout/MentionList";
 import { makeStyles } from "@material-ui/core/styles";
 import Spinner from "../layout/Spinner";
 import { getMentions } from "../hooks/getMentions";
+import InfiniteScroll from "react-infinite-scroller";
+import axios from "axios";
 
 const useStyles = makeStyles((theme) => ({
   box: {
@@ -18,16 +20,45 @@ const useStyles = makeStyles((theme) => ({
 
 const HomePage = () => {
   const classes = useStyles();
+  const [hasMore, setHasMore] = useState(true);
   const [mentionDatas, setMentionDatas] = useState(null);
   const { dispatch, error, searchTerm, user } = useContext(UserContext);
 
+  const loadMore = async (newPage) => {
+    const config = {
+      headers: { "Access-Control-Allow-Origin": "*" },
+    };
+    const url =
+      "/api/mentions?platforms=reddit" +
+      (searchTerm ? "&keyword=" + searchTerm : "") +
+      "&page=" +
+      newPage;
+
+    const results = await axios(url, config);
+    setHasMore(results.data.nextPage ? true : false);
+    const newData = [...mentionDatas, results.data.mentions].flat();
+    setMentionDatas(newData);
+  };
+
   useEffect(() => {
     getMentions(dispatch, searchTerm, user.platforms)
-      .then((data) => setMentionDatas(data))
+      .then((data) => {
+        setMentionDatas(data.mentions);
+        setHasMore(data.nextPage ? true : false);
+      })
       .catch((err) => alert("Cookie expired. Please log in again"));
   }, [searchTerm, user.platforms]);
 
   if (mentionDatas === null) return <Spinner />;
+
+  const items =
+    !error && mentionDatas.length > 0 ? (
+      mentionDatas.map((mentionData) => (
+        <Mention key={mentionData._id} mention={mentionData} />
+      ))
+    ) : (
+      <div>No results found</div>
+    );
 
   return (
     <>
@@ -42,13 +73,14 @@ const HomePage = () => {
               My mentions
             </Typography>
           </Box>
-          {!error && mentionDatas.length > 0 ? (
-            mentionDatas.map((mentionData) => (
-              <Mention key={mentionData._id} mention={mentionData} />
-            ))
-          ) : (
-            <div>No results found</div>
-          )}
+
+          <InfiniteScroll
+            pageStart={1}
+            loadMore={loadMore}
+            hasMore={hasMore}
+            loader={<Spinner />}>
+            {items}
+          </InfiniteScroll>
         </Grid>
         <Grid item xs={2} style={{ backgroundColor: "#FAFBFF" }}></Grid>
       </Grid>
