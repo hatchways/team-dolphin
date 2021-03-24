@@ -8,7 +8,7 @@ import SortToggle from "../layout/SortToggle";
 import { makeStyles } from "@material-ui/core/styles";
 import Spinner from "../layout/Spinner";
 import { getMentions } from "../hooks/getMentions";
-import InfiniteScroll from "react-infinite-scroller";
+import Scroller from "../layout/Scroller";
 import axios from "axios";
 
 const useStyles = makeStyles((theme) => ({
@@ -23,7 +23,8 @@ const HomePage = () => {
   const classes = useStyles();
   const [hasMore, setHasMore] = useState(true);
   const [mentionDatas, setMentionDatas] = useState(null);
-  const [alignment, setAlignment] = useState("date");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [sort, setSort] = useState("date");
   const { dispatch, error, searchTerm, user } = useContext(UserContext);
 
   const loadMore = async (newPage) => {
@@ -34,31 +35,37 @@ const HomePage = () => {
       "/api/mentions?platforms=reddit" +
       (searchTerm ? "&keyword=" + searchTerm : "") +
       "&page=" +
-      newPage;
+      (currentPage + 1) +
+      "&sort=" +
+      sort;
 
     const results = await axios(url, config);
     setHasMore(results.data.nextPage ? true : false);
     const newData = [...mentionDatas, results.data.mentions].flat();
     setMentionDatas(newData);
+    setCurrentPage((prev) => prev + 1);
   };
 
   const handleAlignment = (event, newAlignment) => {
-    setAlignment(newAlignment);
-    getMentions(dispatch, searchTerm, 1, newAlignment)
+    getMentions(dispatch, searchTerm, user.platforms, 1, newAlignment)
       .then((data) => {
+        console.log(data);
         setMentionDatas(data.mentions);
         setHasMore(data.nextPage ? true : false);
       })
       .catch((err) => alert(err.message));
+    setSort(newAlignment);
+    setCurrentPage(1);
   };
 
   useEffect(() => {
-    getMentions(dispatch, searchTerm, user.platforms)
+    getMentions(dispatch, searchTerm, user.platforms, 1, sort)
       .then((data) => {
         setMentionDatas(data.mentions);
         setHasMore(data.nextPage ? true : false);
       })
       .catch((err) => alert("Cookie expired. Please log in again"));
+    setCurrentPage(1);
   }, [searchTerm, user.platforms]);
 
   if (mentionDatas === null) return <Spinner />;
@@ -87,18 +94,19 @@ const HomePage = () => {
             <SortToggle
               align="right"
               handleAlignment={handleAlignment}
-              alignment={alignment}
-              setAlignment={setAlignment}
+              alignment={sort}
+              setAlignment={setSort}
             />
           </Box>
 
-          <InfiniteScroll
-            pageStart={1}
-            loadMore={loadMore}
+          <Scroller
+            sort={sort}
+            items={items}
+            loadmore={loadMore}
             hasMore={hasMore}
-            loader={<Spinner />}>
-            {items}
-          </InfiniteScroll>
+            setHasMore={setHasMore}
+            setMentionDatas={setMentionDatas}
+          />
         </Grid>
         <Grid item xs={2} style={{ backgroundColor: "#FAFBFF" }}></Grid>
       </Grid>

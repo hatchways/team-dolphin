@@ -1,12 +1,8 @@
 import React, { useState, useContext } from "react";
 import ToggleButton from "@material-ui/lab/ToggleButton";
 import ToggleButtonGroup from "@material-ui/lab/ToggleButtonGroup";
-import { getMentions } from "../hooks/getMentions";
-import { UserContext } from "../context/user";
 
-const SortToggle = ({ handleAlignment, alignment, setAlignment }) => {
-  const { dispatch, error, searchTerm } = useContext(UserContext);
-
+const SortToggle = ({ handleAlignment, alignment }) => {
   return (
     <ToggleButtonGroup
       value={alignment}

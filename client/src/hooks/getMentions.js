@@ -1,20 +1,18 @@
 import axios from "axios";
 
-export const getMentions = async (
-  dispatch,
-  keyword,
-  platforms,
-  page = 1,
-  sort
-) => {
+export const getMentions = async (dispatch, keyword, platforms, page, sort) => {
   const platformsArray = Object.keys(platforms).filter((key) => platforms[key]);
 
   let platformsString = platformsArray.join();
 
   try {
+    // const url = `/api/mentions?platforms=${platformsString}${
+    //   keyword ? "&keyword=" + keyword : ""
+    // }&page=${page}${sort ? "&sort=" + sort : "&sort=date"}`;
+
     const url = `/api/mentions?platforms=${platformsString}${
       keyword ? "&keyword=" + keyword : ""
-    }&page=${page}${sort ? "&sort=" + sort : "date"}`;
+    }&page=${page}&sort=${sort}`;
 
     const res = await axios.get(url);
 
