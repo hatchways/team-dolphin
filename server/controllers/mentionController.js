@@ -28,7 +28,9 @@ const getSortOption = (option) => {
 const getMentions = async (req, res) => {
   try {
     const { platforms, page, keyword, sort } = req.query;
+    console.log(platforms);
     if (!platforms) {
+      console.log("NO PLATFORMS");
       res.status(201).json({ mentions: [] });
     } else {
       const platformsArray = platforms.split(",");
