@@ -24,7 +24,7 @@ const HomePage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const { dispatch, error, searchTerm, user } = useContext(UserContext);
 
-  const loadMore = async (currentPage) => {
+  const loadMore = async () => {
     const data = await getMentions(
       dispatch,
       searchTerm,
@@ -42,7 +42,7 @@ const HomePage = () => {
       .then((data) => {
         setMentionDatas(data.mentions);
         setHasMore(data.nextPage ? true : false);
-        console.log(data);
+        setCurrentPage(1);
       })
       .catch((err) => alert("Cookie expired. Please log in again"));
   }, [searchTerm, user.platforms]);
