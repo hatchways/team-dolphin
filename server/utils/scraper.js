@@ -1,13 +1,28 @@
-const Mention = require("../models/mentionModel"); // Added for Co-op Midterm Presentation
-const { searchRecursive } = require("../utils/reddit"); // Added for Co-op Midterm Presentation
+const Mention = require("../models/mentionModel");
+const { searchRecursive } = require("../utils/reddit");
 
-// Added for Co-op Midterm Presentation
-// To be handled later on by BullMQ
-const addMentionsToDB = async (company) => {
+// To be handled by BullMQ
+const addMentionsToDB = async (company, platform) => {
   try {
-    const posts = await searchRecursive(company);
-    await Mention.deleteMany();
-    await Mention.insertMany(posts);
+    switch (platform) {
+      case "reddit":
+        const posts = await searchRecursive(company);
+        await Mention.insertMany(posts);
+      case "twitter":
+
+      case "facebook":
+
+      case "amazon":
+
+      case "forbes":
+
+      case "shopify":
+
+      case "businessinsider":
+
+      default:
+        console.log(`oops! ${platform} is not inside our platform`);
+    }
   } catch (error) {
     console.log(error.message);
   }

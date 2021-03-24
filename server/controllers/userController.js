@@ -33,10 +33,6 @@ const signUp = async (req, res) => {
         secure: false, // should be true in Production !
       });
 
-      // Added for Co-op Midterm Presentation
-      // To be handled later on by BullMQ
-      await addMentionsToDB(user.name);
-
       res.status(201).json({
         _id: user._id,
         name: user.name,
@@ -66,10 +62,6 @@ const signIn = async (req, res) => {
       secure: false, // should be true in Production !
     });
 
-    // Added for Co-op Midterm Presentation
-    // To be handled later on by BullMQ
-    await addMentionsToDB(user.name);
-
     res.status(201).json({
       _id: user._id,
       name: user.name,
@@ -79,7 +71,6 @@ const signIn = async (req, res) => {
     res.status(401).json({ message: "Invalid email or password" });
   }
 };
-
 
 // @desc    Get user profile
 // @route   GET /api/users/profile

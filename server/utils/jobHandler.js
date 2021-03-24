@@ -1,6 +1,7 @@
 const redis = require("redis");
 const Queue = require("bull");
 const User = require("../models/userModel");
+const Mention = require("../models/mentionModel");
 const { addMentionsToDB } = require("./scraper");
 
 const connectRedis = async () => {
@@ -34,41 +35,39 @@ const handleTaskQueues = async () => {
       redis: { port: process.env.REDIS_PORT, host: process.env.REDIS_HOST },
     });
     // job producer
-    // companiesQueue.add(
-    //   {},
-    //   {
-    //     repeat: { cron: "*/1 * * * *" },
-    //     delay: 2000,
-    //     jobId: "repeatCompaniesUpdate",
-    //   }
-    // );
-    // to remove existedQueue usecompaniesQueue.empty();
-    // companiesQueue.add();
+    companiesQueue.add(
+      {},
+      {
+        repeat: { cron: "*/1 * * * *" },
+        delay: 2000,
+        jobId: "repeatCompaniesUpdate",
+      }
+    );
 
-    // const platforms = User.getAllPlatforms().then((data) =>
-    //   data[0].split(":").then((res) => console.log(res[0]))
-    // );
+    // to remove existedQueue use
+    // companiesQueue.empty();
 
-    // console.log(typeof User.schema.obj.platforms);
-    for (var platforms in User.schema.obj.platforms) {
-      console.log(platforms);
-    }
     // job consumer
     companiesQueue.process(function (job, done) {
+      // delete all Mention at the first of updating job queues
+      Mention.deleteMany();
       User.getAllCompanies().then((companies) =>
         companies.forEach((company) => {
-          scrapingQueue.add({ company: company });
+          for (var platform in User.schema.obj.platforms) {
+            scrapingQueue.add({ company: company, platform: platform });
+          }
         })
       );
-      //   User.getAllPlatforms().then((data) => console.log(data));
       // call done when finished
-      done(console.log(`Job with id ${job.id} has been completed`));
+      done();
     });
 
     scrapingQueue.process(function (job, done) {
-      console.log(job.data.company);
-      addMentionsToDB(job.data.company);
-      done(console.log(`Job with id ${job.id} has been completed`));
+      addMentionsToDB(job.data.company, job.data.platform);
+      done();
+      console.log(
+        `Job with company ${job.data.company}, platform ${job.data.platform} has been finished`
+      );
     });
   } catch (err) {
     console.log(err);
