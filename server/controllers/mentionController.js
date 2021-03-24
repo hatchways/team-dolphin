@@ -28,7 +28,6 @@ const getSortOption = (option) => {
 const getMentions = async (req, res) => {
   try {
     const { platforms, page, keyword, sort } = req.query;
-    console.log(keyword);
     if (!platforms) {
       res.status(201).json({ mentions: [] });
     } else {
@@ -69,9 +68,8 @@ const getMentions = async (req, res) => {
           }
         });
       }
-      // after setting filteredMentions, nothing is done with it
 
-      if (endIndex < allMentions.length) {
+      if (endIndex < filteredMentions.length) {
         nextPage = dataPage + 1;
       }
 
@@ -79,10 +77,10 @@ const getMentions = async (req, res) => {
         previousPage = dataPage - 1;
       }
 
-      const paginatedMentions = allMentions.slice(startIndex, endIndex);
+      const paginatedMentions = filteredMentions.slice(startIndex, endIndex);
 
       res.json({
-        nbHits: allMentions.length,
+        nbHits: filteredMentions.length,
         hitsPerPage: 20,
         page: dataPage,
         nextPage,
