@@ -25,7 +25,7 @@ const HomePage = () => {
     getMentions(dispatch, searchTerm, user.platforms)
       .then((data) => setMentionDatas(data))
       .catch((err) => alert("Cookie expired. Please log in again"));
-  }, [searchTerm]);
+  }, [searchTerm, user.platforms]);
 
   if (mentionDatas === null) return <Spinner />;
 

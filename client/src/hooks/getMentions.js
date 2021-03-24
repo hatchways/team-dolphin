@@ -1,15 +1,7 @@
 import axios from "axios";
 
 export const getMentions = async (dispatch, keyword, platforms) => {
-  let platformsArray = [];
-
-  let i = 0;
-  for (const platform in platforms) {
-    if (platforms[platform] === true) {
-      platformsArray.push(Object.keys(platforms)[i]);
-    }
-    i++;
-  }
+  const platformsArray = Object.keys(platforms).filter((key) => platforms[key]);
 
   let platformsString = platformsArray.join();
 
