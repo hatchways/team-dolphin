@@ -1,4 +1,4 @@
-const Mention = require('../models/mentionModel');
+const Mention = require("../models/mentionModel");
 
 // @desc    Get Mentions
 // @route   GET /api/mentions
@@ -11,14 +11,28 @@ const Mention = require('../models/mentionModel');
  * @param {number} page - page number for scrolling purposes
  */
 
+const getPlatformsObject = (array) => {
+  const platforms = [];
+  array.map((platform) => platforms.push({ platform }));
+  return platforms;
+};
+
+const getSortOption = (option) => {
+  if (option === "date") {
+    return { date: -1 };
+  } else {
+    return { popularity: -1 };
+  }
+};
+
 const getMentions = async (req, res) => {
   try {
     const { platforms, page, keyword, sort } = req.query;
     if (!platforms) {
       res.status(201).json({ mentions: [] });
     } else {
-      const platformsArray = platforms.split(',');
-      const sortOption = sort ? sort : 'date';
+      const platformsArray = platforms.split(",");
+      const sortOption = sort ? sort : "date";
       const dataPage = page ? parseInt(req.query.page) : 1;
       const limit = 20;
       const startIndex = (dataPage - 1) * limit;
@@ -29,29 +43,15 @@ const getMentions = async (req, res) => {
       // Fetching Mentions pertaining to selected platforms
       // Sorting handled by MongoDB
 
-      const fetchMentions = async () => {
-        const getPlatformsObject = (array) => {
-          const platforms = [];
-          array.map((platform) => platforms.push({ platform }));
-          return platforms;
-        };
-
-        const getSortOption = (option) => {
-          if (option === 'date') {
-            return { date: -1 };
-          } else {
-            return { popularity: -1 };
-          }
-        };
-
+      const fetchMentions = async (array, sorting) => {
         const results = await Mention.find({
-          $or: [...getPlatformsObject(platformsArray)],
-        }).sort(getSortOption(sortOption));
+          $or: [...getPlatformsObject(array)],
+        }).sort(getSortOption(sorting));
 
         return results;
       };
 
-      const allMentions = await fetchMentions();
+      const allMentions = await fetchMentions(platformsArray, sortOption);
 
       // filter by keyword
       let filteredMentions = [];
@@ -92,7 +92,7 @@ const getMentions = async (req, res) => {
       });
     }
   } catch (error) {
-    res.status(400).json({ message: 'something went wrong' });
+    res.status(400).json({ message: "something went wrong" });
   }
 };
 
