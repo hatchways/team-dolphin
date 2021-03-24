@@ -40,6 +40,7 @@ const signUp = async (req, res) => {
         _id: user._id,
         name: user.name,
         email: user.email,
+        platforms: user.platforms,
       });
     } else {
       res.status(400).json({ message: 'Invalid user data' });
@@ -73,6 +74,7 @@ const signIn = async (req, res) => {
       _id: user._id,
       name: user.name,
       email: user.email,
+      platforms: user.platforms,
     });
   } else {
     res.status(401).json({ message: 'Invalid email or password' });
@@ -86,4 +88,15 @@ const getUserProfile = async (req, res) => {
   res.json(req.user);
 };
 
-module.exports = { signUp, signIn, getUserProfile };
+// @desc Update user's selected platforms
+// @route PATCH /api/users/platforms
+// @access Private
+const updatePlatforms = async (req, res) => {
+  const user = await User.findByIdAndUpdate(req.user._id, {
+    platforms: req.body,
+  });
+
+  res.json(user);
+};
+
+module.exports = { signUp, signIn, getUserProfile, updatePlatforms };

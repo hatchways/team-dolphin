@@ -24,7 +24,7 @@ const HomePage = () => {
   const [hasMore, setHasMore] = useState(true);
   const [mentionDatas, setMentionDatas] = useState(null);
   const [alignment, setAlignment] = useState("date");
-  const { dispatch, error, searchTerm } = useContext(UserContext);
+  const { dispatch, error, searchTerm, user } = useContext(UserContext);
 
   const loadMore = async (newPage) => {
     const config = {
@@ -53,13 +53,13 @@ const HomePage = () => {
   };
 
   useEffect(() => {
-    getMentions(dispatch, searchTerm, 1)
+    getMentions(dispatch, searchTerm, user.platforms)
       .then((data) => {
         setMentionDatas(data.mentions);
         setHasMore(data.nextPage ? true : false);
       })
       .catch((err) => alert("Cookie expired. Please log in again"));
-  }, [searchTerm]);
+  }, [searchTerm, user.platforms]);
 
   if (mentionDatas === null) return <Spinner />;
 

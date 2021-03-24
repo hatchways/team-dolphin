@@ -18,6 +18,14 @@ const reducer = (state, action) => {
         ...state,
         searchTerm: action.payload,
       };
+    case "SET_PLATFORMS":
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          platforms: action.payload,
+        },
+      };
     case "LOGOUT":
       return {
         ...state,
