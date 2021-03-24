@@ -1,14 +1,17 @@
-import axios from "axios";
+import axios from 'axios';
 
-export const getMentions = async (dispatch, keyword) => {
+export const getMentions = async (dispatch, keyword, page) => {
   try {
-    const res = await axios.get(
-      `/api/mentions?platforms=reddit&keyword=${keyword}`
-    );
-    return res.data.mentions;
+    const url = `/api/mentions?platforms=reddit${
+      keyword ? '&keyword=' + keyword : ''
+    }&page=${page ? page : '1'}`;
+
+    const res = await axios.get(url);
+
+    return res.data;
   } catch (err) {
     dispatch({
-      type: "LOGOUT",
+      type: 'LOGOUT',
     });
     throw err;
   }
