@@ -1,9 +1,10 @@
 import React, { useContext } from "react";
-import { UserContext } from "../context/user";
 import { makeStyles } from "@material-ui/core/styles";
 import { IconButton, InputBase } from "@material-ui/core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
+import { setSearchTerm } from "../actions/user";
+import { UserContext } from "../context/user";
 
 const debounce = (func, wait) => {
   let timeout;
@@ -44,7 +45,7 @@ const useStyles = makeStyles((theme) => ({
 const SearchBox = () => {
   const classes = useStyles();
 
-  const { setSearchTerm } = useContext(UserContext);
+  const { dispatch } = useContext(UserContext);
 
   return (
     <div className={classes.search}>
@@ -53,7 +54,10 @@ const SearchBox = () => {
         classes={{ input: classes.input }}
         className={classes.inputBase}
         inputProps={{ "aria-label": "Company name" }}
-        onChange={debounce((e) => setSearchTerm(e.target.value), 1000)} // wait 1 sec after typing to set
+        onChange={debounce(
+          (e) => setSearchTerm(dispatch, e.target.value),
+          1000
+        )} // wait 1 sec after typing to set
       />
       <IconButton
         type="submit"

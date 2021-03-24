@@ -1,9 +1,14 @@
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
 import AppBarLoggedIn from "../layout/AppBarLoggedIn";
+import { Grid, Typography, Box } from "@material-ui/core";
+import { UserContext } from "../context/user";
 import Mention from "../layout/Mention";
 import MentionList from "../layout/MentionList";
-import { Grid, Typography, Box } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
+import Spinner from "../layout/Spinner";
+import { getMentions } from "../hooks/getMentions";
+import InfiniteScroll from "react-infinite-scroller";
+import axios from "axios";
 
 const useStyles = makeStyles((theme) => ({
   box: {
@@ -15,40 +20,45 @@ const useStyles = makeStyles((theme) => ({
 
 const HomePage = () => {
   const classes = useStyles();
-  const mentionDatas = [
-    {
-      title: "PayPal invested $400 in DolphinCorp PayPal invested $400",
-      id: 1,
-      platform: "Reddit",
-      image: "https://picsum.photos/100",
-      content:
-        "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisUt enim ad minim veniam, quis nostrud exercitation ullamco laboris nisquis nostrud exercitation ullamco laboris nisUt eni",
-    },
-    {
-      title: "PayPal invested $800 in DolphinCorp",
-      id: 2,
-      platform: "Facebook",
-      image: "https://picsum.photos/200/300",
-      content:
-        "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisUt enim ad minim veniam, quis nostrud exercitation ullamco laboris nisquis nostrud exercitation ullamco laboris nisUt eni",
-    },
-    {
-      title: "invested $400 in DolphinCorp",
-      id: 3,
-      platform: "Twitter",
-      image: "https://picsum.photos/200",
-      content:
-        "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisUt enim ad minim veniam, quis nostrud exercitation ullamco laboris nisquis nostrud exercitation ullamco laboris nisUt eni",
-    },
-    {
-      title: "invested $400 in DolphinCorp",
-      id: 4,
-      platform: "Twitter",
-      image: "https://picsum.photos/400",
-      content:
-        "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisUt enim ad minim veniam, quis nostrud exercitation ullamco laboris nisquis nostrud exercitation ullamco laboris nisUt eni",
-    },
-  ];
+  const [hasMore, setHasMore] = useState(true);
+  const [mentionDatas, setMentionDatas] = useState(null);
+  const { dispatch, error, searchTerm, user } = useContext(UserContext);
+
+  const loadMore = async (newPage) => {
+    const config = {
+      headers: { "Access-Control-Allow-Origin": "*" },
+    };
+    const url =
+      "/api/mentions?platforms=reddit" +
+      (searchTerm ? "&keyword=" + searchTerm : "") +
+      "&page=" +
+      newPage;
+
+    const results = await axios(url, config);
+    setHasMore(results.data.nextPage ? true : false);
+    const newData = [...mentionDatas, results.data.mentions].flat();
+    setMentionDatas(newData);
+  };
+
+  useEffect(() => {
+    getMentions(dispatch, searchTerm, user.platforms)
+      .then((data) => {
+        setMentionDatas(data.mentions);
+        setHasMore(data.nextPage ? true : false);
+      })
+      .catch((err) => alert("Cookie expired. Please log in again"));
+  }, [searchTerm, user.platforms]);
+
+  if (mentionDatas === null) return <Spinner />;
+
+  const items =
+    !error && mentionDatas.length > 0 ? (
+      mentionDatas.map((mentionData) => (
+        <Mention key={mentionData._id} mention={mentionData} />
+      ))
+    ) : (
+      <div>No results found</div>
+    );
 
   return (
     <>
@@ -63,9 +73,14 @@ const HomePage = () => {
               My mentions
             </Typography>
           </Box>
-          {mentionDatas.map((mentionData) => (
-            <Mention key={mentionData.id} mention={mentionData} />
-          ))}
+
+          <InfiniteScroll
+            pageStart={1}
+            loadMore={loadMore}
+            hasMore={hasMore}
+            loader={<Spinner />}>
+            {items}
+          </InfiniteScroll>
         </Grid>
         <Grid item xs={2} style={{ backgroundColor: "#FAFBFF" }}></Grid>
       </Grid>

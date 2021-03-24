@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import {
   Button,
@@ -9,6 +9,8 @@ import {
   InputAdornment,
   InputLabel,
 } from "@material-ui/core";
+
+import { UserContext } from "../context/user";
 
 const useStyles = makeStyles((theme) => ({
   inputBox: {
@@ -57,6 +59,7 @@ const useStyles = makeStyles((theme) => ({
 
 const SettingCompany = () => {
   const classes = useStyles();
+  const { user } = useContext(UserContext);
   // eslint-disable-next-line
   const [company, setCompany] = useState("Company ABC");
   // const [value, setValue] = useState("");
@@ -93,7 +96,7 @@ const SettingCompany = () => {
               <InputBase
                 id="filled-company-name"
                 placeholder="Company name"
-                value={company}
+                value={user.name}
                 fullWidth
                 classes={{ input: classes.input, root: classes.inputBase }}
                 endAdornment={
@@ -137,15 +140,14 @@ const SettingCompany = () => {
             <FormControl
               className={classes.inputBox}
               style={{ marginTop: "10vh" }}
-              varaint="filled"
-            >
+              varaint="filled">
               <InputLabel htmlFor="subscribed-email"></InputLabel>
               <InputBase
                 id="subscribed-email"
                 placeholder="subscribed email"
                 fullWidth
                 type="email"
-                defaultValue="companyabc@gmail.com"
+                value={user.email}
                 classes={{ input: classes.input, root: classes.inputBase }}
                 inputProps={{ "aria-label": "subscribed email" }}
               />
@@ -158,8 +160,7 @@ const SettingCompany = () => {
         color="primary"
         form="company-form"
         type="submit"
-        className={classes.buttonSave}
-      >
+        className={classes.buttonSave}>
         SAVE
       </Button>
     </>

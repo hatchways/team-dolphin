@@ -1,60 +1,26 @@
-import React, { createContext, useReducer, useEffect } from "react";
-import reducer from "../reducers/user";
-import axios from "axios";
+import React, { createContext, useReducer } from 'react';
+import reducer from '../reducers/user';
 
 const UserContext = createContext();
 
-const checkAuth = async () => {
-  const res = await axios.get("/api/users/me", {
-    withCredentials: true,
-  });
-  if (res.status === 200) return true;
-  return false;
-};
-
 const initialState = {
-  isAuthenticated: checkAuth() ? true : false,
+  isAuthenticated: false,
+  loading: false,
+  error: null,
+  user: {},
+  searchTerm: '',
 };
 
 const UserProvider = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
-  const setUser = (email, name) => {
-    dispatch({
-      type: "SET_USER",
-      payload: {
-        email,
-        name,
-      },
-    });
-  };
-
-  const setSearchTerm = (searchTerm) => {
-    dispatch({
-      type: "SET_SEARCH_TERM",
-      payload: {
-        searchTerm,
-      },
-    });
-  };
-
-  useEffect(() => {
-    const authenticate = async () => {
-      try {
-        const res = await axios.get("/api/users/me", {
-          withCredentials: true,
-        });
-        setUser(res.data.email, res.data.name);
-      } catch (error) {
-        console.log("error");
-      }
-    };
-
-    authenticate();
-  }, []);
-
   return (
-    <UserContext.Provider value={{ ...state, setUser, setSearchTerm }}>
+    <UserContext.Provider
+      value={{
+        ...state,
+        dispatch,
+      }}
+    >
       {children}
     </UserContext.Provider>
   );
