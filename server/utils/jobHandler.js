@@ -34,11 +34,11 @@ const handleTaskQueues = async () => {
     const scrapingQueue = new Queue("queue-for-scraping", {
       redis: { port: process.env.REDIS_PORT, host: process.env.REDIS_HOST },
     });
-    // job producer
+    // job producer, repeated every 15 mins
     companiesQueue.add(
       {},
       {
-        repeat: { cron: "*/1 * * * *" },
+        repeat: { cron: "*/15 * * * *" },
         delay: 2000,
         jobId: "repeatCompaniesUpdate",
       }
