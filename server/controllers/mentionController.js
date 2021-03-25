@@ -42,10 +42,17 @@ const getMentions = async (req, res) => {
 
       // Fetching Mentions pertaining to selected platforms
       // Sorting handled by MongoDB
-
       const fetchMentions = async (array, sorting) => {
         const results = await Mention.find({
-          $or: [...getPlatformsObject(array)],
+          $and: [
+            {
+              $or: [
+                { title: { $regex: req.user.name, $options: "i" } },
+                { content: { $regex: req.user.name, $options: "i" } },
+              ],
+            },
+            { $or: [...getPlatformsObject(array)] },
+          ],
         }).sort(getSortOption(sorting));
 
         return results;
