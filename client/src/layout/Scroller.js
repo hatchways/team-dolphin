@@ -3,16 +3,18 @@ import InfiniteScroll from "react-infinite-scroller";
 import { UserContext } from "../context/user";
 import { getMentions } from "../hooks/getMentions";
 import Spinner from "./Spinner";
+import Mention from "../layout/Mention";
 
 const Scroller = ({
   sort,
-  items,
+  error,
   loadmore,
   hasMore,
   setHasMore,
+  mentionDatas,
   setMentionDatas,
 }) => {
-  const { dispatch, error, searchTerm, user } = useContext(UserContext);
+  const { dispatch, searchTerm, user } = useContext(UserContext);
 
   useEffect(() => {
     getMentions(dispatch, searchTerm, user.platforms, 1, sort)
@@ -29,7 +31,13 @@ const Scroller = ({
       loadMore={loadmore}
       hasMore={hasMore}
       loader={<Spinner />}>
-      {items}
+      {!error && mentionDatas.length > 0 ? (
+        mentionDatas.map((mentionData) => (
+          <Mention key={mentionData._id} mention={mentionData} />
+        ))
+      ) : (
+        <div>No results found</div>
+      )}
     </InfiniteScroll>
   );
 };
