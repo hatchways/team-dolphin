@@ -87,15 +87,17 @@ const HomePage = () => {
         </Grid>
         <Grid item xs={7} style={{ backgroundColor: "#FAFBFF" }} align="right">
           <Box className={classes.box}>
-            <Typography variant="h3" align="left">
-              My mentions
-            </Typography>
-            <SortToggle
-              align="right"
-              handleAlignment={handleAlignment}
-              alignment={sort}
-              setAlignment={setSort}
-            />
+            <div className="flexbox space-between">
+              <Typography variant="h3" align="left">
+                My mentions
+              </Typography>
+              <SortToggle
+                align="right"
+                handleAlignment={handleAlignment}
+                alignment={sort}
+                setAlignment={setSort}
+              />
+            </div>
           </Box>
 
           <Scroller
