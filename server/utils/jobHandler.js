@@ -30,16 +30,15 @@ const handleTaskQueues = () => {
     redis: { port: process.env.REDIS_PORT, host: process.env.REDIS_HOST },
   });
   // job producer, repeated every 15 mins
-  // companiesQueue.add(
-  //   {},
-  //   {
-  //     repeat: { cron: "*/15 * * * *" },
-  //     delay: 2000,
-  //     jobId: "repeatCompaniesUpdate",
-  //   }
-  // );
+  companiesQueue.add(
+    {},
+    {
+      repeat: { cron: "*/15 * * * *" },
+      delay: 2000,
+      jobId: "repeatCompaniesUpdate",
+    }
+  );
 
-  companiesQueue.add();
   // to remove existedQueue use
   // companiesQueue.empty();
 
