@@ -2,7 +2,6 @@ import React, { useContext, useEffect, useState } from "react";
 import AppBarLoggedIn from "../layout/AppBarLoggedIn";
 import { Grid, Typography, Box } from "@material-ui/core";
 import { UserContext } from "../context/user";
-import Mention from "../layout/Mention";
 import MentionList from "../layout/MentionList";
 import SortToggle from "../layout/SortToggle";
 import { makeStyles } from "@material-ui/core/styles";
@@ -23,6 +22,7 @@ const HomePage = () => {
   const classes = useStyles();
   const [hasMore, setHasMore] = useState(true);
   const [mentionDatas, setMentionDatas] = useState(null);
+  const [switching, setSwitching] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [sort, setSort] = useState("date");
   const { dispatch, error, searchTerm, user } = useContext(UserContext);
@@ -47,12 +47,14 @@ const HomePage = () => {
   };
 
   const handleAlignment = (event, newAlignment) => {
+    setSwitching(true);
     getMentions(dispatch, searchTerm, user.platforms, 1, newAlignment)
       .then((data) => {
         setMentionDatas(data.mentions);
         setHasMore(data.nextPage ? true : false);
       })
-      .catch((err) => alert(err.message));
+      .catch((err) => alert(err.message))
+      .finally(() => setSwitching(false));
     setSort(newAlignment);
     setCurrentPage(1);
   };
@@ -68,15 +70,6 @@ const HomePage = () => {
   }, [searchTerm, user.platforms]);
 
   if (mentionDatas === null) return <Spinner />;
-
-  const items =
-    !error && mentionDatas.length > 0 ? (
-      mentionDatas.map((mentionData) => (
-        <Mention key={mentionData._id} mention={mentionData} />
-      ))
-    ) : (
-      <div>No results found</div>
-    );
 
   return (
     <>
@@ -99,15 +92,19 @@ const HomePage = () => {
               />
             </div>
           </Box>
-
-          <Scroller
-            sort={sort}
-            items={items}
-            loadmore={loadMore}
-            hasMore={hasMore}
-            setHasMore={setHasMore}
-            setMentionDatas={setMentionDatas}
-          />
+          {switching ? (
+            <Spinner />
+          ) : (
+            <Scroller
+              sort={sort}
+              loadmore={loadMore}
+              hasMore={hasMore}
+              setHasMore={setHasMore}
+              mentionDatas={mentionDatas}
+              setMentionDatas={setMentionDatas}
+              error={error}
+            />
+          )}
         </Grid>
         <Grid item xs={2} style={{ backgroundColor: "#FAFBFF" }}></Grid>
       </Grid>
