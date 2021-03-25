@@ -25,6 +25,10 @@ const mentionSchema = mongoose.Schema({
     type: Number,
     default: 0,
   },
+  url: {
+    type: String,
+    required: true,
+  },
 });
 
 module.exports = mongoose.model("Mention", mentionSchema);
