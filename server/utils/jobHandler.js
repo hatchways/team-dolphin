@@ -21,6 +21,25 @@ const connectRedis = () => {
   });
 };
 
+const handleIndividualCompany = (company) => {
+  const individualQueue = new Queue("queue-for-scraping-individual-company", {
+    redis: { port: process.env.REDIS_PORT, host: process.env.REDIS_HOST },
+  });
+
+  for (var platform in User.schema.obj.platforms) {
+    individualQueue.add({ company: company, platform: platform });
+  }
+
+  individualQueue.process(async function (job, done) {
+    try {
+      await addMentionsToDB(job.data.company, job.data.platform);
+      done(new Error(`${job.data.company} and ${job.data.platform} error`));
+    } catch (err) {
+      console.log(err);
+    }
+  });
+};
+
 const handleTaskQueues = () => {
   const companiesQueue = new Queue("queue-for-getting-componies", {
     redis: { port: process.env.REDIS_PORT, host: process.env.REDIS_HOST },
@@ -29,6 +48,7 @@ const handleTaskQueues = () => {
   const scrapingQueue = new Queue("queue-for-scraping", {
     redis: { port: process.env.REDIS_PORT, host: process.env.REDIS_HOST },
   });
+
   // job producer, repeated every 15 mins
   companiesQueue.add(
     {},
@@ -52,7 +72,7 @@ const handleTaskQueues = () => {
           }
         })
       );
-      done(new Error("error adding companies to queue"));
+      done(new Error("error get all companies to queue"));
     } catch (err) {
       console.log(err);
     }
@@ -68,4 +88,4 @@ const handleTaskQueues = () => {
   });
 };
 
-module.exports = { connectRedis, handleTaskQueues };
+module.exports = { connectRedis, handleTaskQueues, handleIndividualCompany };
