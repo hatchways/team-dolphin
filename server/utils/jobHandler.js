@@ -3,7 +3,6 @@ const Queue = require("bull");
 const User = require("../models/userModel");
 const Mention = require("../models/mentionModel");
 const { addMentionsToDB } = require("./scraper");
-const { collection } = require("../models/mentionModel");
 
 const connectRedis = () => {
   // to start redis server in background
@@ -46,8 +45,6 @@ const handleTaskQueues = () => {
   // job consumer
   companiesQueue.process(async function (job, done) {
     try {
-      // delete all Mention at the first of updating job queues
-      await Mention.deleteMany();
       User.getAllCompanies().then((companies) =>
         companies.forEach((company) => {
           for (var platform in User.schema.obj.platforms) {
@@ -65,11 +62,8 @@ const handleTaskQueues = () => {
   scrapingQueue.process(async function (job, done) {
     try {
       await addMentionsToDB(job.data.company, job.data.platform);
-      done(
-        console.log(
-          `Job with company ${job.data.company}, platform ${job.data.platform} has been finished`
-        )
-      );
+      done();
+      done(new Error(`${job.data.company} and ${job.data.platform} error`));
     } catch (err) {
       console.log(err);
     }
