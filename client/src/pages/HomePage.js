@@ -49,7 +49,6 @@ const HomePage = () => {
   const handleAlignment = (event, newAlignment) => {
     getMentions(dispatch, searchTerm, user.platforms, 1, newAlignment)
       .then((data) => {
-        console.log(data);
         setMentionDatas(data.mentions);
         setHasMore(data.nextPage ? true : false);
       })

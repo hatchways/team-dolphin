@@ -21,7 +21,6 @@ const Scroller = ({
         setHasMore(data.nextPage ? true : false);
       })
       .catch((err) => alert("Cookie expired. Please log in again"));
-    // setCurrentPage(1);
   }, [sort]);
 
   return (

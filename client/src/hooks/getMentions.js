@@ -6,10 +6,6 @@ export const getMentions = async (dispatch, keyword, platforms, page, sort) => {
   let platformsString = platformsArray.join();
 
   try {
-    // const url = `/api/mentions?platforms=${platformsString}${
-    //   keyword ? "&keyword=" + keyword : ""
-    // }&page=${page}${sort ? "&sort=" + sort : "&sort=date"}`;
-
     const url = `/api/mentions?platforms=${platformsString}${
       keyword ? "&keyword=" + keyword : ""
     }&page=${page}&sort=${sort}`;
