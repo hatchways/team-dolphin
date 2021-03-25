@@ -52,8 +52,7 @@ const handleTaskQueues = () => {
           }
         })
       );
-      // call done when finished
-      done();
+      done(new Error("error get all companies to queue"));
     } catch (err) {
       console.log(err);
     }
@@ -62,7 +61,6 @@ const handleTaskQueues = () => {
   scrapingQueue.process(async function (job, done) {
     try {
       await addMentionsToDB(job.data.company, job.data.platform);
-      done();
       done(new Error(`${job.data.company} and ${job.data.platform} error`));
     } catch (err) {
       console.log(err);
