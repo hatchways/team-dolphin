@@ -27,7 +27,7 @@ const HomePage = () => {
   const [sort, setSort] = useState("date");
   const { dispatch, error, searchTerm, user } = useContext(UserContext);
 
-  const loadMore = async (newPage) => {
+  const loadMore = async () => {
     const config = {
       headers: { "Access-Control-Allow-Origin": "*" },
     };
