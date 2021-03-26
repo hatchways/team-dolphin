@@ -7,7 +7,6 @@ const { addMentionsToDB } = require("../utils/scraper"); // Added for Co-op Midt
 // @access  Public
 const signUp = async (req, res) => {
   const { name, email, password } = req.body;
-  let companies = [name];
 
   const userAlreadyRegistered = await User.findOne({ email });
 
@@ -20,8 +19,8 @@ const signUp = async (req, res) => {
 
   if (validPassword) {
     const user = await User.create({
-      companies,
-      activeCompany: name,
+      companies: [name],
+      activeCompany: name, // will be the company signed up with by default -- can be changed in settings and navbar
       email,
       reportEmail: email, // by default -- can be changed in settings
       password,
