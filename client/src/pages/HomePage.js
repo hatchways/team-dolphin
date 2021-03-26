@@ -45,7 +45,7 @@ const HomePage = () => {
         setCurrentPage(1);
       })
       .catch((err) => alert("Cookie expired. Please log in again"));
-  }, [searchTerm, user.platforms, dispatch]);
+  }, [searchTerm, user.platforms, dispatch, user.activeCompany]);
 
   if (mentionDatas === null) return <Spinner />;
 

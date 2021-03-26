@@ -170,14 +170,13 @@ export const updateReportEmail = async (dispatch, update) => {
 };
 
 export const updateActiveCompany = async (dispatch, update) => {
-  dispatch({
-    type: "SET_ACTIVE_COMPANY",
-    payload: update,
-  });
-
   try {
     await axios.patch("/api/users/update/activeCompany", {
       updatedCompany: update,
+    });
+    dispatch({
+      type: "SET_ACTIVE_COMPANY",
+      payload: update,
     });
   } catch (error) {
     throw error;

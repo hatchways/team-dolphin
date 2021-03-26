@@ -86,6 +86,7 @@ const SettingCompany = () => {
   const { user, dispatch, error } = useContext(UserContext);
   // eslint-disable-next-line
   const [newCompany, setNewCompany] = useState("");
+  const [newCompanyError, setNewCompanyError] = useState(null);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   // const [value, setValue] = useState("");
 
@@ -95,6 +96,14 @@ const SettingCompany = () => {
   };
 
   const handleAddCompany = async () => {
+    if (newCompany.length < 3) {
+      dispatch({
+        type: "SET_ERROR",
+        payload: "Minimum length of 3 characters",
+      });
+      return setSnackbarOpen(true);
+    }
+
     let newCompaniesArray = [...user.companies, newCompany];
 
     try {
@@ -106,6 +115,10 @@ const SettingCompany = () => {
   };
 
   const handleRemoveCompany = async (removeIndex) => {
+    if (user.companies[removeIndex] === user.activeCompany) {
+      // if removing current active company, set new active
+      updateActiveCompany(dispatch, user.companies[removeIndex - 1]);
+    }
     let companiesToKeep = user.companies.filter(
       (company, index) => index !== removeIndex
     );
@@ -181,6 +194,7 @@ const SettingCompany = () => {
                 classes={{ input: classes.input, root: classes.inputBase }}
                 value={newCompany}
                 onChange={(e) => setNewCompany(e.target.value)}
+                error={newCompanyError}
                 endAdornment={
                   <InputAdornment position="end">
                     <Button

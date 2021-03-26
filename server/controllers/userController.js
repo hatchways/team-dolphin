@@ -34,6 +34,11 @@ const signUp = async (req, res) => {
         secure: false, // should be true in Production !
       });
 
+      // here for functionality -- will be replaced by Aidan's handleIndividualCompany function in a future PR
+      for (const platform in user.platforms) {
+        await addMentionsToDB(user.activeCompany, platform);
+      }
+
       res.status(201).json({
         _id: user._id,
         companies: user.companies,
@@ -132,6 +137,7 @@ const updateCompanies = async (req, res) => {
 };
 
 const updateActiveCompany = async (req, res) => {
+  console.log(req.body);
   try {
     const user = await User.findByIdAndUpdate(req.user._id, {
       activeCompany: req.body.updatedCompany,
