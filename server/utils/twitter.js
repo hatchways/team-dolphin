@@ -1,6 +1,5 @@
 var Twitter = require("twitter");
 const ENDPOINT = "https://api.twitter.com/1.1/search/tweets.json";
-const fakeImage = "https://imgflip.com/i/2i347c";
 
 var client = new Twitter({
   bearer_token: process.env.TWITTER_BEARER_TOKEN,
@@ -25,7 +24,7 @@ const searchTwitter = async (term) => {
         platform: "twitter",
         image: tweet.entities.media
           ? tweet.entities.media[0].media_url
-          : fakeImage,
+          : "twitterDefault",
         date: new Date(tweet.created_at),
         popularity: tweet.favorite_count,
         url: `https://twitter.com/${tweet.user.screen_name}/statuses/${tweet.id_str}`,

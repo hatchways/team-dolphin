@@ -9,7 +9,8 @@ import {
 import { makeStyles } from "@material-ui/core/styles";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSmile } from "@fortawesome/free-regular-svg-icons";
-import redditLogo from "../utils/images/reddit-logo.png"
+import redditLogo from "../utils/images/reddit-logo.png";
+import twitterLogo from "../utils/images/twitter-logo.png";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -68,14 +69,16 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-  const image = (image) => {
-    if (image === "default" || image === "self") {
+const image = (image) => {
+  switch (keyword) {
+    case "default" || "self":
       return redditLogo;
-    } else {
+    case "twitterDefault":
+      return twitterLogo;
+    default:
       return image;
-    }
-  };
-
+  }
+};
 
 const Mention = ({ mention }) => {
   const classes = useStyles();
