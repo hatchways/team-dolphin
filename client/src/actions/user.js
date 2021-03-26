@@ -8,7 +8,6 @@ export const login = async (dispatch, payload) => {
     });
 
     const res = await axios.post("/api/users/auth/signin", payload);
-    console.log(res);
     dispatch({
       type: "SET_USER",
       payload: {
@@ -73,7 +72,6 @@ export const authenticate = async (dispatch) => {
     const res = await axios.get("/api/users/me", {
       withCredentials: true,
     });
-    console.log(res);
 
     dispatch({
       type: "SET_USER",
@@ -178,7 +176,7 @@ export const updateActiveCompany = async (dispatch, update) => {
   });
 
   try {
-    const res = await axios.patch("/api/users/update/activeCompany", {
+    await axios.patch("/api/users/update/activeCompany", {
       updatedCompany: update,
     });
   } catch (error) {
