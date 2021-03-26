@@ -52,4 +52,8 @@ userSchema.pre("save", async function (next) {
   this.password = await bcrypt.hash(this.password, salt);
 });
 
+userSchema.statics.getAllCompanies = async function () {
+  return await this.distinct("name");
+};
+
 module.exports = mongoose.model("User", userSchema);

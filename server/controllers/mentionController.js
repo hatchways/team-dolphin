@@ -42,10 +42,17 @@ const getMentions = async (req, res) => {
 
       // Fetching Mentions pertaining to selected platforms
       // Sorting handled by MongoDB
-
       const fetchMentions = async (array, sorting) => {
         const results = await Mention.find({
-          $or: [...getPlatformsObject(array)],
+          $and: [
+            {
+              $or: [
+                { title: { $regex: req.user.name, $options: "i" } },
+                { content: { $regex: req.user.name, $options: "i" } },
+              ],
+            },
+            { $or: [...getPlatformsObject(array)] },
+          ],
         }).sort(getSortOption(sorting));
 
         return results;
@@ -69,7 +76,7 @@ const getMentions = async (req, res) => {
         });
       }
 
-      if (endIndex < allMentions.length) {
+      if (endIndex < filteredMentions.length) {
         nextPage = dataPage + 1;
       }
 
@@ -77,10 +84,10 @@ const getMentions = async (req, res) => {
         previousPage = dataPage - 1;
       }
 
-      const paginatedMentions = allMentions.slice(startIndex, endIndex);
+      const paginatedMentions = filteredMentions.slice(startIndex, endIndex);
 
       res.json({
-        nbHits: allMentions.length,
+        nbHits: filteredMentions.length,
         hitsPerPage: 20,
         page: dataPage,
         nextPage,

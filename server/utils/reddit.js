@@ -8,16 +8,16 @@ const searchRecursive = async (term, after = "", posts = []) => {
 
   try {
     const res = await axios.get(url);
-
     if (res.status === 200) {
-      res.data.data.children.forEach((post) => {
+      res.data.data.children.forEach(async (post) => {
         posts.push({
-          content: post.data.url,
+          content: post.data.selftext || post.data.url,
           title: post.data.title,
           platform: "reddit",
           image: post.data.thumbnail,
           date: new Date(post.data.created * 1000),
           popularity: post.data.ups,
+          url: post.data.url,
         });
       });
       if (res.data.data.after) {

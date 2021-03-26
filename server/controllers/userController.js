@@ -35,10 +35,6 @@ const signUp = async (req, res) => {
         secure: false, // should be true in Production !
       });
 
-      // Added for Co-op Midterm Presentation
-      // To be handled later on by BullMQ
-      await addMentionsToDB(user.companies[0]);
-
       res.status(201).json({
         _id: user._id,
         companies: user.companies,
@@ -70,10 +66,6 @@ const signIn = async (req, res) => {
       httpOnly: true,
       secure: false, // should be true in Production !
     });
-
-    // Added for Co-op Midterm Presentation
-    // To be handled later on by BullMQ
-    await addMentionsToDB(user.companies[0]);
 
     res.status(201).json({
       _id: user._id,
