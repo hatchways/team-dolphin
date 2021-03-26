@@ -1,9 +1,9 @@
 import axios from "axios";
 
 export const getMentions = async (dispatch, keyword, platforms, page = 1) => {
-  let platformsArray = Object.keys(platforms).filter((key) => platforms[key]);
+  const platformsArray = Object.keys(platforms).filter((key) => platforms[key]);
 
-  let platformsString = platformsArray.join();
+  const platformsString = platformsArray.join();
 
   try {
     const url = `/api/mentions?platforms=${platformsString}${
