@@ -8,7 +8,6 @@ import { makeStyles } from "@material-ui/core/styles";
 import Spinner from "../layout/Spinner";
 import { getMentions } from "../hooks/getMentions";
 import InfiniteScroll from "react-infinite-scroller";
-import axios from "axios";
 
 const useStyles = makeStyles((theme) => ({
   box: {
@@ -22,32 +21,31 @@ const HomePage = () => {
   const classes = useStyles();
   const [hasMore, setHasMore] = useState(true);
   const [mentionDatas, setMentionDatas] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
   const { dispatch, error, searchTerm, user } = useContext(UserContext);
 
-  const loadMore = async (newPage) => {
-    const config = {
-      headers: { "Access-Control-Allow-Origin": "*" },
-    };
-    const url =
-      "/api/mentions?platforms=reddit" +
-      (searchTerm ? "&keyword=" + searchTerm : "") +
-      "&page=" +
-      newPage;
-
-    const results = await axios(url, config);
-    setHasMore(results.data.nextPage ? true : false);
-    const newData = [...mentionDatas, results.data.mentions].flat();
+  const loadMore = async () => {
+    const data = await getMentions(
+      dispatch,
+      searchTerm,
+      user.platforms,
+      currentPage + 1
+    );
+    setHasMore(data.nextPage ? true : false);
+    const newData = [...mentionDatas, data.mentions].flat();
     setMentionDatas(newData);
+    setCurrentPage(currentPage + 1);
   };
 
   useEffect(() => {
-    getMentions(dispatch, searchTerm, user.platforms)
+    getMentions(dispatch, searchTerm, user.platforms, 1)
       .then((data) => {
         setMentionDatas(data.mentions);
         setHasMore(data.nextPage ? true : false);
+        setCurrentPage(1);
       })
       .catch((err) => alert("Cookie expired. Please log in again"));
-  }, [searchTerm, user.platforms]);
+  }, [searchTerm, user.platforms, dispatch]);
 
   if (mentionDatas === null) return <Spinner />;
 
@@ -75,8 +73,8 @@ const HomePage = () => {
           </Box>
 
           <InfiniteScroll
-            pageStart={1}
-            loadMore={loadMore}
+            pageStart={currentPage}
+            loadMore={() => loadMore(currentPage)}
             hasMore={hasMore}
             loader={<Spinner />}>
             {items}

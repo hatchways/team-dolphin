@@ -76,7 +76,7 @@ const getMentions = async (req, res) => {
         });
       }
 
-      if (endIndex < allMentions.length) {
+      if (endIndex < filteredMentions.length) {
         nextPage = dataPage + 1;
       }
 
@@ -84,10 +84,10 @@ const getMentions = async (req, res) => {
         previousPage = dataPage - 1;
       }
 
-      const paginatedMentions = allMentions.slice(startIndex, endIndex);
+      const paginatedMentions = filteredMentions.slice(startIndex, endIndex);
 
       res.json({
-        nbHits: allMentions.length,
+        nbHits: filteredMentions.length,
         hitsPerPage: 20,
         page: dataPage,
         nextPage,
