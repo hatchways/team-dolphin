@@ -1,17 +1,18 @@
-const generateToken = require('../config/generateToken');
-const User = require('../models/userModel');
-const { addMentionsToDB } = require('../utils/scraper'); // Added for Co-op Midterm Presentation
+const generateToken = require("../config/generateToken");
+const User = require("../models/userModel");
+const { addMentionsToDB } = require("../utils/scraper"); // Added for Co-op Midterm Presentation
 
 // @desc    Register a new user
 // @route   POST /api/users/auth/signup
 // @access  Public
 const signUp = async (req, res) => {
   const { name, email, password } = req.body;
+  let companies = [name];
 
   const userAlreadyRegistered = await User.findOne({ email });
 
   if (userAlreadyRegistered) {
-    res.status(400).json({ message: 'User already exists' });
+    res.status(400).json({ message: "User already exists" });
   }
 
   const regex = /\w{6,}/gm;
@@ -19,14 +20,16 @@ const signUp = async (req, res) => {
 
   if (validPassword) {
     const user = await User.create({
-      name,
+      companies,
+      activeCompany: name,
       email,
+      reportEmail: email, // by default -- can be changed in settings
       password,
     });
 
     if (user) {
       const token = generateToken(user._id);
-      res.cookie('dolphinToken', token, {
+      res.cookie("dolphinToken", token, {
         maxAge: 3600000,
         httpOnly: true,
         secure: false, // should be true in Production !
@@ -34,19 +37,21 @@ const signUp = async (req, res) => {
 
       // Added for Co-op Midterm Presentation
       // To be handled later on by BullMQ
-      await addMentionsToDB(user.name);
+      await addMentionsToDB(user.companies[0]);
 
       res.status(201).json({
         _id: user._id,
-        name: user.name,
+        companies: user.companies,
+        activeCompany: user.activeCompany,
         email: user.email,
+        reportEmail: user.reportEmail,
         platforms: user.platforms,
       });
     } else {
-      res.status(400).json({ message: 'Invalid user data' });
+      res.status(400).json({ message: "Invalid user data" });
     }
   } else {
-    res.status(400).json({ message: 'Invalid password' });
+    res.status(400).json({ message: "Invalid password" });
   }
 };
 
@@ -60,7 +65,7 @@ const signIn = async (req, res) => {
 
   if (user && (await user.matchPassword(password))) {
     const token = generateToken(user._id);
-    res.cookie('dolphinToken', token, {
+    res.cookie("dolphinToken", token, {
       maxAge: 3600000,
       httpOnly: true,
       secure: false, // should be true in Production !
@@ -68,17 +73,27 @@ const signIn = async (req, res) => {
 
     // Added for Co-op Midterm Presentation
     // To be handled later on by BullMQ
-    await addMentionsToDB(user.name);
+    await addMentionsToDB(user.companies[0]);
 
     res.status(201).json({
       _id: user._id,
-      name: user.name,
+      companies: user.companies,
+      activeCompany: user.activeCompany,
       email: user.email,
+      reportEmail: user.reportEmail,
       platforms: user.platforms,
     });
   } else {
-    res.status(401).json({ message: 'Invalid email or password' });
+    res.status(401).json({ message: "Invalid email or password" });
   }
+};
+
+// @desc    Clears user cookie
+// @route   GET /api/users/logout
+// @access  Public
+const logout = async (req, res) => {
+  res.clearCookie("dolphinToken");
+  res.sendStatus(200);
 };
 
 // @desc    Get user profile
@@ -88,9 +103,9 @@ const getUserProfile = async (req, res) => {
   res.json(req.user);
 };
 
-// @desc Update user's selected platforms
-// @route PATCH /api/users/platforms
-// @access Private
+// @desc    Update user's selected platforms
+// @route   PATCH /api/users/platforms
+// @access  Private
 const updatePlatforms = async (req, res) => {
   const user = await User.findByIdAndUpdate(req.user._id, {
     platforms: req.body,
@@ -99,4 +114,51 @@ const updatePlatforms = async (req, res) => {
   res.json(user);
 };
 
-module.exports = { signUp, signIn, getUserProfile, updatePlatforms };
+// @desc    Update user's weekly report email
+// @route   PATCH /api/users/settings
+// @access  Private
+const updateReportEmail = async (req, res) => {
+  const user = await User.findByIdAndUpdate(req.user._id, {
+    reportEmail: req.body.updatedEmail,
+  });
+
+  res.json(user);
+};
+
+// @desc    Update user's companies
+// @route   PATCH /api/users/platforms
+// @access  Private
+const updateCompanies = async (req, res) => {
+  try {
+    const user = await User.findByIdAndUpdate(req.user._id, {
+      companies: req.body.companies,
+    });
+
+    res.json(user);
+  } catch (error) {
+    throw error;
+  }
+};
+
+const updateActiveCompany = async (req, res) => {
+  try {
+    const user = await User.findByIdAndUpdate(req.user._id, {
+      activeCompany: req.body.updatedCompany,
+    });
+
+    res.json(user);
+  } catch (error) {
+    throw error;
+  }
+};
+
+module.exports = {
+  signUp,
+  signIn,
+  getUserProfile,
+  updatePlatforms,
+  updateReportEmail,
+  updateCompanies,
+  updateActiveCompany,
+  logout,
+};

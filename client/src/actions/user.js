@@ -1,4 +1,5 @@
 import axios from "axios";
+import { isValidEmail } from "../pages/Signup";
 
 export const login = async (dispatch, payload) => {
   try {
@@ -7,12 +8,14 @@ export const login = async (dispatch, payload) => {
     });
 
     const res = await axios.post("/api/users/auth/signin", payload);
-
+    console.log(res);
     dispatch({
       type: "SET_USER",
       payload: {
         email: res.data.email,
-        name: res.data.name,
+        reportEmail: res.data.reportEmail,
+        companies: res.data.companies,
+        activeCompany: res.data.activeCompany,
         platforms: res.data.platforms,
       },
     });
@@ -46,7 +49,9 @@ export const register = async (dispatch, payload) => {
       type: "SET_USER",
       payload: {
         email: res.data.email,
-        name: res.data.name,
+        reportEmail: res.data.reportEmail,
+        companies: res.data.companies,
+        activeCompany: res.data.activeCompany,
         platforms: res.data.platforms,
       },
     });
@@ -68,12 +73,15 @@ export const authenticate = async (dispatch) => {
     const res = await axios.get("/api/users/me", {
       withCredentials: true,
     });
+    console.log(res);
 
     dispatch({
       type: "SET_USER",
       payload: {
         email: res.data.email,
-        name: res.data.name,
+        reportEmail: res.data.reportEmail,
+        companies: res.data.companies,
+        activeCompany: res.data.activeCompany,
         platforms: res.data.platforms,
       },
     });
@@ -93,7 +101,7 @@ export const setPlatforms = async (dispatch, platforms) => {
   });
 
   try {
-    const res = await axios.patch("/api/users/platforms", platforms);
+    const res = await axios.patch("/api/users/update/platforms", platforms);
     return res;
   } catch (error) {
     dispatch({
@@ -112,7 +120,68 @@ export const setSearchTerm = (dispatch, searchTerm) => {
 
 // User logout action
 export const logout = async (dispatch) => {
+  await axios.get("/api/users/logout");
   dispatch({
     type: "LOGOUT",
   });
+};
+
+export const setReportEmail = (dispatch, updatedEmail) => {
+  dispatch({
+    type: "SET_REPORT_EMAIL",
+    payload: updatedEmail,
+  });
+};
+
+export const updateCompanies = async (dispatch, companies) => {
+  dispatch({
+    type: "SET_COMPANIES",
+    payload: companies,
+  });
+  try {
+    const res = await axios.patch("/api/users/update/companies", {
+      companies,
+    });
+    return res;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const updateReportEmail = async (dispatch, update) => {
+  if (!isValidEmail(update.updatedEmail)) {
+    dispatch({
+      type: "SET_ERROR",
+      payload: "Invalid email format",
+    });
+    throw new Error("Invalid email format");
+  }
+
+  dispatch({
+    type: "SET_ERROR",
+    payload: null,
+  });
+  try {
+    const res = await axios.patch("/api/users/update/reportEmail", {
+      updatedEmail: update.updatedEmail,
+    });
+    return res;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const updateActiveCompany = async (dispatch, update) => {
+  dispatch({
+    type: "SET_ACTIVE_COMPANY",
+    payload: update,
+  });
+
+  try {
+    const res = await axios.patch("/api/users/update/activeCompany", {
+      updatedCompany: update,
+    });
+  } catch (error) {
+    throw error;
+  }
 };

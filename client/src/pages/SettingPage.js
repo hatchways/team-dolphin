@@ -53,8 +53,7 @@ const SettingPage = () => {
               <Route path="/setting/company" component={SettingCompany}></Route>
               <Route
                 path="/setting/security"
-                component={SettingSecurity}
-              ></Route>
+                component={SettingSecurity}></Route>
             </Switch>
           </Grid>
         </Grid>

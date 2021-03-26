@@ -8,9 +8,17 @@ import {
   FormControl,
   InputAdornment,
   InputLabel,
+  Snackbar,
 } from "@material-ui/core";
+import { Alert } from "@material-ui/lab";
 
 import { UserContext } from "../context/user";
+import {
+  setReportEmail,
+  updateReportEmail,
+  updateCompanies,
+  updateActiveCompany,
+} from "../actions/user";
 
 const useStyles = makeStyles((theme) => ({
   inputBox: {
@@ -55,23 +63,64 @@ const useStyles = makeStyles((theme) => ({
     width: "10em",
     height: "3em",
   },
+  buttonActive: {
+    borderRadius: theme.shape.borderRadius * 4,
+    width: "4em",
+    height: "2em",
+    backgroundColor: theme.palette.primary,
+    color: theme.palette.primary.light,
+    marginRight: "1em",
+  },
+  buttonSet: {
+    borderRadius: theme.shape.borderRadius * 4,
+    width: "4em",
+    height: "2em",
+    backgroundColor: "#F0F3FE",
+    color: theme.palette.primary.light,
+    marginRight: "1em",
+  },
 }));
 
 const SettingCompany = () => {
   const classes = useStyles();
-  const { user } = useContext(UserContext);
+  const { user, dispatch, error } = useContext(UserContext);
   // eslint-disable-next-line
-  const [company, setCompany] = useState("Company ABC");
+  const [newCompany, setNewCompany] = useState("");
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
   // const [value, setValue] = useState("");
-
-  // const updateHandler = () => {
-  //   setCompany(value);
-  //   setValue("");
-  // };
 
   // handle subscriber info update submit
   const submitHandler = (e) => {
     e.preventDefault();
+  };
+
+  const handleAddCompany = async () => {
+    let newCompaniesArray = [...user.companies, newCompany];
+
+    try {
+      const res = await updateCompanies(dispatch, newCompaniesArray);
+      setNewCompany("");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleRemoveCompany = async (removeIndex) => {
+    let companiesToKeep = user.companies.filter(
+      (company, index) => index !== removeIndex
+    );
+    updateCompanies(dispatch, companiesToKeep);
+  };
+
+  const handleSaveReportEmail = async () => {
+    try {
+      await updateReportEmail(dispatch, {
+        updatedEmail: user.reportEmail,
+      });
+      setSnackbarOpen(true);
+    } catch (error) {
+      setSnackbarOpen(true);
+    }
   };
 
   return (
@@ -91,52 +140,61 @@ const SettingCompany = () => {
         </Grid>
         <Grid item xs={6}>
           <form id="company-form" onSubmit={submitHandler}>
-            <FormControl variant="filled" className={classes.inputBox}>
-              <InputLabel htmlFor="filled-company-name"></InputLabel>
-              <InputBase
-                id="filled-company-name"
-                placeholder="Company name"
-                value={user.name}
-                fullWidth
-                classes={{ input: classes.input, root: classes.inputBase }}
-                endAdornment={
-                  <InputAdornment position="end">
-                    {/* <Button
-                      variant="text"
-                      onClick={() => setCompany("")}
-                      className={classes.buttonRemove}
-                    >
-                      REMOVE
-                    </Button> */}
-                  </InputAdornment>
-                }
-                inputProps={{ "aria-label": "Company name" }}
-              />
-            </FormControl>
-            {/* <FormControl className={classes.inputBox} focused>
+            {user.companies.map((company, index) => (
+              <FormControl variant="filled" className={classes.inputBox}>
+                <InputLabel htmlFor="filled-company-name"></InputLabel>
+                <InputBase
+                  id={`company-name-${index}`}
+                  value={company}
+                  fullWidth
+                  classes={{ input: classes.input, root: classes.inputBase }}
+                  endAdornment={
+                    user.companies.length > 1 && (
+                      <InputAdornment position="end">
+                        <Button
+                          variant="text"
+                          onClick={() => updateActiveCompany(dispatch, company)}
+                          disabled={company === user.activeCompany}
+                          className={classes.buttonRemove}>
+                          {company === user.activeCompany ? "ACTIVE" : "SET"}
+                        </Button>
+                        <Button
+                          variant="text"
+                          onClick={() => handleRemoveCompany(index)}
+                          className={classes.buttonRemove}>
+                          REMOVE
+                        </Button>
+                      </InputAdornment>
+                    )
+                  }
+                  inputProps={{ "aria-label": "Company name" }}
+                />
+              </FormControl>
+            ))}
+
+            <FormControl className={classes.inputBox} focused>
               <InputLabel htmlFor="add-company-name"></InputLabel>
               <InputBase
                 id="add-company-name"
                 placeholder="Company name"
                 fullWidth
                 classes={{ input: classes.input, root: classes.inputBase }}
-                value={value}
-                onChange={(e) => setValue(e.target.value)}
+                value={newCompany}
+                onChange={(e) => setNewCompany(e.target.value)}
                 endAdornment={
                   <InputAdornment position="end">
                     <Button
                       variant="contained"
                       color="primary"
-                      onClick={updateHandler}
-                      className={classes.buttonAdd}
-                    >
+                      onClick={handleAddCompany}
+                      className={classes.buttonAdd}>
                       ADD
                     </Button>
                   </InputAdornment>
                 }
                 inputProps={{ "aria-label": "Company name" }}
               />
-            </FormControl> */}
+            </FormControl>
             <FormControl
               className={classes.inputBox}
               style={{ marginTop: "10vh" }}
@@ -147,7 +205,8 @@ const SettingCompany = () => {
                 placeholder="subscribed email"
                 fullWidth
                 type="email"
-                value={user.email}
+                value={user.reportEmail}
+                onChange={(e) => setReportEmail(dispatch, e.target.value)}
                 classes={{ input: classes.input, root: classes.inputBase }}
                 inputProps={{ "aria-label": "subscribed email" }}
               />
@@ -160,9 +219,21 @@ const SettingCompany = () => {
         color="primary"
         form="company-form"
         type="submit"
-        className={classes.buttonSave}>
+        className={classes.buttonSave}
+        onClick={handleSaveReportEmail}>
         SAVE
       </Button>
+      <Snackbar open={snackbarOpen}>
+        {error ? (
+          <Alert onClose={() => setSnackbarOpen(false)} severity="error">
+            {error}
+          </Alert>
+        ) : (
+          <Alert onClose={() => setSnackbarOpen(false)} severity="success">
+            Successfully updated weekly report email
+          </Alert>
+        )}
+      </Snackbar>
     </>
   );
 };
