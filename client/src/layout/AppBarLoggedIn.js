@@ -14,7 +14,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser, faCogs, faBriefcase } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 import { UserContext } from "../context/user";
-import { updateActiveCompany } from "../actions/user";
+import { updateUser } from "../actions/user";
 
 const useStyles = makeStyles((theme) => ({
   toolbar: {
@@ -40,16 +40,27 @@ const AppBarLoggedIn = () => {
     setAnchorEl(event.currentTarget);
   };
 
-  const handleClose = (e, item) => {
+  const handleClose = async (e, item) => {
     setAnchorEl(null);
 
     if (
-      item == "backdropClick" ||
+      item === "backdropClick" ||
       item === "escapeKeyDown" ||
       item === "tabKeyDown"
     )
       return;
-    updateActiveCompany(dispatch, item);
+
+    try {
+      await updateUser({
+        activeCompany: item,
+      });
+      dispatch({
+        type: "SET_ACTIVE_COMPANY",
+        payload: item,
+      });
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -82,6 +93,9 @@ const AppBarLoggedIn = () => {
             </IconButton>
             <Menu
               anchorEl={anchorEl}
+              getContentAnchorEl={null}
+              anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+              transformOrigin={{ vertical: "top", horizontal: "left" }}
               keepMounted
               open={Boolean(anchorEl)}
               onClose={handleClose}>

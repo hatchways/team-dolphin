@@ -99,50 +99,17 @@ const getUserProfile = async (req, res) => {
   res.json(req.user);
 };
 
-// @desc    Update user's selected platforms
-// @route   PATCH /api/users/platforms
+// @desc    Update property/properties of User
+// @route   PATCH /api/users/update
 // @access  Private
-const updatePlatforms = async (req, res) => {
-  const user = await User.findByIdAndUpdate(req.user._id, {
-    platforms: req.body,
-  });
-
-  res.json(user);
-};
-
-// @desc    Update user's weekly report email
-// @route   PATCH /api/users/settings
-// @access  Private
-const updateReportEmail = async (req, res) => {
-  const user = await User.findByIdAndUpdate(req.user._id, {
-    reportEmail: req.body.updatedEmail,
-  });
-
-  res.json(user);
-};
-
-// @desc    Update user's companies
-// @route   PATCH /api/users/platforms
-// @access  Private
-const updateCompanies = async (req, res) => {
+const updateUser = async (req, res) => {
   try {
-    const user = await User.findByIdAndUpdate(req.user._id, {
-      companies: req.body.companies,
-    });
-
-    res.json(user);
-  } catch (error) {
-    throw error;
-  }
-};
-
-const updateActiveCompany = async (req, res) => {
-  console.log(req.body);
-  try {
-    const user = await User.findByIdAndUpdate(req.user._id, {
-      activeCompany: req.body.updatedCompany,
-    });
-
+    const user = await User.findByIdAndUpdate(
+      req.user._id,
+      { $set: req.body },
+      { new: true }
+    );
+    console.log(user);
     res.json(user);
   } catch (error) {
     throw error;
@@ -153,9 +120,6 @@ module.exports = {
   signUp,
   signIn,
   getUserProfile,
-  updatePlatforms,
-  updateReportEmail,
-  updateCompanies,
-  updateActiveCompany,
+  updateUser,
   logout,
 };

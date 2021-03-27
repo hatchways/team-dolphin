@@ -13,12 +13,10 @@ import {
 import { Alert } from "@material-ui/lab";
 
 import { UserContext } from "../context/user";
-import {
-  setReportEmail,
-  updateReportEmail,
-  updateCompanies,
-  updateActiveCompany,
-} from "../actions/user";
+import { setReportEmail, updateUser } from "../actions/user";
+import { isValidEmail } from "../pages/Signup";
+
+import axios from "axios";
 
 const useStyles = makeStyles((theme) => ({
   inputBox: {
@@ -83,56 +81,100 @@ const useStyles = makeStyles((theme) => ({
 
 const SettingCompany = () => {
   const classes = useStyles();
-  const { user, dispatch, error } = useContext(UserContext);
+  const { user, dispatch } = useContext(UserContext);
   // eslint-disable-next-line
   const [newCompany, setNewCompany] = useState("");
-  const [newCompanyError, setNewCompanyError] = useState(null);
+  const [error, setError] = useState(null);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   // const [value, setValue] = useState("");
 
-  // handle subscriber info update submit
-  const submitHandler = (e) => {
-    e.preventDefault();
-  };
-
   const handleAddCompany = async () => {
     if (newCompany.length < 3) {
-      dispatch({
-        type: "SET_ERROR",
-        payload: "Minimum length of 3 characters",
-      });
+      setError("Minimum length of 3 characters");
       return setSnackbarOpen(true);
     }
 
     let newCompaniesArray = [...user.companies, newCompany];
 
     try {
-      const res = await updateCompanies(dispatch, newCompaniesArray);
+      await updateUser({
+        companies: newCompaniesArray,
+      });
+      setError(null);
       setNewCompany("");
+      dispatch({
+        type: "SET_COMPANIES",
+        payload: newCompaniesArray,
+      });
     } catch (error) {
       console.log(error);
     }
   };
 
   const handleRemoveCompany = async (removeIndex) => {
-    if (user.companies[removeIndex] === user.activeCompany) {
-      // if removing current active company, set new active
-      updateActiveCompany(dispatch, user.companies[removeIndex - 1]);
-    }
-    let companiesToKeep = user.companies.filter(
+    const companiesToKeep = user.companies.filter(
       (company, index) => index !== removeIndex
     );
-    updateCompanies(dispatch, companiesToKeep);
+    let newActiveCompany;
+
+    if (user.companies[removeIndex] === user.activeCompany && removeIndex === 0)
+      // if removing the active company and it is the first in the list
+      newActiveCompany = user.companies[1];
+    else if (
+      user.companies[removeIndex] === user.activeCompany &&
+      removeIndex > 0
+    )
+      // if removing the active company and it isn't first in the list, set the one before it as the active
+      newActiveCompany = user.companies[removeIndex - 1];
+    else newActiveCompany = user.activeCompany; // stays the same
+
+    try {
+      await updateUser({
+        activeCompany: newActiveCompany,
+        companies: companiesToKeep,
+      });
+      dispatch({
+        type: "SET_COMPANIES",
+        payload: companiesToKeep,
+      });
+
+      dispatch({
+        type: "SET_ACTIVE_COMPANY",
+        payload: newActiveCompany,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleSetActiveCompany = async (company) => {
+    try {
+      await updateUser({
+        activeCompany: company,
+      });
+      dispatch({
+        type: "SET_ACTIVE_COMPANY",
+        payload: company,
+      });
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const handleSaveReportEmail = async () => {
+    if (!isValidEmail(user.reportEmail)) {
+      setError("Invalid email format");
+      return setSnackbarOpen(true);
+    }
+
     try {
-      await updateReportEmail(dispatch, {
-        updatedEmail: user.reportEmail,
+      await axios.patch("/api/users/update", {
+        reportEmail: user.reportEmail,
       });
+      setError(null);
       setSnackbarOpen(true);
     } catch (error) {
-      setSnackbarOpen(true);
+      console.log(error);
     }
   };
 
@@ -152,7 +194,7 @@ const SettingCompany = () => {
           </Grid>
         </Grid>
         <Grid item xs={6}>
-          <form id="company-form" onSubmit={submitHandler}>
+          <form id="company-form">
             {user.companies.map((company, index) => (
               <FormControl variant="filled" className={classes.inputBox}>
                 <InputLabel htmlFor="filled-company-name"></InputLabel>
@@ -166,7 +208,7 @@ const SettingCompany = () => {
                       <InputAdornment position="end">
                         <Button
                           variant="text"
-                          onClick={() => updateActiveCompany(dispatch, company)}
+                          onClick={() => handleSetActiveCompany(company)}
                           disabled={company === user.activeCompany}
                           className={classes.buttonRemove}>
                           {company === user.activeCompany ? "ACTIVE" : "SET"}
@@ -184,7 +226,6 @@ const SettingCompany = () => {
                 />
               </FormControl>
             ))}
-
             <FormControl className={classes.inputBox} focused>
               <InputLabel htmlFor="add-company-name"></InputLabel>
               <InputBase
@@ -194,7 +235,6 @@ const SettingCompany = () => {
                 classes={{ input: classes.input, root: classes.inputBase }}
                 value={newCompany}
                 onChange={(e) => setNewCompany(e.target.value)}
-                error={newCompanyError}
                 endAdornment={
                   <InputAdornment position="end">
                     <Button
@@ -232,7 +272,6 @@ const SettingCompany = () => {
         variant="contained"
         color="primary"
         form="company-form"
-        type="submit"
         className={classes.buttonSave}
         onClick={handleSaveReportEmail}>
         SAVE

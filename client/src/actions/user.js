@@ -92,23 +92,6 @@ export const authenticate = async (dispatch) => {
   }
 };
 
-export const setPlatforms = async (dispatch, platforms) => {
-  dispatch({
-    type: "SET_PLATFORMS",
-    payload: platforms,
-  });
-
-  try {
-    const res = await axios.patch("/api/users/update/platforms", platforms);
-    return res;
-  } catch (error) {
-    dispatch({
-      type: "LOGOUT",
-    });
-    throw error;
-  }
-};
-
 export const setSearchTerm = (dispatch, searchTerm) => {
   dispatch({
     type: "SET_SEARCH_TERM",
@@ -131,53 +114,9 @@ export const setReportEmail = (dispatch, updatedEmail) => {
   });
 };
 
-export const updateCompanies = async (dispatch, companies) => {
-  dispatch({
-    type: "SET_COMPANIES",
-    payload: companies,
-  });
+export const updateUser = async (update) => {
   try {
-    const res = await axios.patch("/api/users/update/companies", {
-      companies,
-    });
-    return res;
-  } catch (error) {
-    throw error;
-  }
-};
-
-export const updateReportEmail = async (dispatch, update) => {
-  if (!isValidEmail(update.updatedEmail)) {
-    dispatch({
-      type: "SET_ERROR",
-      payload: "Invalid email format",
-    });
-    throw new Error("Invalid email format");
-  }
-
-  dispatch({
-    type: "SET_ERROR",
-    payload: null,
-  });
-  try {
-    const res = await axios.patch("/api/users/update/reportEmail", {
-      updatedEmail: update.updatedEmail,
-    });
-    return res;
-  } catch (error) {
-    throw error;
-  }
-};
-
-export const updateActiveCompany = async (dispatch, update) => {
-  try {
-    await axios.patch("/api/users/update/activeCompany", {
-      updatedCompany: update,
-    });
-    dispatch({
-      type: "SET_ACTIVE_COMPANY",
-      payload: update,
-    });
+    await axios.patch("/api/users/update", update);
   } catch (error) {
     throw error;
   }
