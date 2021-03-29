@@ -6,7 +6,9 @@ import MentionList from "../layout/MentionList";
 import SortToggle from "../layout/SortToggle";
 import { makeStyles } from "@material-ui/core/styles";
 import Spinner from "../layout/Spinner";
+import Scroller from "../layout/Scroller";
 import { getMentions } from "../hooks/getMentions";
+// import { flexbox } from "@material-ui/system";
 
 const useStyles = makeStyles((theme) => ({
   box: {
@@ -74,17 +76,20 @@ const HomePage = () => {
         </Grid>
         <Grid item xs={7} style={{ backgroundColor: "#FAFBFF" }} align="right">
           <Box className={classes.box}>
-            <div className="flexbox space-between">
-              <Typography variant="h3" align="left">
-                My mentions
-              </Typography>
-              <SortToggle
-                align="right"
-                handleAlignment={handleAlignment}
-                alignment={sort}
-                setAlignment={setSort}
-              />
-            </div>
+            <Box display="flex">
+              <Box flexGrow={1}>
+                <Typography variant="h3" align="left">
+                  My mentions
+                </Typography>
+              </Box>
+              <Box>
+                <SortToggle
+                  handleAlignment={handleAlignment}
+                  alignment={sort}
+                  setAlignment={setSort}
+                />
+              </Box>
+            </Box>
           </Box>
           {switching ? (
             <Spinner />
@@ -107,3 +112,5 @@ const HomePage = () => {
 };
 
 export default HomePage;
+
+// <div className="flexbox space-between"></div>
