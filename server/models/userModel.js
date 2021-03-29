@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
+const Mention = require("./mentionModel");
 
 const userSchema = mongoose.Schema(
   {
@@ -8,6 +9,11 @@ const userSchema = mongoose.Schema(
       required: true,
     },
     email: {
+      type: String,
+      required: true,
+      unique: true,
+    },
+    reportEmail: {
       type: String,
       required: true,
       unique: true,
@@ -48,8 +54,10 @@ userSchema.statics.getAllCompanies = async function () {
   return await this.distinct("name");
 };
 
-userSchema.statics.getAllReportEmails = async () => {
-  return await this.distinct("reportEmail");
+userSchema.methods.getTopFiveMentions = async () => {
+  return await Mention.find({ company: this.activeCompany })
+    .sort({ popularity: -1 })
+    .limit(5);
 };
 
 module.exports = mongoose.model("User", userSchema);
