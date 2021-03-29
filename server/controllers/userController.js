@@ -1,6 +1,10 @@
 const generateToken = require("../config/generateToken");
 const User = require("../models/userModel");
-const { addMentionsToDB } = require("../utils/scraper"); // Added for Co-op Midterm Presentation
+
+///////// TO BE REMOVED /////////////
+////// To be handled by BullMQ //////
+//// Added for Testing purposes /////
+const { addMentionsToDB } = require("../utils/scraper");
 
 // @desc    Register a new user
 // @route   POST /api/users/auth/signup
@@ -32,8 +36,9 @@ const signUp = async (req, res) => {
         secure: false, // should be true in Production !
       });
 
-      // To be handled by BullMQ
-      // Added for Testing purposes
+      ///////// TO BE REMOVED /////////////
+      ////// To be handled by BullMQ //////
+      //// Added for Testing purposes /////
       await addMentionsToDB(user.name, "reddit");
 
       res.status(201).json({
@@ -66,8 +71,9 @@ const signIn = async (req, res) => {
       secure: false, // should be true in Production !
     });
 
-    // To be handled by BullMQ
-    // Added for Testing purposes
+    ///////// TO BE REMOVED /////////////
+    ////// To be handled by BullMQ //////
+    //// Added for Testing purposes /////
     await addMentionsToDB(user.name, "reddit");
 
     res.status(201).json({

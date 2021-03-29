@@ -8,8 +8,6 @@ import { makeStyles } from "@material-ui/core/styles";
 import Spinner from "../layout/Spinner";
 import Scroller from "../layout/Scroller";
 import { getMentions } from "../hooks/getMentions";
-import InfiniteScroll from "react-infinite-scroller";
-import { faClosedCaptioning } from "@fortawesome/free-solid-svg-icons";
 
 const useStyles = makeStyles((theme) => ({
   box: {
@@ -23,7 +21,7 @@ const HomePage = () => {
   const classes = useStyles();
   const [hasMore, setHasMore] = useState(true);
   const [mentionDatas, setMentionDatas] = useState(null);
-  const [switching, setSwitching] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [sort, setSort] = useState("date");
 
@@ -44,27 +42,20 @@ const HomePage = () => {
   };
 
   const handleAlignment = (event, newAlignment) => {
-    setSwitching(true);
-    getMentions(dispatch, searchTerm, user.platforms, 1, newAlignment)
-      .then((data) => {
-        setMentionDatas(data.mentions);
-        setHasMore(data.nextPage ? true : false);
-        setSort(newAlignment);
-        setCurrentPage(1);
-      })
-      .catch((err) => alert(err.message))
-      .finally(() => setSwitching(false));
+    setSort(newAlignment);
   };
 
   useEffect(() => {
+    setLoading(true);
     getMentions(dispatch, searchTerm, user.platforms, 1, sort)
       .then((data) => {
         setMentionDatas(data.mentions);
         setHasMore(data.nextPage ? true : false);
         setCurrentPage(1);
       })
-      .catch((err) => alert("Cookie expired. Please log in again"));
-  }, [searchTerm, user.platforms, dispatch]);
+      .catch((err) => alert("Cookie expired. Please log in again"))
+      .finally(() => setLoading(false));
+  }, [searchTerm, user.platforms, dispatch, sort]);
 
   if (mentionDatas === null) return <Spinner />;
 
@@ -77,18 +68,22 @@ const HomePage = () => {
         </Grid>
         <Grid item xs={7} style={{ backgroundColor: "#FAFBFF" }} align="right">
           <Box className={classes.box}>
-            <Typography variant="h3" align="left">
-              My mentions
-            </Typography>
-
-            <SortToggle
-              align="right"
-              handleAlignment={handleAlignment}
-              alignment={sort}
-              setAlignment={setSort}
-            />
+            <Box display="flex">
+              <Box flexGrow={1}>
+                <Typography variant="h3" align="left">
+                  My mentions
+                </Typography>
+              </Box>
+              <Box>
+                <SortToggle
+                  handleAlignment={handleAlignment}
+                  alignment={sort}
+                  setAlignment={setSort}
+                />
+              </Box>
+            </Box>
           </Box>
-          {switching ? (
+          {loading ? (
             <Spinner />
           ) : (
             <Scroller
