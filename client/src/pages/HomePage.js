@@ -7,8 +7,6 @@ import SortToggle from "../layout/SortToggle";
 import { makeStyles } from "@material-ui/core/styles";
 import Spinner from "../layout/Spinner";
 import { getMentions } from "../hooks/getMentions";
-import Scroller from "../layout/Scroller";
-import axios from "axios";
 
 const useStyles = makeStyles((theme) => ({
   box: {
@@ -25,25 +23,21 @@ const HomePage = () => {
   const [switching, setSwitching] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [sort, setSort] = useState("date");
+
   const { dispatch, error, searchTerm, user } = useContext(UserContext);
 
   const loadMore = async () => {
-    const config = {
-      headers: { "Access-Control-Allow-Origin": "*" },
-    };
-    const url =
-      "/api/mentions?platforms=reddit" +
-      (searchTerm ? "&keyword=" + searchTerm : "") +
-      "&page=" +
-      (currentPage + 1) +
-      "&sort=" +
-      sort;
-
-    const results = await axios(url, config);
-    setHasMore(results.data.nextPage ? true : false);
-    const newData = [...mentionDatas, results.data.mentions].flat();
+    const data = await getMentions(
+      dispatch,
+      searchTerm,
+      user.platforms,
+      currentPage + 1,
+      sort
+    );
+    setHasMore(data.nextPage ? true : false);
+    const newData = [...mentionDatas, data.mentions].flat();
     setMentionDatas(newData);
-    setCurrentPage((prev) => prev + 1);
+    setCurrentPage(currentPage + 1);
   };
 
   const handleAlignment = (event, newAlignment) => {
@@ -52,11 +46,11 @@ const HomePage = () => {
       .then((data) => {
         setMentionDatas(data.mentions);
         setHasMore(data.nextPage ? true : false);
+        setSort(newAlignment);
+        setCurrentPage(1);
       })
       .catch((err) => alert(err.message))
       .finally(() => setSwitching(false));
-    setSort(newAlignment);
-    setCurrentPage(1);
   };
 
   useEffect(() => {
@@ -64,10 +58,10 @@ const HomePage = () => {
       .then((data) => {
         setMentionDatas(data.mentions);
         setHasMore(data.nextPage ? true : false);
+        setCurrentPage(1);
       })
       .catch((err) => alert("Cookie expired. Please log in again"));
-    setCurrentPage(1);
-  }, [searchTerm, user.platforms]);
+  }, [searchTerm, user.platforms, dispatch]);
 
   if (mentionDatas === null) return <Spinner />;
 
