@@ -6,7 +6,7 @@ import {
   makeStyles,
   Typography,
 } from "@material-ui/core";
-import { CopyToClipboard } from "react-copy-to-clipboard"; // FaClipboard
+import { CopyToClipboard } from "react-copy-to-clipboard";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faClipboard } from "@fortawesome/free-solid-svg-icons";
 import { REACT_APP_BASE_URL } from "../utils/constants";
@@ -37,6 +37,3 @@ const MentionDialog = (props) => {
 };
 
 export default MentionDialog;
-
-// TODO
-// - Import copy-to-clipboard button
