@@ -103,4 +103,21 @@ const getMentions = async (req, res) => {
   }
 };
 
-module.exports = { getMentions };
+const getOneMention = async (req, res) => {
+  try {
+    const { id } = req.query;
+    if (!id) {
+      res.status(404).json({ message: "No Mention ID provided" });
+    } else {
+      const fetchMention = async () => {
+        const results = await Mention.find({ _id: id });
+        res.status(201).json(results[0]);
+      };
+      fetchMention();
+    }
+  } catch (error) {
+    res.status(400).json({ message: "something went wrong" });
+  }
+};
+
+module.exports = { getMentions, getOneMention };

@@ -4,6 +4,7 @@ import { BrowserRouter, Route, Switch } from "react-router-dom";
 import { theme } from "./themes/theme";
 import HomePage from "./pages/HomePage";
 import SettingPage from "./pages/SettingPage";
+import MentionPage from "./pages/MentionPage";
 import Signup from "./pages/Signup";
 import Login from "./pages/Login";
 import PagesWrapper from "./pages/PagesWrapper";
@@ -18,6 +19,7 @@ function App() {
           <PagesWrapper>
             <PrivateRoute exact path="/" component={HomePage} />
             <PrivateRoute path="/setting" component={SettingPage} />
+            <PrivateRoute path="/mentions/:id" component={MentionPage} />
             <Route path="/signup" component={Signup} />
             <Route path="/login" component={Login} />
           </PagesWrapper>

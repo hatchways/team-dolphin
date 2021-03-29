@@ -1,6 +1,6 @@
-const generateToken = require('../config/generateToken');
-const User = require('../models/userModel');
-const { addMentionsToDB } = require('../utils/scraper'); // Added for Co-op Midterm Presentation
+const generateToken = require("../config/generateToken");
+const User = require("../models/userModel");
+const { addMentionsToDB } = require("../utils/scraper"); // Added for Co-op Midterm Presentation
 
 // @desc    Register a new user
 // @route   POST /api/users/auth/signup
@@ -11,7 +11,7 @@ const signUp = async (req, res) => {
   const userAlreadyRegistered = await User.findOne({ email });
 
   if (userAlreadyRegistered) {
-    res.status(400).json({ message: 'User already exists' });
+    res.status(400).json({ message: "User already exists" });
   }
 
   const regex = /\w{6,}/gm;
@@ -26,11 +26,15 @@ const signUp = async (req, res) => {
 
     if (user) {
       const token = generateToken(user._id);
-      res.cookie('dolphinToken', token, {
+      res.cookie("dolphinToken", token, {
         maxAge: 3600000,
         httpOnly: true,
         secure: false, // should be true in Production !
       });
+
+      // To be handled by BullMQ
+      // Added for Testing purposes
+      await addMentionsToDB(user.name, "reddit");
 
       res.status(201).json({
         _id: user._id,
@@ -39,10 +43,10 @@ const signUp = async (req, res) => {
         platforms: user.platforms,
       });
     } else {
-      res.status(400).json({ message: 'Invalid user data' });
+      res.status(400).json({ message: "Invalid user data" });
     }
   } else {
-    res.status(400).json({ message: 'Invalid password' });
+    res.status(400).json({ message: "Invalid password" });
   }
 };
 
@@ -56,11 +60,15 @@ const signIn = async (req, res) => {
 
   if (user && (await user.matchPassword(password))) {
     const token = generateToken(user._id);
-    res.cookie('dolphinToken', token, {
+    res.cookie("dolphinToken", token, {
       maxAge: 3600000,
       httpOnly: true,
       secure: false, // should be true in Production !
     });
+
+    // To be handled by BullMQ
+    // Added for Testing purposes
+    await addMentionsToDB(user.name, "reddit");
 
     res.status(201).json({
       _id: user._id,
@@ -69,7 +77,7 @@ const signIn = async (req, res) => {
       platforms: user.platforms,
     });
   } else {
-    res.status(401).json({ message: 'Invalid email or password' });
+    res.status(401).json({ message: "Invalid email or password" });
   }
 };
 

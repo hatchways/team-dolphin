@@ -8,6 +8,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Spinner from "../layout/Spinner";
 import { getMentions } from "../hooks/getMentions";
 import InfiniteScroll from "react-infinite-scroller";
+import { faClosedCaptioning } from "@fortawesome/free-solid-svg-icons";
 
 const useStyles = makeStyles((theme) => ({
   box: {
@@ -52,7 +53,9 @@ const HomePage = () => {
   const items =
     !error && mentionDatas.length > 0 ? (
       mentionDatas.map((mentionData) => (
-        <Mention key={mentionData._id} mention={mentionData} />
+        <>
+          <Mention key={mentionData._id} mention={mentionData} />
+        </>
       ))
     ) : (
       <div>No results found</div>
