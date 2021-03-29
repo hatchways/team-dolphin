@@ -23,11 +23,11 @@ const connectRedis = () => {
 };
 
 const handleSendWeeklyReport = () => {
-  const emailsQueue = new Queue("queue-for-getting-emails", {
+  const emailsQueue = new Queue("report email enqueue", {
     redis: { port: process.env.REDIS_PORT, host: process.env.REDIS_HOST },
   });
 
-  const sendingQueue = new Queue("queue-for-sending-emails", {
+  const sendingQueue = new Queue("sending", {
     redis: { port: process.env.REDIS_PORT, host: process.env.REDIS_HOST },
   });
 
@@ -42,12 +42,12 @@ const handleSendWeeklyReport = () => {
 
   emailsQueue.process(async (job, done) => {
     try {
-      const emails = await User.getAllReportEmails();
+      const users = await User.find({});
 
-      emails.forEach(email => {
-        const mentions = await User.getMostPopularMentions(email);
-        sendingQueue.add({ email: email, mentions: mentions })
-      })
+      users.forEach(async (user) => {
+        const mentions = await user.getTopFiveMentions();
+        sendingQueue.add({ email: user.reportEmail, mentions: mentions });
+      });
 
       done(new Error("error adding emails to queue"));
     } catch (error) {

@@ -23,8 +23,10 @@
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.11.19",
     "morgan": "^1.10.0",
+    "node-mailjet": "^3.3.1",
     "nodemon": "^2.0.6",
-    "redis": "^3.0.2"
+    "redis": "^3.0.2",
+    "sib-api-v3-sdk": "^8.2.0"
   },
   "devDependencies": {
     "chai": "^4.2.0",

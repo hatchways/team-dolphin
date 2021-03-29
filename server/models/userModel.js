@@ -48,4 +48,8 @@ userSchema.statics.getAllCompanies = async function () {
   return await this.distinct("name");
 };
 
+userSchema.statics.getAllReportEmails = async () => {
+  return await this.distinct("reportEmail");
+};
+
 module.exports = mongoose.model("User", userSchema);
