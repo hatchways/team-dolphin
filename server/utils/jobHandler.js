@@ -3,6 +3,7 @@ const Queue = require("bull");
 const User = require("../models/userModel");
 const Mention = require("../models/mentionModel");
 const { addMentionsToDB } = require("./scraper");
+const { sendWeeklyReport } = require("./mailjet");
 
 const connectRedis = () => {
   // to start redis server in background
@@ -18,6 +19,49 @@ const connectRedis = () => {
 
   client.on("ready", function () {
     console.log("redis is running");
+  });
+};
+
+const handleSendWeeklyReport = () => {
+  const emailsQueue = new Queue("queue-for-getting-emails", {
+    redis: { port: process.env.REDIS_PORT, host: process.env.REDIS_HOST },
+  });
+
+  const sendingQueue = new Queue("queue-for-sending-emails", {
+    redis: { port: process.env.REDIS_PORT, host: process.env.REDIS_HOST },
+  });
+
+  emailsQueue.add(
+    {},
+    {
+      repeat: { cron: "0 9 * * 1" }, // 9:00 AM every Monday
+      delay: 2000,
+      jobId: "repeatEmailsUpdate",
+    }
+  );
+
+  emailsQueue.process(async (job, done) => {
+    try {
+      const emails = await User.getAllReportEmails();
+
+      emails.forEach(email => {
+        const mentions = await User.getMostPopularMentions(email);
+        sendingQueue.add({ email: email, mentions: mentions })
+      })
+
+      done(new Error("error adding emails to queue"));
+    } catch (error) {
+      console.log(error);
+    }
+  });
+
+  sendingQueue.process(async (job, done) => {
+    try {
+      await sendWeeklyReport(job.data.email, job.data.mentions);
+      done(new Error(`${job.data.email} and mentions error`));
+    } catch (error) {
+      console.log(error);
+    }
   });
 };
 
