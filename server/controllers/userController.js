@@ -25,7 +25,7 @@ const signUp = async (req, res) => {
     });
 
     if (user) {
-      handleIndividualCompany(user.name);
+      handleIndividualCompany(user.activeCompany);
       const token = generateToken(user._id);
       res.cookie("dolphinToken", token, {
         maxAge: 3600000,
