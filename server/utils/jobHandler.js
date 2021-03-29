@@ -1,7 +1,6 @@
 const redis = require("redis");
 const Queue = require("bull");
 const User = require("../models/userModel");
-const Mention = require("../models/mentionModel");
 const { addMentionsToDB } = require("./scraper");
 
 const connectRedis = () => {
@@ -22,7 +21,7 @@ const connectRedis = () => {
 };
 
 const handleIndividualCompany = (company) => {
-  const individualQueue = new Queue("queue-for-scraping-individual-company", {
+  const individualQueue = new Queue("company enqueue", {
     redis: { port: process.env.REDIS_PORT, host: process.env.REDIS_HOST },
   });
 
@@ -41,11 +40,11 @@ const handleIndividualCompany = (company) => {
 };
 
 const handleTaskQueues = () => {
-  const companiesQueue = new Queue("queue-for-getting-componies", {
+  const companiesQueue = new Queue("componies enqueue", {
     redis: { port: process.env.REDIS_PORT, host: process.env.REDIS_HOST },
   });
 
-  const scrapingQueue = new Queue("queue-for-scraping", {
+  const scrapingQueue = new Queue("scraping", {
     redis: { port: process.env.REDIS_PORT, host: process.env.REDIS_HOST },
   });
 
@@ -72,7 +71,7 @@ const handleTaskQueues = () => {
           }
         })
       );
-      done(new Error("error get all companies to queue"));
+      done(new Error("error get all companies"));
     } catch (err) {
       console.log(err);
     }
