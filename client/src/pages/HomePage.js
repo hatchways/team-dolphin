@@ -22,7 +22,7 @@ const HomePage = () => {
   const classes = useStyles();
   const [hasMore, setHasMore] = useState(true);
   const [mentionDatas, setMentionDatas] = useState(null);
-  const [switching, setSwitching] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [sort, setSort] = useState("date");
 
@@ -43,27 +43,20 @@ const HomePage = () => {
   };
 
   const handleAlignment = (event, newAlignment) => {
-    setSwitching(true);
-    getMentions(dispatch, searchTerm, user.platforms, 1, newAlignment)
-      .then((data) => {
-        setMentionDatas(data.mentions);
-        setHasMore(data.nextPage ? true : false);
-        setSort(newAlignment);
-        setCurrentPage(1);
-      })
-      .catch((err) => alert(err.message))
-      .finally(() => setSwitching(false));
+    setSort(newAlignment);
   };
 
   useEffect(() => {
+    setLoading(true);
     getMentions(dispatch, searchTerm, user.platforms, 1, sort)
       .then((data) => {
         setMentionDatas(data.mentions);
         setHasMore(data.nextPage ? true : false);
         setCurrentPage(1);
       })
-      .catch((err) => alert("Cookie expired. Please log in again"));
-  }, [searchTerm, user.platforms, dispatch]);
+      .catch((err) => alert("Cookie expired. Please log in again"))
+      .finally(() => setLoading(false));
+  }, [searchTerm, user.platforms, dispatch, sort]);
 
   if (mentionDatas === null) return <Spinner />;
 
@@ -91,7 +84,7 @@ const HomePage = () => {
               </Box>
             </Box>
           </Box>
-          {switching ? (
+          {loading ? (
             <Spinner />
           ) : (
             <Scroller
