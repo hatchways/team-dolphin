@@ -1,6 +1,6 @@
 const mailjet = require("node-mailjet").connect(
-  process.env.MAILJET_API_KEY || "09c3b2a50111930bf73775e7a833a797",
-  process.env.MAILJET_SECRET || "c6c1ef249dae9f25c70c478089fdd29b"
+  process.env.MAILJET_API_KEY,
+  process.env.MAILJET_SECRET
 );
 
 const sendWeeklyReport = (email, mentions) => {
