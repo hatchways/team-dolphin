@@ -1,4 +1,5 @@
 import React, { useContext, useEffect } from "react";
+import { useHistory } from "react-router-dom";
 import InfiniteScroll from "react-infinite-scroller";
 import { UserContext } from "../context/user";
 import { getMentions } from "../hooks/getMentions";
@@ -15,6 +16,7 @@ const Scroller = ({
   setMentionDatas,
 }) => {
   const { dispatch, searchTerm, user } = useContext(UserContext);
+  const history = useHistory();
 
   useEffect(() => {
     getMentions(dispatch, searchTerm, user.platforms, 1, sort)
@@ -22,7 +24,10 @@ const Scroller = ({
         setMentionDatas(data.mentions);
         setHasMore(data.nextPage ? true : false);
       })
-      .catch((err) => alert("Cookie expired. Please log in again"));
+      .catch((err) => {
+        alert("Cookie expired. Please log in again");
+        history.push("/login");
+      });
   }, [sort]);
 
   return (
