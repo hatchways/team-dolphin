@@ -7,6 +7,7 @@ import SortToggle from "../layout/SortToggle";
 import { makeStyles } from "@material-ui/core/styles";
 import Spinner from "../layout/Spinner";
 import { getMentions } from "../hooks/getMentions";
+import InfiniteScroll from "react-infinite-scroller";
 
 const useStyles = makeStyles((theme) => ({
   box: {
@@ -23,6 +24,7 @@ const HomePage = () => {
   const [switching, setSwitching] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [sort, setSort] = useState("date");
+
   const { dispatch, error, searchTerm, user } = useContext(UserContext);
 
   const loadMore = async () => {
@@ -60,7 +62,7 @@ const HomePage = () => {
         setCurrentPage(1);
       })
       .catch((err) => alert("Cookie expired. Please log in again"));
-  }, [searchTerm, user.platforms]);
+  }, [searchTerm, user.platforms, dispatch]);
 
   if (mentionDatas === null) return <Spinner />;
 
@@ -97,6 +99,7 @@ const HomePage = () => {
               error={error}
             />
           )}
+
         </Grid>
         <Grid item xs={2} style={{ backgroundColor: "#FAFBFF" }}></Grid>
       </Grid>
