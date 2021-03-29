@@ -6,6 +6,7 @@ import MentionList from "../layout/MentionList";
 import SortToggle from "../layout/SortToggle";
 import { makeStyles } from "@material-ui/core/styles";
 import Spinner from "../layout/Spinner";
+import Scroller from "../layout/Scroller";
 import { getMentions } from "../hooks/getMentions";
 import InfiniteScroll from "react-infinite-scroller";
 import { faClosedCaptioning } from "@fortawesome/free-solid-svg-icons";

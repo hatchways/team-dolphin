@@ -3,35 +3,52 @@ import {
   Dialog,
   DialogTitle,
   DialogContent,
-  makeStyles,
   Typography,
+  Grid,
+  Button,
+  Link,
 } from "@material-ui/core";
 import { CopyToClipboard } from "react-copy-to-clipboard";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faClipboard } from "@fortawesome/free-solid-svg-icons";
 import { REACT_APP_BASE_URL } from "../utils/constants";
 
 const MentionDialog = (props) => {
-  const { mention, children, openDialog, setOpenDialog } = props;
+  const { mention, openDialog, setOpenDialog } = props;
   const url = `${REACT_APP_BASE_URL}/mentions/${mention._id}`;
   const [mentionSectionUrl, setMentionSectionUrl] = useState(url);
 
   return (
-    <Dialog open={openDialog}>
-      <DialogTitle onClick={() => setOpenDialog(false)}>
-        <div>{mention.title}</div>
-      </DialogTitle>
-      <DialogContent>
-        <div>{mention.content}</div>
-        <hr />
-        <a href={mention.url}>Open link</a>
-        <hr />
-        <CopyToClipboard text={mentionSectionUrl}>
-          <button>Copy URL</button>
-        </CopyToClipboard>
-        <hr />
-        <span>{mentionSectionUrl}</span>
-      </DialogContent>
+    <Dialog open={openDialog} maxWidth="md">
+      <Grid container spacing={2}>
+        <Grid item xs={12}>
+          <DialogTitle onClick={() => setOpenDialog(false)}>
+            <Typography variant="h6">{mention.title}</Typography>
+          </DialogTitle>
+        </Grid>
+        <Grid item xs={12}>
+          <DialogContent>
+            <Grid item xs={12}>
+              <Typography paragraph>{mention.content}</Typography>
+            </Grid>
+
+            <Grid item xs={12} container spacing={2}>
+              <Grid item xs={6}>
+                <Link href={mention.url} target="_blank" rel="noopener">
+                  <Button variant="contained" color="primary" fullWidth>
+                    Open link
+                  </Button>
+                </Link>
+              </Grid>
+              <Grid item xs={6}>
+                <CopyToClipboard text={mentionSectionUrl}>
+                  <Button variant="contained" color="primary" fullWidth>
+                    Copy URL
+                  </Button>
+                </CopyToClipboard>
+              </Grid>
+            </Grid>
+          </DialogContent>
+        </Grid>
+      </Grid>
     </Dialog>
   );
 };
