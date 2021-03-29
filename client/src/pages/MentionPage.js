@@ -18,7 +18,8 @@ const MentionPage = () => {
   return (
     <>
       <AppBarLoggedIn />
-      <div>Mention Page here</div>
+      <h2>{mention.title}</h2>
+      <p>{mention.content}</p>
     </>
   );
 };
