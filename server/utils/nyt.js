@@ -5,6 +5,7 @@ const scrapeNYT = async (term) => {
   try {
     const browser = await puppeteer.launch({ headless: true });
     const page = await browser.newPage();
+    await page.setDefaultNavigationTimeout(0);
     await page.goto(`${ENDPOINT}query=${term}`);
     await page.evaluate(() => {
       const loadMoreTimes = 9;
@@ -18,7 +19,6 @@ const scrapeNYT = async (term) => {
     const res = await page.evaluate(
       ({ term }) => {
         let articles = document.body.querySelectorAll(".css-1l4w6pd");
-
         const posts = [];
         articles.forEach((article) => {
           posts.push({
@@ -30,13 +30,19 @@ const scrapeNYT = async (term) => {
             image: article.querySelector("img.css-11cwn6f")
               ? article.querySelector("img.css-11cwn6f").src
               : "nytDefault",
-            date: new Date(
-              Date.parse(
-                article
-                  .querySelector("span.css-17ubb9w")
-                  .getAttribute("aria-label")
-              )
-            ).toString(),
+            date: Date.parse(
+              article
+                .querySelector("span.css-17ubb9w")
+                .getAttribute("aria-label")
+            )
+              ? new Date(
+                  Date.parse(
+                    article
+                      .querySelector("span.css-17ubb9w")
+                      .getAttribute("aria-label")
+                  )
+                ).toISOString()
+              : new Date(Date.now()).toISOString(),
             popularity: 5, //set a default number, it will be further handled by algorithm
             url: article.querySelector("a").href,
             company: term,
@@ -47,7 +53,6 @@ const scrapeNYT = async (term) => {
       { term }
     );
     await browser.close();
-    console.log(res);
     return res;
   } catch (err) {
     console.log(err);

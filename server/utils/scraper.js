@@ -6,16 +6,18 @@ const { scrapeNYT } = require("../utils/nyt.js");
 // To be handled by BullMQ
 const addMentionsToDB = async (company, platform) => {
   const updatePost = (posts) => {
-    posts.forEach(async (post) => {
-      try {
-        const bool = await Mention.exists({ url: post.url });
-        if (!bool) {
-          await Mention.create(post);
+    if (posts) {
+      posts.forEach(async (post) => {
+        try {
+          const bool = await Mention.exists({ url: post.url });
+          if (!bool) {
+            await Mention.create(post);
+          }
+        } catch (err) {
+          console.log(err);
         }
-      } catch (err) {
-        console.log(err);
-      }
-    });
+      });
+    }
   };
 
   try {
