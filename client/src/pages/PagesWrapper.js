@@ -7,7 +7,7 @@ const PagesWrapper = ({ children }) => {
 
   useEffect(() => {
     authenticate(dispatch);
-  }, [isAuthenticated]);
+  }, [isAuthenticated, dispatch]);
 
   return <>{children}</>;
 };

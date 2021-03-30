@@ -1,6 +1,6 @@
-const generateToken = require('../config/generateToken');
-const User = require('../models/userModel');
-const { addMentionsToDB } = require('../utils/scraper'); // Added for Co-op Midterm Presentation
+const generateToken = require("../config/generateToken");
+const User = require("../models/userModel");
+const { addMentionsToDB } = require("../utils/scraper"); // Added for Co-op Midterm Presentation
 
 // @desc    Register a new user
 // @route   POST /api/users/auth/signup
@@ -11,7 +11,7 @@ const signUp = async (req, res) => {
   const userAlreadyRegistered = await User.findOne({ email });
 
   if (userAlreadyRegistered) {
-    res.status(400).json({ message: 'User already exists' });
+    res.status(400).json({ message: "User already exists" });
   }
 
   const regex = /\w{6,}/gm;
@@ -19,30 +19,39 @@ const signUp = async (req, res) => {
 
   if (validPassword) {
     const user = await User.create({
-      name,
+      companies: [name],
+      activeCompany: name, // will be the company signed up with by default -- can be changed in settings and navbar
       email,
+      reportEmail: email, // by default -- can be changed in settings
       password,
     });
 
     if (user) {
       const token = generateToken(user._id);
-      res.cookie('dolphinToken', token, {
+      res.cookie("dolphinToken", token, {
         maxAge: 3600000,
         httpOnly: true,
         secure: false, // should be true in Production !
       });
 
+      // here for functionality -- will be replaced by Aidan's handleIndividualCompany function in a future PR
+      for (const platform in user.platforms) {
+        await addMentionsToDB(user.activeCompany, platform);
+      }
+
       res.status(201).json({
         _id: user._id,
-        name: user.name,
+        companies: user.companies,
+        activeCompany: user.activeCompany,
         email: user.email,
+        reportEmail: user.reportEmail,
         platforms: user.platforms,
       });
     } else {
-      res.status(400).json({ message: 'Invalid user data' });
+      res.status(400).json({ message: "Invalid user data" });
     }
   } else {
-    res.status(400).json({ message: 'Invalid password' });
+    res.status(400).json({ message: "Invalid password" });
   }
 };
 
@@ -56,7 +65,7 @@ const signIn = async (req, res) => {
 
   if (user && (await user.matchPassword(password))) {
     const token = generateToken(user._id);
-    res.cookie('dolphinToken', token, {
+    res.cookie("dolphinToken", token, {
       maxAge: 3600000,
       httpOnly: true,
       secure: false, // should be true in Production !
@@ -64,13 +73,23 @@ const signIn = async (req, res) => {
 
     res.status(201).json({
       _id: user._id,
-      name: user.name,
+      companies: user.companies,
+      activeCompany: user.activeCompany,
       email: user.email,
+      reportEmail: user.reportEmail,
       platforms: user.platforms,
     });
   } else {
-    res.status(401).json({ message: 'Invalid email or password' });
+    res.status(401).json({ message: "Invalid email or password" });
   }
+};
+
+// @desc    Clears user cookie
+// @route   GET /api/users/logout
+// @access  Public
+const logout = async (req, res) => {
+  res.clearCookie("dolphinToken");
+  res.sendStatus(200);
 };
 
 // @desc    Get user profile
@@ -80,15 +99,27 @@ const getUserProfile = async (req, res) => {
   res.json(req.user);
 };
 
-// @desc Update user's selected platforms
-// @route PATCH /api/users/platforms
-// @access Private
-const updatePlatforms = async (req, res) => {
-  const user = await User.findByIdAndUpdate(req.user._id, {
-    platforms: req.body,
-  });
-
-  res.json(user);
+// @desc    Update property/properties of User
+// @route   PATCH /api/users/update
+// @access  Private
+const updateUser = async (req, res) => {
+  try {
+    const user = await User.findByIdAndUpdate(
+      req.user._id,
+      { $set: req.body },
+      { new: true }
+    );
+    console.log(user);
+    res.json(user);
+  } catch (error) {
+    throw error;
+  }
 };
 
-module.exports = { signUp, signIn, getUserProfile, updatePlatforms };
+module.exports = {
+  signUp,
+  signIn,
+  getUserProfile,
+  updateUser,
+  logout,
+};

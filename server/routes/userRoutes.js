@@ -4,7 +4,8 @@ const {
   signUp,
   signIn,
   getUserProfile,
-  updatePlatforms,
+  updateUser,
+  logout,
 } = require("../controllers/userController");
 const { isAuthenticated } = require("../middlewares/isAuthenticated");
 
@@ -12,6 +13,8 @@ router.post("/auth/signin", signIn);
 router.post("/auth/signup", signUp);
 router.get("/profile", isAuthenticated, getUserProfile);
 router.get("/me", isAuthenticated, getUserProfile);
-router.patch("/platforms", isAuthenticated, updatePlatforms);
+router.patch("/update", isAuthenticated, updateUser);
+
+router.get("/logout", logout);
 
 module.exports = router;
