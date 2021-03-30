@@ -3,7 +3,11 @@ const bcrypt = require("bcryptjs");
 
 const userSchema = mongoose.Schema(
   {
-    name: {
+    companies: {
+      type: Array,
+      required: true,
+    },
+    activeCompany: {
       type: String,
       required: true,
     },
@@ -11,6 +15,10 @@ const userSchema = mongoose.Schema(
       type: String,
       required: true,
       unique: true,
+    },
+    reportEmail: {
+      type: String,
+      required: true,
     },
     password: {
       type: String,
@@ -24,6 +32,7 @@ const userSchema = mongoose.Schema(
       forbes: { type: Boolean, required: true, default: false },
       shopify: { type: Boolean, required: true, default: false },
       businessinsider: { type: Boolean, required: true, default: false },
+      nyt: { type: Boolean, required: true, default: false },
     },
   },
   {
@@ -45,7 +54,7 @@ userSchema.pre("save", async function (next) {
 });
 
 userSchema.statics.getAllCompanies = async function () {
-  return await this.distinct("name");
+  return await this.distinct("name").flat();
 };
 
 module.exports = mongoose.model("User", userSchema);

@@ -2,13 +2,13 @@ import React, { useContext, useEffect, useState } from "react";
 import AppBarLoggedIn from "../layout/AppBarLoggedIn";
 import { Grid, Typography, Box } from "@material-ui/core";
 import { UserContext } from "../context/user";
-import Mention from "../layout/Mention";
 import MentionList from "../layout/MentionList";
+import SortToggle from "../layout/SortToggle";
 import { makeStyles } from "@material-ui/core/styles";
 import Spinner from "../layout/Spinner";
+import Scroller from "../layout/Scroller";
 import { getMentions } from "../hooks/getMentions";
-import InfiniteScroll from "react-infinite-scroller";
-import axios from "axios";
+// import { flexbox } from "@material-ui/system";
 
 const useStyles = makeStyles((theme) => ({
   box: {
@@ -22,43 +22,43 @@ const HomePage = () => {
   const classes = useStyles();
   const [hasMore, setHasMore] = useState(true);
   const [mentionDatas, setMentionDatas] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [sort, setSort] = useState("date");
+
   const { dispatch, error, searchTerm, user } = useContext(UserContext);
 
-  const loadMore = async (newPage) => {
-    const config = {
-      headers: { "Access-Control-Allow-Origin": "*" },
-    };
-    const url =
-      "/api/mentions?platforms=reddit" +
-      (searchTerm ? "&keyword=" + searchTerm : "") +
-      "&page=" +
-      newPage;
-
-    const results = await axios(url, config);
-    setHasMore(results.data.nextPage ? true : false);
-    const newData = [...mentionDatas, results.data.mentions].flat();
+  const loadMore = async () => {
+    const data = await getMentions(
+      dispatch,
+      searchTerm,
+      user.platforms,
+      currentPage + 1,
+      sort
+    );
+    setHasMore(data.nextPage ? true : false);
+    const newData = [...mentionDatas, data.mentions].flat();
     setMentionDatas(newData);
+    setCurrentPage(currentPage + 1);
+  };
+
+  const handleAlignment = (event, newAlignment) => {
+    setSort(newAlignment);
   };
 
   useEffect(() => {
-    getMentions(dispatch, searchTerm, user.platforms)
+    setLoading(true);
+    getMentions(dispatch, searchTerm, user.platforms, 1, sort)
       .then((data) => {
         setMentionDatas(data.mentions);
         setHasMore(data.nextPage ? true : false);
+        setCurrentPage(1);
       })
-      .catch((err) => alert("Cookie expired. Please log in again"));
-  }, [searchTerm, user.platforms]);
+      .catch((err) => alert("Cookie expired. Please log in again"))
+      .finally(() => setLoading(false));
+  }, [searchTerm, user.platforms, dispatch, user.activeCompany, sort]);
 
   if (mentionDatas === null) return <Spinner />;
-
-  const items =
-    !error && mentionDatas.length > 0 ? (
-      mentionDatas.map((mentionData) => (
-        <Mention key={mentionData._id} mention={mentionData} />
-      ))
-    ) : (
-      <div>No results found</div>
-    );
 
   return (
     <>
@@ -69,18 +69,34 @@ const HomePage = () => {
         </Grid>
         <Grid item xs={7} style={{ backgroundColor: "#FAFBFF" }} align="right">
           <Box className={classes.box}>
-            <Typography variant="h3" align="left">
-              My mentions
-            </Typography>
+            <Box display="flex">
+              <Box flexGrow={1}>
+                <Typography variant="h3" align="left">
+                  My mentions
+                </Typography>
+              </Box>
+              <Box>
+                <SortToggle
+                  handleAlignment={handleAlignment}
+                  alignment={sort}
+                  setAlignment={setSort}
+                />
+              </Box>
+            </Box>
           </Box>
-
-          <InfiniteScroll
-            pageStart={1}
-            loadMore={loadMore}
-            hasMore={hasMore}
-            loader={<Spinner />}>
-            {items}
-          </InfiniteScroll>
+          {loading ? (
+            <Spinner />
+          ) : (
+            <Scroller
+              sort={sort}
+              loadmore={loadMore}
+              hasMore={hasMore}
+              setHasMore={setHasMore}
+              mentionDatas={mentionDatas}
+              setMentionDatas={setMentionDatas}
+              error={error}
+            />
+          )}
         </Grid>
         <Grid item xs={2} style={{ backgroundColor: "#FAFBFF" }}></Grid>
       </Grid>
@@ -89,3 +105,5 @@ const HomePage = () => {
 };
 
 export default HomePage;
+
+// <div className="flexbox space-between"></div>

@@ -1,7 +1,9 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Tabs, Tab } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { Link } from "react-router-dom";
+import { logout } from "../actions/user";
+import { UserContext } from "../context/user";
 
 const useStyles = makeStyles((theme) => ({
   indicator: {
@@ -31,9 +33,8 @@ const SettingTab = () => {
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
+  const { dispatch } = useContext(UserContext);
 
-  // logout function handler
-  const logoutHandler = () => {};
   return (
     <Tabs
       orientation="vertical"
@@ -45,8 +46,7 @@ const SettingTab = () => {
       classes={{
         root: classes.tabs,
         indicator: classes.indicator,
-      }}
-    >
+      }}>
       <Tab
         label="Company"
         classes={{
@@ -71,7 +71,7 @@ const SettingTab = () => {
           wrapper: classes.wrapper,
           selected: classes.selected,
         }}
-        onClick={logoutHandler}
+        onClick={() => logout(dispatch)}
       />
     </Tabs>
   );
