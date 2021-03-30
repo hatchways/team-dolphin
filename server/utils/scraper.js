@@ -1,20 +1,27 @@
 const Mention = require("../models/mentionModel");
 const { searchRecursive } = require("../utils/reddit");
+const { searchTwitter } = require("../utils/twitter");
 
 // To be handled by BullMQ
 const addMentionsToDB = async (company, platform) => {
+  const updatePost = (posts) => {
+    posts.forEach(async (post) => {
+      const bool = await Mention.exists({ url: post.url });
+      if (!bool) {
+        await Mention.create(post);
+      }
+    });
+  };
+
   try {
     switch (platform) {
       case "reddit":
-        const posts = await searchRecursive(company);
-        posts.forEach(async (post) => {
-          const bool = await Mention.exists({ url: post.url });
-          if (!bool) {
-            await Mention.create(post);
-          }
-        });
+        const reddits = await searchRecursive(company);
+        updatePost(reddits);
         break;
       case "twitter":
+        const tweets = await searchTwitter(company);
+        updatePost(tweets);
         break;
       case "facebook":
         break;

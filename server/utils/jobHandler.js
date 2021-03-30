@@ -52,7 +52,7 @@ const handleTaskQueues = () => {
           }
         })
       );
-      done(new Error("error adding companies to queue"));
+      done(new Error("error get all companies to queue"));
     } catch (err) {
       console.log(err);
     }
