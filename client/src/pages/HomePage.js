@@ -104,5 +104,3 @@ const HomePage = () => {
 };
 
 export default HomePage;
-
-// <div className="flexbox space-between"></div>

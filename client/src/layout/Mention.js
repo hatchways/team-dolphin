@@ -1,4 +1,5 @@
 import React, { useContext, useState } from "react";
+import { Link } from "react-router-dom";
 import {
   Typography,
   Card,
@@ -11,7 +12,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSmile } from "@fortawesome/free-regular-svg-icons";
 import redditLogo from "../utils/images/reddit-logo.png";
 import { UserContext } from "../context/user";
-import MentionDialog from "./MentionDialog";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -84,43 +84,43 @@ const Mention = ({ mention }) => {
   const { searchTerm } = useContext(UserContext);
   const regex = new RegExp(`${searchTerm}`, "i");
   const indexK = mention.title.search(regex);
-  const [openDialog, setOpenDialog] = useState(false);
 
   return (
     <>
-      <Card className={classes.root} onClick={() => setOpenDialog(true)}>
-        <CardMedia
-          image={image(mention.image)}
-          className={classes.media}
-          title="mention cover"
-        />
-        <CardContent className={classes.content}>
-          <Box component="div" className={classes.titleBox}>
-            <Typography variant="h6" gutterBottom>
-              {/* {mention.title.substring(0, indexK)}
+      <Link to={`/mentions/${mention._id}`}>
+        <Card className={classes.root}>
+          <CardMedia
+            image={image(mention.image)}
+            className={classes.media}
+            title="mention cover"
+          />
+          <CardContent className={classes.content}>
+            <Box component="div" className={classes.titleBox}>
+              <Typography variant="h6" gutterBottom>
+                {/* {mention.title.substring(0, indexK)}
             <span style={{ color: "#536dfe" }}>{searchTerm}</span>
             {mention.title.substring(indexK + searchTerm.length)} */}
-              {mention.title}
+                {mention.title}
+              </Typography>
+            </Box>
+            <Typography
+              vairant="subtitle1"
+              className={classes.subtitle}
+              gutterBottom>
+              {mention.platform}
             </Typography>
-          </Box>
-          <Typography
-            vairant="subtitle1"
-            className={classes.subtitle}
-            gutterBottom>
-            {mention.platform}
-          </Typography>
-          <Box component="div" classes={{ root: classes.customBox }}>
-            <Typography vairant="caption" className={classes.text} gutterBottom>
-              {mention.content}
-            </Typography>
-          </Box>
-        </CardContent>
-        <FontAwesomeIcon icon={faSmile} className={classes.icon} size="lg" />
-      </Card>
-      <MentionDialog
-        openDialog={openDialog}
-        setOpenDialog={setOpenDialog}
-        mention={mention}></MentionDialog>
+            <Box component="div" classes={{ root: classes.customBox }}>
+              <Typography
+                vairant="caption"
+                className={classes.text}
+                gutterBottom>
+                {mention.content}
+              </Typography>
+            </Box>
+          </CardContent>
+          <FontAwesomeIcon icon={faSmile} className={classes.icon} size="lg" />
+        </Card>
+      </Link>
     </>
   );
 };
