@@ -44,5 +44,4 @@ const scrapeNYT = async (term) => {
     console.log(err);
   }
 };
-// scrapeNYT("Logitech");
 module.exports = { scrapeNYT };
