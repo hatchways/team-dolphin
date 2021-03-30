@@ -1,7 +1,6 @@
 const redis = require("redis");
 const Queue = require("bull");
 const User = require("../models/userModel");
-const Mention = require("../models/mentionModel");
 const { addMentionsToDB } = require("./scraper");
 
 const connectRedis = () => {
@@ -21,14 +20,34 @@ const connectRedis = () => {
   });
 };
 
-const handleTaskQueues = () => {
-  const companiesQueue = new Queue("queue-for-getting-componies", {
+const handleIndividualCompany = (company) => {
+  const individualQueue = new Queue("company enqueue", {
     redis: { port: process.env.REDIS_PORT, host: process.env.REDIS_HOST },
   });
 
-  const scrapingQueue = new Queue("queue-for-scraping", {
+  for (var platform in User.schema.obj.platforms) {
+    individualQueue.add({ company: company, platform: platform });
+  }
+
+  individualQueue.process(async function (job, done) {
+    try {
+      await addMentionsToDB(job.data.company, job.data.platform);
+      done(new Error(`${job.data.company} and ${job.data.platform} error`));
+    } catch (err) {
+      console.log(err);
+    }
+  });
+};
+
+const handleTaskQueues = () => {
+  const companiesQueue = new Queue("componies enqueue", {
     redis: { port: process.env.REDIS_PORT, host: process.env.REDIS_HOST },
   });
+
+  const scrapingQueue = new Queue("scraping", {
+    redis: { port: process.env.REDIS_PORT, host: process.env.REDIS_HOST },
+  });
+
   // job producer, repeated every 15 mins
   companiesQueue.add(
     {},
@@ -52,7 +71,7 @@ const handleTaskQueues = () => {
           }
         })
       );
-      done(new Error("error adding companies to queue"));
+      done(new Error("error get all companies"));
     } catch (err) {
       console.log(err);
     }
@@ -68,4 +87,4 @@ const handleTaskQueues = () => {
   });
 };
 
-module.exports = { connectRedis, handleTaskQueues };
+module.exports = { connectRedis, handleTaskQueues, handleIndividualCompany };

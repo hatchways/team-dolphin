@@ -1,10 +1,6 @@
 const generateToken = require("../config/generateToken");
 const User = require("../models/userModel");
-
-///////// TO BE REMOVED /////////////
-////// To be handled by BullMQ //////
-//// Added for Testing purposes /////
-const { addMentionsToDB } = require("../utils/scraper");
+const { handleIndividualCompany } = require("../utils/jobHandler");
 
 // @desc    Register a new user
 // @route   POST /api/users/auth/signup
@@ -23,28 +19,27 @@ const signUp = async (req, res) => {
 
   if (validPassword) {
     const user = await User.create({
-      name,
+      companies: [name],
+      activeCompany: name, // will be the company signed up with by default -- can be changed in settings and navbar
       email,
+      reportEmail: email, // by default -- can be changed in settings
       password,
     });
 
     if (user) {
+      handleIndividualCompany(user.activeCompany);
       const token = generateToken(user._id);
       res.cookie("dolphinToken", token, {
         maxAge: 3600000,
         httpOnly: true,
         secure: false, // should be true in Production !
       });
-
-      ///////// TO BE REMOVED /////////////
-      ////// To be handled by BullMQ //////
-      //// Added for Testing purposes /////
-      await addMentionsToDB(user.name, "reddit");
-
       res.status(201).json({
         _id: user._id,
-        name: user.name,
+        companies: user.companies,
+        activeCompany: user.activeCompany,
         email: user.email,
+        reportEmail: user.reportEmail,
         platforms: user.platforms,
       });
     } else {
@@ -71,20 +66,25 @@ const signIn = async (req, res) => {
       secure: false, // should be true in Production !
     });
 
-    ///////// TO BE REMOVED /////////////
-    ////// To be handled by BullMQ //////
-    //// Added for Testing purposes /////
-    await addMentionsToDB(user.name, "reddit");
-
     res.status(201).json({
       _id: user._id,
-      name: user.name,
+      companies: user.companies,
+      activeCompany: user.activeCompany,
       email: user.email,
+      reportEmail: user.reportEmail,
       platforms: user.platforms,
     });
   } else {
     res.status(401).json({ message: "Invalid email or password" });
   }
+};
+
+// @desc    Clears user cookie
+// @route   GET /api/users/logout
+// @access  Public
+const logout = async (req, res) => {
+  res.clearCookie("dolphinToken");
+  res.sendStatus(200);
 };
 
 // @desc    Get user profile
@@ -94,15 +94,27 @@ const getUserProfile = async (req, res) => {
   res.json(req.user);
 };
 
-// @desc Update user's selected platforms
-// @route PATCH /api/users/platforms
-// @access Private
-const updatePlatforms = async (req, res) => {
-  const user = await User.findByIdAndUpdate(req.user._id, {
-    platforms: req.body,
-  });
-
-  res.json(user);
+// @desc    Update property/properties of User
+// @route   PATCH /api/users/update
+// @access  Private
+const updateUser = async (req, res) => {
+  try {
+    const user = await User.findByIdAndUpdate(
+      req.user._id,
+      { $set: req.body },
+      { new: true }
+    );
+    console.log(user);
+    res.json(user);
+  } catch (error) {
+    throw error;
+  }
 };
 
-module.exports = { signUp, signIn, getUserProfile, updatePlatforms };
+module.exports = {
+  signUp,
+  signIn,
+  getUserProfile,
+  updateUser,
+  logout,
+};

@@ -32,7 +32,7 @@ const isMatch = (password1, passwordMatch) => {
   return password1 === passwordMatch;
 };
 
-const isValidEmail = (email) => {
+export const isValidEmail = (email) => {
   if (email.length === 0) return true; // just so the input field doesn't appear red at first
   const re = /\S+@\S+\.\S+/;
   return re.test(email);
