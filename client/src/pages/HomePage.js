@@ -54,7 +54,8 @@ const HomePage = () => {
         setHasMore(data.nextPage ? true : false);
         setCurrentPage(1);
       })
-      .catch((err) => alert("Cookie expired. Please log in again"));
+      .catch((err) => alert("Cookie expired. Please log in again"))
+      .finally(() => setLoading(false));
   }, [searchTerm, user.platforms, dispatch, user.activeCompany, sort]);
 
   if (mentionDatas === null) return <Spinner />;
