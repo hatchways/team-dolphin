@@ -1,5 +1,4 @@
-import React, { useContext, useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useContext } from "react";
 import {
   Typography,
   Card,
@@ -90,42 +89,35 @@ const Mention = ({ mention }) => {
   const indexK = mention.title.search(regex);
 
   return (
-    <>
-      <Link to={`/mentions/${mention._id}`}>
-        <Card className={classes.root}>
-          <CardMedia
-            image={image(mention.image)}
-            className={classes.media}
-            title="mention cover"
-          />
-          <CardContent className={classes.content}>
-            <Box component="div" className={classes.titleBox}>
-              <Typography variant="h6" gutterBottom>
-                {/* {mention.title.substring(0, indexK)}
+    <Card className={classes.root}>
+      <CardMedia
+        image={image(mention.image)}
+        className={classes.media}
+        title="mention cover"
+      />
+      <CardContent className={classes.content}>
+        <Box component="div" className={classes.titleBox}>
+          <Typography variant="h6" gutterBottom>
+            {/* {mention.title.substring(0, indexK)}
             <span style={{ color: "#536dfe" }}>{searchTerm}</span>
             {mention.title.substring(indexK + searchTerm.length)} */}
-                {mention.title}
-              </Typography>
-            </Box>
-            <Typography
-              vairant="subtitle1"
-              className={classes.subtitle}
-              gutterBottom>
-              {mention.platform}
-            </Typography>
-            <Box component="div" classes={{ root: classes.customBox }}>
-              <Typography
-                vairant="caption"
-                className={classes.text}
-                gutterBottom>
-                {mention.content}
-              </Typography>
-            </Box>
-          </CardContent>
-          <FontAwesomeIcon icon={faSmile} className={classes.icon} size="lg" />
-        </Card>
-      </Link>
-    </>
+            {mention.title}
+          </Typography>
+        </Box>
+        <Typography
+          vairant="subtitle1"
+          className={classes.subtitle}
+          gutterBottom>
+          {mention.platform}
+        </Typography>
+        <Box component="div" classes={{ root: classes.customBox }}>
+          <Typography vairant="caption" className={classes.text} gutterBottom>
+            {mention.content}
+          </Typography>
+        </Box>
+      </CardContent>
+      <FontAwesomeIcon icon={faSmile} className={classes.icon} size="lg" />
+    </Card>
   );
 };
 
