@@ -18,6 +18,7 @@ const searchRecursive = async (term, after = "", posts = []) => {
           date: new Date(post.data.created * 1000),
           popularity: post.data.ups,
           url: post.data.url,
+          company: term,
         });
       });
       if (res.data.data.after) {

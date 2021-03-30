@@ -54,7 +54,12 @@ userSchema.pre("save", async function (next) {
 });
 
 userSchema.statics.getAllCompanies = async function () {
-  return await this.distinct("name").flat();
+  const companiesObj = await this.find({}, { _id: 0, companies: 1 });
+  return [
+    ...new Set(
+      companiesObj.reduce((acc, val) => acc.concat(val.companies), [])
+    ),
+  ];
 };
 
 module.exports = mongoose.model("User", userSchema);

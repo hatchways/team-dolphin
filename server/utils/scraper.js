@@ -7,9 +7,13 @@ const { scrapeNYT } = require("../utils/nyt.js");
 const addMentionsToDB = async (company, platform) => {
   const updatePost = (posts) => {
     posts.forEach(async (post) => {
-      const bool = await Mention.exists({ url: post.url });
-      if (!bool) {
-        await Mention.create(post);
+      try {
+        const bool = await Mention.exists({ url: post.url });
+        if (!bool) {
+          await Mention.create(post);
+        }
+      } catch (err) {
+        console.log(err);
       }
     });
   };
