@@ -1,4 +1,5 @@
 import axios from "axios";
+import { isValidEmail } from "../pages/Signup";
 
 export const login = async (dispatch, payload) => {
   try {
@@ -7,12 +8,13 @@ export const login = async (dispatch, payload) => {
     });
 
     const res = await axios.post("/api/users/auth/signin", payload);
-
     dispatch({
       type: "SET_USER",
       payload: {
         email: res.data.email,
-        name: res.data.name,
+        reportEmail: res.data.reportEmail,
+        companies: res.data.companies,
+        activeCompany: res.data.activeCompany,
         platforms: res.data.platforms,
       },
     });
@@ -46,7 +48,9 @@ export const register = async (dispatch, payload) => {
       type: "SET_USER",
       payload: {
         email: res.data.email,
-        name: res.data.name,
+        reportEmail: res.data.reportEmail,
+        companies: res.data.companies,
+        activeCompany: res.data.activeCompany,
         platforms: res.data.platforms,
       },
     });
@@ -73,7 +77,9 @@ export const authenticate = async (dispatch) => {
       type: "SET_USER",
       payload: {
         email: res.data.email,
-        name: res.data.name,
+        reportEmail: res.data.reportEmail,
+        companies: res.data.companies,
+        activeCompany: res.data.activeCompany,
         platforms: res.data.platforms,
       },
     });
@@ -81,23 +87,6 @@ export const authenticate = async (dispatch) => {
     dispatch({
       type: "SET_ERROR",
       payload: error.response.data.message,
-    });
-    throw error;
-  }
-};
-
-export const setPlatforms = async (dispatch, platforms) => {
-  dispatch({
-    type: "SET_PLATFORMS",
-    payload: platforms,
-  });
-
-  try {
-    const res = await axios.patch("/api/users/platforms", platforms);
-    return res;
-  } catch (error) {
-    dispatch({
-      type: "LOGOUT",
     });
     throw error;
   }
@@ -112,7 +101,23 @@ export const setSearchTerm = (dispatch, searchTerm) => {
 
 // User logout action
 export const logout = async (dispatch) => {
+  await axios.get("/api/users/logout");
   dispatch({
     type: "LOGOUT",
   });
+};
+
+export const setReportEmail = (dispatch, updatedEmail) => {
+  dispatch({
+    type: "SET_REPORT_EMAIL",
+    payload: updatedEmail,
+  });
+};
+
+export const updateUser = async (update) => {
+  try {
+    await axios.patch("/api/users/update", update);
+  } catch (error) {
+    throw error;
+  }
 };

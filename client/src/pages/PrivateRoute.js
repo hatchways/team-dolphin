@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext } from "react";
 import { Route, Redirect } from "react-router-dom";
 import { UserContext } from "../context/user";
 
@@ -13,7 +13,15 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
           <Component {...props} />
         ) : (
           <Redirect
-            to={{ pathname: "/login", state: { from: props.location } }}
+            to={{
+              pathname: "/login",
+              state: {
+                from:
+                  props.location.pathname === "/setting"
+                    ? { pathname: "/" }
+                    : props.location,
+              },
+            }}
           />
         )
       }

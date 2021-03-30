@@ -19,7 +19,7 @@ import shopify from "../utils/images/shopify-logo.png";
 import business_insider from "../utils/images/BI-logo.png";
 import { CustomizedSwitch } from "./CustomizedSwitch";
 import { UserContext } from "../context/user";
-import { setPlatforms } from "../actions/user";
+import { updateUser } from "../actions/user";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -36,11 +36,23 @@ const MentionList = () => {
 
   const { user, dispatch } = useContext(UserContext);
 
-  const togglePlatform = (event) => {
-    setPlatforms(dispatch, {
+  const togglePlatform = async (event) => {
+    const updatedPlatforms = {
       ...user.platforms,
       [event.target.name]: event.target.checked,
-    }).catch((err) => alert("Cookie expired. Please log in again"));
+    };
+
+    try {
+      await updateUser({
+        platforms: updatedPlatforms,
+      });
+      dispatch({
+        type: "SET_PLATFORMS",
+        payload: updatedPlatforms,
+      });
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (

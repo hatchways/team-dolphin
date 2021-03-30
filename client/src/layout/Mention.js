@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import {
   Typography,
   Card,
@@ -9,7 +9,9 @@ import {
 import { makeStyles } from "@material-ui/core/styles";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSmile } from "@fortawesome/free-regular-svg-icons";
-import redditLogo from "../utils/images/reddit-logo.png"
+import redditLogo from "../utils/images/reddit-logo.png";
+import twitterLogo from "../utils/images/twitter-logo.png";
+import { UserContext } from "../context/user";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -68,19 +70,22 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-  const image = (image) => {
-    if (image === "default" || image === "self") {
+const image = (image) => {
+  switch (keyword) {
+    case "default" || "self":
       return redditLogo;
-    } else {
+    case "twitterDefault":
+      return twitterLogo;
+    default:
       return image;
-    }
-  };
-
+  }
+};
 
 const Mention = ({ mention }) => {
   const classes = useStyles();
   const keyword = "DolphinCorp";
-  const regex = new RegExp(`${keyword}`, "i");
+  const { searchTerm } = useContext(UserContext);
+  const regex = new RegExp(`${searchTerm}`, "i");
   const indexK = mention.title.search(regex);
 
   return (
@@ -94,8 +99,8 @@ const Mention = ({ mention }) => {
         <Box component="div" className={classes.titleBox}>
           <Typography variant="h6" gutterBottom>
             {/* {mention.title.substring(0, indexK)}
-            <span style={{ color: "#536dfe" }}>{keyword}</span>
-            {mention.title.substring(indexK + keyword.length)} */}
+            <span style={{ color: "#536dfe" }}>{searchTerm}</span>
+            {mention.title.substring(indexK + searchTerm.length)} */}
             {mention.title}
           </Typography>
         </Box>
