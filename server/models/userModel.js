@@ -53,7 +53,7 @@ userSchema.pre("save", async function (next) {
 });
 
 userSchema.statics.getAllCompanies = async function () {
-  return await this.distinct("name");
+  return await this.distinct("name").flat();
 };
 
 module.exports = mongoose.model("User", userSchema);

@@ -1,6 +1,6 @@
 const generateToken = require("../config/generateToken");
 const User = require("../models/userModel");
-const { addMentionsToDB } = require("../utils/scraper"); // Added for Co-op Midterm Presentation
+const { handleIndividualCompany } = require("../utils/jobHandler");
 
 // @desc    Register a new user
 // @route   POST /api/users/auth/signup
@@ -27,18 +27,13 @@ const signUp = async (req, res) => {
     });
 
     if (user) {
+      handleIndividualCompany(user.activeCompany);
       const token = generateToken(user._id);
       res.cookie("dolphinToken", token, {
         maxAge: 3600000,
         httpOnly: true,
         secure: false, // should be true in Production !
       });
-
-      // here for functionality -- will be replaced by Aidan's handleIndividualCompany function in a future PR
-      for (const platform in user.platforms) {
-        await addMentionsToDB(user.activeCompany, platform);
-      }
-
       res.status(201).json({
         _id: user._id,
         companies: user.companies,
