@@ -6,7 +6,9 @@ const scrapeNYT = async (term) => {
     const browser = await puppeteer.launch({ headless: true });
     const page = await browser.newPage();
     await page.setDefaultNavigationTimeout(0);
-    await page.goto(`${ENDPOINT}query=${term}`);
+    await page.goto(`${ENDPOINT}query=${term}`, {
+      waitUntil: "domcontentloaded",
+    });
     await page.evaluate(() => {
       const loadMoreTimes = 9;
       for (let i = 0; i < loadMoreTimes; i++) {

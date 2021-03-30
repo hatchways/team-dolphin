@@ -71,7 +71,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const image = (image) => {
-  switch (keyword) {
+  switch (image) {
     case "default" || "self":
       return redditLogo;
     case "twitterDefault":
