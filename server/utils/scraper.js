@@ -1,6 +1,7 @@
 const Mention = require("../models/mentionModel");
 const { searchRecursive } = require("../utils/reddit");
 const { searchTwitter } = require("../utils/twitter");
+const { scrapeNYT } = require("../utils/nyt.js");
 
 // To be handled by BullMQ
 const addMentionsToDB = async (company, platform) => {
@@ -22,6 +23,10 @@ const addMentionsToDB = async (company, platform) => {
       case "twitter":
         const tweets = await searchTwitter(company);
         updatePost(tweets);
+        break;
+      case "nyt":
+        const articles = await scrapeNYT(company);
+        updatePost(articles);
         break;
       case "facebook":
         break;
