@@ -10,11 +10,13 @@ import Login from "./pages/Login";
 import PagesWrapper from "./pages/PagesWrapper";
 import "./App.css";
 import PrivateRoute from "./pages/PrivateRoute";
+import ScrollRestoration from "react-scroll-restoration";
 
 function App() {
   return (
     <MuiThemeProvider theme={theme}>
       <BrowserRouter>
+        <ScrollRestoration />
         <Switch>
           <PagesWrapper>
             <PrivateRoute exact path="/" component={HomePage} />

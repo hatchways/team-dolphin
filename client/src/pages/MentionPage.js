@@ -27,6 +27,12 @@ const MentionPage = () => {
     getOneMention(id)
       .then((data) => {
         setMention(data);
+        localStorage.setItem(
+          "mentions",
+          JSON.stringify(location.state.mentions)
+        );
+        console.log("### NB mentions from MentionPage ");
+        console.log(JSON.parse(localStorage.getItem("mentions")).length);
         setOpenDialog(true);
       })
       .catch((err) => alert("Something went wrong"));
@@ -34,7 +40,10 @@ const MentionPage = () => {
 
   const handleclick = () => {
     setOpenDialog(false);
-    history.push("/");
+    history.push("/", {
+      mentions: JSON.parse(localStorage.getItem("mentions")),
+      from: "MentionDialog",
+    });
   };
 
   return (
@@ -64,7 +73,7 @@ const MentionPage = () => {
                 <Grid item xs={6}>
                   <CopyToClipboard text={mentionSectionUrl}>
                     <Button variant="contained" color="primary" fullWidth>
-                      Copy URL
+                      SHARE
                     </Button>
                   </CopyToClipboard>
                 </Grid>

@@ -15,21 +15,6 @@ const Scroller = ({
   mentionDatas,
   setMentionDatas,
 }) => {
-  const { dispatch, searchTerm, user } = useContext(UserContext);
-  const history = useHistory();
-
-  useEffect(() => {
-    getMentions(dispatch, searchTerm, user.platforms, 1, sort)
-      .then((data) => {
-        setMentionDatas(data.mentions);
-        setHasMore(data.nextPage ? true : false);
-      })
-      .catch((err) => {
-        alert("Cookie expired. Please log in again");
-        history.push("/login");
-      });
-  }, [sort]);
-
   return (
     <InfiniteScroll
       pageStart={1}

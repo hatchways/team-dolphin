@@ -1,4 +1,5 @@
 import React, { useContext } from "react";
+import { Link } from "react-router-dom";
 import {
   Typography,
   Card,
@@ -70,14 +71,28 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+/////////////////////////////
+//////// On Dev /////////////
+/////////////////////////////
+// const image = (image) => {
+//   switch (keyword) {
+//     case "default" || "self":
+//       return redditLogo;
+//     case "twitterDefault":
+//       return twitterLogo;
+//     default:
+//       return image;
+//   }
+// };
+
+/////////////////////////////
+//////// To Delete //////////
+/////////////////////////////
 const image = (image) => {
-  switch (keyword) {
-    case "default" || "self":
-      return redditLogo;
-    case "twitterDefault":
-      return twitterLogo;
-    default:
-      return image;
+  if (image === "default" || image === "self") {
+    return redditLogo;
+  } else {
+    return image;
   }
 };
 
@@ -87,37 +102,51 @@ const Mention = ({ mention }) => {
   const { searchTerm } = useContext(UserContext);
   const regex = new RegExp(`${searchTerm}`, "i");
   const indexK = mention.title.search(regex);
-
+  //
   return (
-    <Card className={classes.root}>
-      <CardMedia
-        image={image(mention.image)}
-        className={classes.media}
-        title="mention cover"
-      />
-      <CardContent className={classes.content}>
-        <Box component="div" className={classes.titleBox}>
-          <Typography variant="h6" gutterBottom>
-            {/* {mention.title.substring(0, indexK)}
+    <>
+      <Link
+        to={{
+          pathname: `/mentions/${mention._id}`,
+          state: {
+            mentions: JSON.parse(localStorage.getItem("mentions")),
+            from: "Mention",
+          },
+        }}>
+        <Card className={classes.root}>
+          <CardMedia
+            image={image(mention.image)}
+            className={classes.media}
+            title="mention cover"
+          />
+          <CardContent className={classes.content}>
+            <Box component="div" className={classes.titleBox}>
+              <Typography variant="h6" gutterBottom>
+                {/* {mention.title.substring(0, indexK)}
             <span style={{ color: "#536dfe" }}>{searchTerm}</span>
             {mention.title.substring(indexK + searchTerm.length)} */}
-            {mention.title}
-          </Typography>
-        </Box>
-        <Typography
-          vairant="subtitle1"
-          className={classes.subtitle}
-          gutterBottom>
-          {mention.platform}
-        </Typography>
-        <Box component="div" classes={{ root: classes.customBox }}>
-          <Typography vairant="caption" className={classes.text} gutterBottom>
-            {mention.content}
-          </Typography>
-        </Box>
-      </CardContent>
-      <FontAwesomeIcon icon={faSmile} className={classes.icon} size="lg" />
-    </Card>
+                {mention.title}
+              </Typography>
+            </Box>
+            <Typography
+              vairant="subtitle1"
+              className={classes.subtitle}
+              gutterBottom>
+              {mention.platform}
+            </Typography>
+            <Box component="div" classes={{ root: classes.customBox }}>
+              <Typography
+                vairant="caption"
+                className={classes.text}
+                gutterBottom>
+                {mention.content}
+              </Typography>
+            </Box>
+          </CardContent>
+          <FontAwesomeIcon icon={faSmile} className={classes.icon} size="lg" />
+        </Card>
+      </Link>
+    </>
   );
 };
 
