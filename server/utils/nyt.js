@@ -1,13 +1,13 @@
 const puppeteer = require("puppeteer");
 const ENDPOINT = "https://www.nytimes.com/search?";
-const { sentimentHandler } = require("./jobHandler");
+const { sentimentHandler } = require(".//sentimentHandler");
 
 const scrapeNYT = async (term) => {
   try {
     const browser = await puppeteer.launch({ headless: true });
     const page = await browser.newPage();
     page.setDefaultNavigationTimeout(0);
-    await page.exposeFunction("senti", sentimentHandler);
+    await page.exposeFunction("sentimentHandler", sentimentHandler);
     await page.goto(`${ENDPOINT}query=${term}`, {
       waitUntil: "domcontentloaded",
     });
@@ -22,14 +22,14 @@ const scrapeNYT = async (term) => {
         }
       }
     });
-    await page.waitForTimeout(500);
+    // this will going to change by the amount of searchButtons required to click
+    await page.waitForTimeout(3000);
 
     const res = await page.evaluate(
-      ({ term }) => {
+      async ({ term }) => {
         let articles = document.body.querySelectorAll(".css-1l4w6pd");
         const posts = [];
-
-        articles.forEach(async (article) => {
+        for (const article of articles) {
           const cotentSelector = article.querySelector("p.css-16nhkrn");
           const titleSelector = article.querySelector("h4.css-2fgx4k");
           const imgSelector = article.querySelector("img.css-11cwn6f");
@@ -49,20 +49,19 @@ const scrapeNYT = async (term) => {
             popularity: 5, //set a default number, it will be further handled by algorithm
             url: article.querySelector("a").href,
             company: term,
-            // sentiment: sentimentHandler(titleSelector.innerText),
+            sentiment: cotentSelector
+              ? await window.sentimentHandler(cotentSelector.innerText)
+              : await window.sentimentHandler(titleSelector.innerText),
           });
-        });
+        }
         return posts;
       },
       { term }
     );
-
     await browser.close();
     return res;
   } catch (err) {
     console.log(err);
   }
 };
-
-// scrapeNYT("amazon");
 module.exports = { scrapeNYT };
