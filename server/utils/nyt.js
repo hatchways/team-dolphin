@@ -11,10 +11,13 @@ const scrapeNYT = async (term) => {
     });
     await page.evaluate(() => {
       const loadMoreTimes = 9;
+      const searchButton = document.querySelector(
+        '[data-testid="search-show-more-button"]'
+      );
       for (let i = 0; i < loadMoreTimes; i++) {
-        document
-          .querySelector('[data-testid="search-show-more-button"]')
-          .click();
+        if (searchButton) {
+          searchButton.click();
+        }
       }
     });
     await page.waitForTimeout(500);
