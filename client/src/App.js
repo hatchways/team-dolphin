@@ -21,7 +21,7 @@ function App() {
           <PagesWrapper>
             <PrivateRoute exact path="/" component={HomePage} />
             <PrivateRoute path="/setting" component={SettingPage} />
-            <PrivateRoute path="/mentions/:id" component={MentionPage} />
+            {/* <PrivateRoute path="/mentions/:id" component={MentionPage} /> */}
             <Route path="/signup" component={Signup} />
             <Route path="/login" component={Login} />
           </PagesWrapper>

@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { Link } from "react-router-dom";
 import {
   Typography,
@@ -6,6 +6,8 @@ import {
   CardContent,
   CardMedia,
   Box,
+  Dialog,
+  Button,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -13,6 +15,7 @@ import { faSmile } from "@fortawesome/free-regular-svg-icons";
 import redditLogo from "../utils/images/reddit-logo.png";
 import twitterLogo from "../utils/images/twitter-logo.png";
 import { UserContext } from "../context/user";
+import { faWindowRestore } from "@fortawesome/free-solid-svg-icons";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -102,50 +105,65 @@ const Mention = ({ mention }) => {
   const { searchTerm } = useContext(UserContext);
   const regex = new RegExp(`${searchTerm}`, "i");
   const indexK = mention.title.search(regex);
+
+  const handleClick = () => {
+    window.history.pushState({}, "", `/${mention._id}`);
+  };
+
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const handleClickOpen = () => {
+    setDialogOpen(true);
+    window.history.pushState({}, "", `/${mention._id}`);
+  };
+
+  const handleClose = () => {
+    setDialogOpen(false);
+    window.history.back();
+  };
   //
   return (
     <>
-      <Link
+      {/* <Link
         to={{
           pathname: `/mentions/${mention._id}`,
           state: {
             mentions: JSON.parse(localStorage.getItem("mentions")),
             from: "Mention",
           },
-        }}>
-        <Card className={classes.root}>
-          <CardMedia
-            image={image(mention.image)}
-            className={classes.media}
-            title="mention cover"
-          />
-          <CardContent className={classes.content}>
-            <Box component="div" className={classes.titleBox}>
-              <Typography variant="h6" gutterBottom>
-                {/* {mention.title.substring(0, indexK)}
+        }}> */}
+      <Card className={classes.root} onClick={handleClickOpen}>
+        <CardMedia
+          image={image(mention.image)}
+          className={classes.media}
+          title="mention cover"
+        />
+        <CardContent className={classes.content}>
+          <Box component="div" className={classes.titleBox}>
+            <Typography variant="h6" gutterBottom>
+              {/* {mention.title.substring(0, indexK)}
             <span style={{ color: "#536dfe" }}>{searchTerm}</span>
             {mention.title.substring(indexK + searchTerm.length)} */}
-                {mention.title}
-              </Typography>
-            </Box>
-            <Typography
-              vairant="subtitle1"
-              className={classes.subtitle}
-              gutterBottom>
-              {mention.platform}
+              {mention.title}
             </Typography>
-            <Box component="div" classes={{ root: classes.customBox }}>
-              <Typography
-                vairant="caption"
-                className={classes.text}
-                gutterBottom>
-                {mention.content}
-              </Typography>
-            </Box>
-          </CardContent>
-          <FontAwesomeIcon icon={faSmile} className={classes.icon} size="lg" />
-        </Card>
-      </Link>
+          </Box>
+          <Typography
+            vairant="subtitle1"
+            className={classes.subtitle}
+            gutterBottom>
+            {mention.platform}
+          </Typography>
+          <Box component="div" classes={{ root: classes.customBox }}>
+            <Typography vairant="caption" className={classes.text} gutterBottom>
+              {mention.content}
+            </Typography>
+          </Box>
+        </CardContent>
+        <FontAwesomeIcon icon={faSmile} className={classes.icon} size="lg" />
+      </Card>
+      <Dialog open={dialogOpen} onClose={handleClose}>
+        asdsda ASDLASDKLDSALKDASK CONTENTCONTENTCONTENTCONTENTCONTENTCONTENT
+      </Dialog>
+      {/* </Link> */}
     </>
   );
 };
