@@ -26,6 +26,7 @@
     "nodemon": "^2.0.6",
     "puppeteer": "^8.0.0",
     "redis": "^3.0.2",
+    "sentiment": "^5.0.2",
     "twitter": "^1.7.1"
   },
   "devDependencies": {

@@ -33,6 +33,10 @@ const mentionSchema = mongoose.Schema({
     type: String,
     required: true,
   },
+  sentiment: {
+    type: String,
+    required: true,
+  },
 });
 
 module.exports = mongoose.model("Mention", mentionSchema);

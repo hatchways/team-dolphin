@@ -1,5 +1,6 @@
 const redis = require("redis");
 const Queue = require("bull");
+const Sentiment = require("sentiment");
 const User = require("../models/userModel");
 const { addMentionsToDB } = require("./scraper");
 
@@ -88,4 +89,21 @@ const handleTaskQueues = () => {
   });
 };
 
-module.exports = { connectRedis, handleTaskQueues, handleIndividualCompany };
+const sentimentHandler = (context) => {
+  var sentiment = new Sentiment();
+  const evaluation = sentiment.analyze(context).comparative;
+  if (evaluation > 0) {
+    return "positive";
+  } else if (evaluation < 0) {
+    return "negtive";
+  } else {
+    return "neutral";
+  }
+};
+
+module.exports = {
+  connectRedis,
+  handleTaskQueues,
+  handleIndividualCompany,
+  sentimentHandler,
+};
