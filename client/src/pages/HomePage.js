@@ -29,7 +29,7 @@ const HomePage = () => {
 
   const { dispatch, error, searchTerm, user } = useContext(UserContext);
 
-  console.log("history object");
+  console.log("### history object from HomePage ###");
   console.log(history);
 
   const loadMore = async () => {

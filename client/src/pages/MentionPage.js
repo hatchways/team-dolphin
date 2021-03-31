@@ -27,12 +27,12 @@ const MentionPage = () => {
     getOneMention(id)
       .then((data) => {
         setMention(data);
-        localStorage.setItem(
-          "mentions",
-          JSON.stringify(location.state.mentions)
-        );
-        console.log("### NB mentions from MentionPage ");
-        console.log(JSON.parse(localStorage.getItem("mentions")).length);
+        // localStorage.setItem(
+        //   "mentions",
+        //   JSON.stringify(location.state.mentions)
+        // );
+        // console.log("### NB mentions from MentionPage ");
+        // console.log(JSON.parse(localStorage.getItem("mentions")).length);
         setOpenDialog(true);
       })
       .catch((err) => alert("Something went wrong"));
@@ -40,19 +40,19 @@ const MentionPage = () => {
 
   const handleclick = () => {
     setOpenDialog(false);
-    history.push("/", {
-      mentions: JSON.parse(localStorage.getItem("mentions")),
-      from: "MentionDialog",
-    });
+    // history.push("/", {
+    //   mentions: JSON.parse(localStorage.getItem("mentions")),
+    //   from: "MentionDialog",
+    // });
   };
 
   return (
     <>
       <HomePage />
-      <Dialog open={openDialog} maxWidth="md">
+      <Dialog open={openDialog} onClick={handleclick} maxWidth="md">
         <Grid container spacing={2}>
           <Grid item xs={12}>
-            <DialogTitle onClick={handleclick}>
+            <DialogTitle>
               <Typography variant="h6">{mention.title}</Typography>
             </DialogTitle>
           </Grid>
