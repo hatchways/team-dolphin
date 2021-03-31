@@ -1,6 +1,7 @@
-const generateToken = require('../config/generateToken');
-const User = require('../models/userModel');
-const { addMentionsToDB } = require('../utils/scraper'); // Added for Co-op Midterm Presentation
+const generateToken = require("../config/generateToken");
+const User = require("../models/userModel");
+const { addMentionsToDB } = require("../utils/scraper"); // Added for Co-op Midterm Presentation
+const { sendWeeklyReport } = require("../utils/mailjet");
 
 // @desc    Register a new user
 // @route   POST /api/users/auth/signup
@@ -11,7 +12,7 @@ const signUp = async (req, res) => {
   const userAlreadyRegistered = await User.findOne({ email });
 
   if (userAlreadyRegistered) {
-    res.status(400).json({ message: 'User already exists' });
+    res.status(400).json({ message: "User already exists" });
   }
 
   const regex = /\w{6,}/gm;
@@ -26,7 +27,7 @@ const signUp = async (req, res) => {
 
     if (user) {
       const token = generateToken(user._id);
-      res.cookie('dolphinToken', token, {
+      res.cookie("dolphinToken", token, {
         maxAge: 3600000,
         httpOnly: true,
         secure: false, // should be true in Production !
@@ -39,10 +40,10 @@ const signUp = async (req, res) => {
         platforms: user.platforms,
       });
     } else {
-      res.status(400).json({ message: 'Invalid user data' });
+      res.status(400).json({ message: "Invalid user data" });
     }
   } else {
-    res.status(400).json({ message: 'Invalid password' });
+    res.status(400).json({ message: "Invalid password" });
   }
 };
 
@@ -56,7 +57,7 @@ const signIn = async (req, res) => {
 
   if (user && (await user.matchPassword(password))) {
     const token = generateToken(user._id);
-    res.cookie('dolphinToken', token, {
+    res.cookie("dolphinToken", token, {
       maxAge: 3600000,
       httpOnly: true,
       secure: false, // should be true in Production !
@@ -69,7 +70,7 @@ const signIn = async (req, res) => {
       platforms: user.platforms,
     });
   } else {
-    res.status(401).json({ message: 'Invalid email or password' });
+    res.status(401).json({ message: "Invalid email or password" });
   }
 };
 
@@ -80,9 +81,9 @@ const getUserProfile = async (req, res) => {
   res.json(req.user);
 };
 
-// @desc Update user's selected platforms
-// @route PATCH /api/users/platforms
-// @access Private
+// @desc    Update user's selected platforms
+// @route   PATCH /api/users/platforms
+// @access  Private
 const updatePlatforms = async (req, res) => {
   const user = await User.findByIdAndUpdate(req.user._id, {
     platforms: req.body,
@@ -91,4 +92,19 @@ const updatePlatforms = async (req, res) => {
   res.json(user);
 };
 
-module.exports = { signUp, signIn, getUserProfile, updatePlatforms };
+// @desc    Send user's weekly report email -- DEMO PURPOSES ONLY
+// @route   GET /api/users/sendReport
+// @access  Private
+const sendReport = async (req, res) => {
+  const topMentions = await req.user.getTopFiveMentions();
+  await sendWeeklyReport(req.user.reportEmail, topMentions);
+  res.sendStatus(200);
+};
+
+module.exports = {
+  signUp,
+  signIn,
+  getUserProfile,
+  updatePlatforms,
+  sendReport,
+};

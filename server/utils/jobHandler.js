@@ -1,7 +1,6 @@
 const redis = require("redis");
 const Queue = require("bull");
 const User = require("../models/userModel");
-const Mention = require("../models/mentionModel");
 const { addMentionsToDB } = require("./scraper");
 const { sendWeeklyReport } = require("./mailjet");
 
@@ -34,7 +33,7 @@ const handleSendWeeklyReport = () => {
   emailsQueue.add(
     {},
     {
-      repeat: { cron: "0 9 * * 1" }, // 9:00 AM every Monday
+      repeat: { cron: "0 9 * * 5" }, // 9:00 AM every Monday
       delay: 2000,
       jobId: "repeatEmailsUpdate",
     }
