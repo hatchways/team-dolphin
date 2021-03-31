@@ -57,7 +57,7 @@ userSchema.statics.getAllCompanies = async function () {
   return await this.distinct("name").flat();
 };
 
-userSchema.methods.getTopFiveMentions = async () => {
+userSchema.methods.getTopFiveMentions = async function () {
   return await Mention.find({ company: this.activeCompany })
     .sort({ popularity: -1 })
     .limit(5);

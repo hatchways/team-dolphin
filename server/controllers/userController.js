@@ -118,7 +118,7 @@ const updateUser = async (req, res) => {
 // @access  Private
 const sendReport = async (req, res) => {
   const topMentions = await req.user.getTopFiveMentions();
-  await sendWeeklyReport(req.user.reportEmail, topMentions);
+  sendWeeklyReport(req.user.reportEmail, topMentions);
   res.sendStatus(200);
 };
 
