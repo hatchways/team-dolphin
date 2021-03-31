@@ -60,6 +60,10 @@ const handleSendWeeklyReport = () => {
       done(new Error(`${job.data.email} and mentions error`));
     } catch (error) {
       console.log(error);
+    }
+  });
+};
+
 const handleIndividualCompany = (company) => {
   const individualQueue = new Queue("company enqueue", {
     redis: { port: process.env.REDIS_PORT, host: process.env.REDIS_HOST },
@@ -127,4 +131,9 @@ const handleTaskQueues = () => {
   });
 };
 
-module.exports = { connectRedis, handleTaskQueues, handleIndividualCompany };
+module.exports = {
+  connectRedis,
+  handleTaskQueues,
+  handleIndividualCompany,
+  handleSendWeeklyReport,
+};

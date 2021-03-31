@@ -4,8 +4,8 @@ const {
   signUp,
   signIn,
   getUserProfile,
-updateUser,
-logout,
+  updateUser,
+  logout,
   sendReport,
 } = require("../controllers/userController");
 const { isAuthenticated } = require("../middlewares/isAuthenticated");

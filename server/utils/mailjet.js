@@ -89,4 +89,4 @@ const sendWeeklyReport = (email, mentions) => {
     });
 };
 
-module.exports = sendWeeklyReport;
+module.exports = { sendWeeklyReport };
