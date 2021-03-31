@@ -8,7 +8,7 @@ import {
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSmile } from "@fortawesome/free-regular-svg-icons";
+import { faSmile, faFrown, faMeh } from "@fortawesome/free-regular-svg-icons";
 import redditLogo from "../utils/images/reddit-logo.png";
 import twitterLogo from "../utils/images/twitter-logo.png";
 import { UserContext } from "../context/user";
@@ -132,7 +132,17 @@ const Mention = ({ mention }) => {
           </Typography>
         </Box>
       </CardContent>
-      <FontAwesomeIcon icon={faSmile} className={classes.icon} size="lg" />
+      <FontAwesomeIcon
+        icon={
+          mention.sentiment === "positive"
+            ? faSmile
+            : mention.sentiment === "negative"
+            ? faFrown
+            : faMeh
+        }
+        className={classes.icon}
+        size="lg"
+      />
     </Card>
   );
 };
