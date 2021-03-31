@@ -26,7 +26,7 @@
     "node-mailjet": "^3.3.1",
     "nodemon": "^2.0.6",
     "redis": "^3.0.2",
-    "sib-api-v3-sdk": "^8.2.0"
+    "twitter": "^1.7.1"
   },
   "devDependencies": {
     "chai": "^4.2.0",

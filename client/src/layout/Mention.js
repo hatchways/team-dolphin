@@ -10,6 +10,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSmile } from "@fortawesome/free-regular-svg-icons";
 import redditLogo from "../utils/images/reddit-logo.png";
+import twitterLogo from "../utils/images/twitter-logo.png";
 import { UserContext } from "../context/user";
 
 const useStyles = makeStyles((theme) => ({
@@ -70,10 +71,13 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const image = (image) => {
-  if (image === "default" || image === "self") {
-    return redditLogo;
-  } else {
-    return image;
+  switch (image) {
+    case "default" || "self":
+      return redditLogo;
+    case "twitterDefault":
+      return twitterLogo;
+    default:
+      return image;
   }
 };
 

@@ -4,7 +4,11 @@ const Mention = require("./mentionModel");
 
 const userSchema = mongoose.Schema(
   {
-    name: {
+    companies: {
+      type: Array,
+      required: true,
+    },
+    activeCompany: {
       type: String,
       required: true,
     },
@@ -16,7 +20,6 @@ const userSchema = mongoose.Schema(
     reportEmail: {
       type: String,
       required: true,
-      unique: true,
     },
     password: {
       type: String,
@@ -51,7 +54,7 @@ userSchema.pre("save", async function (next) {
 });
 
 userSchema.statics.getAllCompanies = async function () {
-  return await this.distinct("name");
+  return await this.distinct("name").flat();
 };
 
 userSchema.methods.getTopFiveMentions = async () => {
