@@ -182,9 +182,9 @@ const Mention = ({ mention }) => {
         </CardContent>
         <FontAwesomeIcon
           icon={
-            mention.sentiment === "positive"
+            mention.sentiment > 0
               ? faSmile
-              : mention.sentiment === "negative"
+              : mention.sentiment < 0
               ? faFrown
               : faMeh
           }

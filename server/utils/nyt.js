@@ -59,11 +59,9 @@ const scrapeNYT = async (term) => {
       { term }
     );
     await browser.close();
-    console.log(res);
     return res;
   } catch (err) {
     console.log(err);
   }
 };
-scrapeNYT("amazon");
 module.exports = { scrapeNYT };
