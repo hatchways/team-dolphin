@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
+const Mention = require("./mentionModel");
 
 const userSchema = mongoose.Schema(
   {
@@ -60,6 +61,12 @@ userSchema.statics.getAllCompanies = async function () {
       companiesObj.reduce((acc, val) => acc.concat(val.companies), [])
     ),
   ];
+};
+
+userSchema.methods.getTopFiveMentions = async function () {
+  return await Mention.find({ company: this.activeCompany })
+    .sort({ popularity: -1 })
+    .limit(5);
 };
 
 module.exports = mongoose.model("User", userSchema);
