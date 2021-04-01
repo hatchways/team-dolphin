@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import {
   Typography,
   Card,
@@ -68,10 +68,13 @@ const useStyles = makeStyles((theme) => ({
     wordBreak: "break-all",
     overflow: "hidden",
   },
+  highlight: {
+    color: theme.palette.primary.main,
+  },
 }));
 
 const image = (image) => {
-  switch (keyword) {
+  switch (image) {
     case "default" || "self":
       return redditLogo;
     case "twitterDefault":
@@ -83,10 +86,16 @@ const image = (image) => {
 
 const Mention = ({ mention }) => {
   const classes = useStyles();
-  const keyword = "DolphinCorp";
-  const { searchTerm } = useContext(UserContext);
-  const regex = new RegExp(`${searchTerm}`, "i");
+  const { searchTerm, user } = useContext(UserContext);
+  const [keyword, setKeyword] = useState(user.activeCompany);
+  const regex = new RegExp(`${keyword}`, "i");
   const indexK = mention.title.search(regex);
+
+  useEffect(() => {
+    if (searchTerm !== "") {
+      setKeyword(searchTerm);
+    }
+  }, [searchTerm]);
 
   return (
     <Card className={classes.root}>
@@ -98,10 +107,17 @@ const Mention = ({ mention }) => {
       <CardContent className={classes.content}>
         <Box component="div" className={classes.titleBox}>
           <Typography variant="h6" gutterBottom>
-            {/* {mention.title.substring(0, indexK)}
-            <span style={{ color: "#536dfe" }}>{searchTerm}</span>
-            {mention.title.substring(indexK + searchTerm.length)} */}
-            {mention.title}
+            {indexK >= 0 ? (
+              <span>
+                {mention.title.substring(0, indexK)}
+                <span className={classes.highlight}>
+                  {mention.title.substring(indexK, indexK + keyword.length)}
+                </span>
+                {mention.title.substring(indexK + keyword.length)}
+              </span>
+            ) : (
+              mention.title
+            )}
           </Typography>
         </Box>
         <Typography
