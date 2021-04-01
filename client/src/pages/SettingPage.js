@@ -7,7 +7,6 @@ import { BrowserRouter, Route, Switch } from "react-router-dom";
 import SettingCompany from "../layout/SettingCompany";
 import AppBarLoggedIn from "../layout/AppBarLoggedIn";
 import SettingTab from "../layout/SettingTab";
-import SettingSecurity from "../layout/SettingSecurity";
 
 const useStyles = makeStyles((theme) => ({
   leftPanel: {
@@ -51,9 +50,6 @@ const SettingPage = () => {
             <Switch>
               <Route exact path="/setting" component={SettingCompany}></Route>
               <Route path="/setting/company" component={SettingCompany}></Route>
-              <Route
-                path="/setting/security"
-                component={SettingSecurity}></Route>
             </Switch>
           </Grid>
         </Grid>

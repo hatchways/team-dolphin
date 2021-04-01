@@ -57,15 +57,6 @@ const SettingTab = () => {
         component={Link}
       />
       <Tab
-        label="Security"
-        classes={{
-          wrapper: classes.wrapper,
-          selected: classes.selected,
-        }}
-        to="/setting/security"
-        component={Link}
-      />
-      <Tab
         label="Log out"
         classes={{
           wrapper: classes.wrapper,
