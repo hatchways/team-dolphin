@@ -47,7 +47,7 @@ const scrapeNYT = async (term) => {
               ? new Date(Date.parse(dateSelector)).toISOString()
               : new Date(Date.now()).toISOString(),
             popularity: 5, //set a default number, it will be further handled by algorithm
-            url: article.querySelector("a").href,
+            url: article.querySelector("a").href.split("?")[0],
             company: term,
             sentiment: cotentSelector
               ? await window.sentimentHandler(cotentSelector.innerText)
@@ -59,9 +59,11 @@ const scrapeNYT = async (term) => {
       { term }
     );
     await browser.close();
+    console.log(res);
     return res;
   } catch (err) {
     console.log(err);
   }
 };
+scrapeNYT("amazon");
 module.exports = { scrapeNYT };
