@@ -33,11 +33,13 @@ const handleSendWeeklyReport = () => {
   emailsQueue.add(
     {},
     {
-      repeat: { cron: "5 16 * * 5" }, // 9:00 AM every Monday
+      repeat: { cron: "05 16 * * 4" }, // 9:00 AM every Monday
       delay: 2000,
       jobId: "repeatEmailsUpdate",
     }
   );
+  // emailsQueue.empty();
+  // sendingQueue.empty();
 
   emailsQueue.process(async (job, done) => {
     try {
@@ -72,6 +74,7 @@ const handleIndividualCompany = (company) => {
   for (var platform in User.schema.obj.platforms) {
     individualQueue.add({ company: company, platform: platform });
   }
+  // individualQueue.empty();
 
   individualQueue.process(async function (job, done) {
     try {

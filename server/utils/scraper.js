@@ -41,5 +41,4 @@ const addMentionsToDB = async (company, platform) => {
     console.log(error.message);
   }
 };
-addMentionsToDB("a", "b");
 module.exports = { addMentionsToDB };

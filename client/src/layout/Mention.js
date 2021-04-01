@@ -106,7 +106,9 @@ const useStyles = makeStyles((theme) => ({
 
 const image = (image) => {
   switch (image) {
-    case "default" || "self":
+    case "self":
+      return redditLogo;
+    case "default":
       return redditLogo;
     case "twitterDefault":
       return twitterLogo;
