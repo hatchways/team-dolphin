@@ -12,7 +12,11 @@ const pingRouter = require("./routes/ping");
 const mentionRouter = require("./routes/mentionRoutes");
 const userRouter = require("./routes/userRoutes");
 const mongoose = require("mongoose");
-const { connectRedis, handleTaskQueues } = require("./utils/jobHandler");
+const {
+  connectRedis,
+  handleTaskQueues,
+  handleSendWeeklyReport,
+} = require("./utils/jobHandler");
 
 const connectDB = async () => {
   try {
@@ -35,6 +39,7 @@ connectDB();
 connectRedis(); // if error, try start redis server in background
 
 handleTaskQueues();
+handleSendWeeklyReport();
 
 const { json, urlencoded } = express;
 
