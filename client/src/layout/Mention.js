@@ -166,7 +166,7 @@ const Mention = ({ mention }) => {
             </Typography>
           </Box>
           <Typography
-            variant="subtitle1"
+            vairant="subtitle1"
             className={classes.subtitle}
             gutterBottom>
             {mention.platform}
