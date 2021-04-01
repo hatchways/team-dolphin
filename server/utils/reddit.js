@@ -1,4 +1,5 @@
 const axios = require("axios");
+const { sentimentHandler } = require("./sentimentHandler");
 const ENDPOINT = "http://www.reddit.com/r/all/search.json";
 
 const searchRecursive = async (term, after = "", posts = []) => {
@@ -19,6 +20,7 @@ const searchRecursive = async (term, after = "", posts = []) => {
           popularity: post.data.ups,
           url: post.data.url,
           company: term,
+          sentiment: sentimentHandler(post.data.title),
         });
       });
       if (res.data.data.after) {
@@ -29,5 +31,4 @@ const searchRecursive = async (term, after = "", posts = []) => {
     console.log(error);
   }
 };
-
 module.exports = { searchRecursive };

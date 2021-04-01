@@ -28,11 +28,6 @@ const userSchema = mongoose.Schema(
     platforms: {
       reddit: { type: Boolean, required: true, default: true },
       twitter: { type: Boolean, required: true, default: false },
-      facebook: { type: Boolean, required: true, default: false },
-      amazon: { type: Boolean, required: true, default: false },
-      forbes: { type: Boolean, required: true, default: false },
-      shopify: { type: Boolean, required: true, default: false },
-      businessinsider: { type: Boolean, required: true, default: false },
       nyt: { type: Boolean, required: true, default: false },
     },
   },

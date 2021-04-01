@@ -1,4 +1,5 @@
 var Twitter = require("twitter");
+const { sentimentHandler } = require("./sentimentHandler");
 const ENDPOINT = "https://api.twitter.com/1.1/search/tweets.json";
 
 var client = new Twitter({
@@ -29,6 +30,7 @@ const searchTwitter = async (term) => {
         popularity: tweet.favorite_count,
         url: `https://twitter.com/${tweet.user.screen_name}/statuses/${tweet.id_str}`,
         company: term,
+        sentiment: sentimentHandler(tweet.full_text),
       });
     });
     return posts;
@@ -36,4 +38,5 @@ const searchTwitter = async (term) => {
     console.log(err.message);
   }
 };
+
 module.exports = { searchTwitter };

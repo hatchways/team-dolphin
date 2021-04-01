@@ -13,9 +13,10 @@ import {
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSmile } from "@fortawesome/free-regular-svg-icons";
+import { faSmile, faFrown, faMeh } from "@fortawesome/free-regular-svg-icons";
 import redditLogo from "../utils/images/reddit-logo.png";
 import twitterLogo from "../utils/images/twitter-logo.png";
+import nytLogo from "../utils/images/nyt-logo.png";
 import { UserContext } from "../context/user";
 import { faWindowRestore } from "@fortawesome/free-solid-svg-icons";
 import { CopyToClipboard } from "react-copy-to-clipboard";
@@ -109,6 +110,8 @@ const image = (image) => {
       return redditLogo;
     case "twitterDefault":
       return twitterLogo;
+    case "nytDefault":
+      return nytLogo;
     default:
       return image;
   }
@@ -177,7 +180,17 @@ const Mention = ({ mention }) => {
             </Typography>
           </Box>
         </CardContent>
-        <FontAwesomeIcon icon={faSmile} className={classes.icon} size="lg" />
+        <FontAwesomeIcon
+          icon={
+            mention.sentiment === "positive"
+              ? faSmile
+              : mention.sentiment === "negative"
+              ? faFrown
+              : faMeh
+          }
+          className={classes.icon}
+          size="lg"
+        />
       </Card>
 
       <Dialog open={dialogOpen} className={classes.modalRoot} maxWidth="md">

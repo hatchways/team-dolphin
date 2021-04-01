@@ -121,3 +121,11 @@ export const updateUser = async (update) => {
     throw error;
   }
 };
+
+export const addCompany = async (update) => {
+  try {
+    await axios.patch("/api/users/addcompany", update);
+  } catch (error) {
+    throw error;
+  }
+};

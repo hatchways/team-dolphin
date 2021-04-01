@@ -1,6 +1,5 @@
 const generateToken = require("../config/generateToken");
 const User = require("../models/userModel");
-const { addMentionsToDB } = require("../utils/scraper"); // Added for Co-op Midterm Presentation
 const { sendWeeklyReport } = require("../utils/mailjet");
 const { handleIndividualCompany } = require("../utils/jobHandler");
 
@@ -106,7 +105,23 @@ const updateUser = async (req, res) => {
       { $set: req.body },
       { new: true }
     );
-    console.log(user);
+    res.json(user);
+  } catch (error) {
+    throw error;
+  }
+};
+
+// @desc    Add company to user companies
+// @route   PATCH /api/users/addcompany
+// @access  Private
+const addCompany = async (req, res) => {
+  try {
+    const user = await User.findByIdAndUpdate(
+      req.user._id,
+      { $push: req.body },
+      { new: true }
+    );
+    handleIndividualCompany(req.body.companies);
     res.json(user);
   } catch (error) {
     throw error;
@@ -128,5 +143,6 @@ module.exports = {
   getUserProfile,
   updateUser,
   logout,
+  addCompany,
   sendReport,
 };
