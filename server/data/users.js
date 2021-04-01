@@ -2,19 +2,52 @@ const bcrypt = require("bcryptjs");
 
 const users = [
   {
-    name: "Airbus",
-    email: "philippe@dolphin.com",
+    activeCompany: "Airbus",
+    email: "philippe@newdolphin.com",
+    reportEmail: "philippe@newdolphin.com",
     password: bcrypt.hashSync("123456", 10),
+    companies: ["Airbus"],
+    platforms: {
+      reddit: true,
+      twitter: false,
+      facebook: false,
+      amazon: false,
+      forbes: false,
+      shopify: false,
+      businessinsider: false,
+    },
   },
   {
-    name: "Walmart",
-    email: "aidan@dolphin.com",
+    activeCompany: "Walmart",
+    email: "aidan@newdolphin.com",
+    reportEmail: "aidan@newdolphin.com",
     password: bcrypt.hashSync("123456", 10),
+    companies: ["Walmart"],
+    platforms: {
+      reddit: true,
+      twitter: false,
+      facebook: false,
+      amazon: false,
+      forbes: false,
+      shopify: false,
+      businessinsider: false,
+    },
   },
   {
-    name: "Lufthansa",
-    email: "alan@dolphin.com",
+    activeCompany: "Loblaws",
+    email: "alan@newdolphin.com",
+    reportEmail: "alan@newdolphin.com",
     password: bcrypt.hashSync("123456", 10),
+    companies: ["Loblaws"],
+    platforms: {
+      reddit: true,
+      twitter: false,
+      facebook: false,
+      amazon: false,
+      forbes: false,
+      shopify: false,
+      businessinsider: false,
+    },
   },
 ];
 
