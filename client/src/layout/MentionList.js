@@ -12,11 +12,7 @@ import {
 import { makeStyles } from "@material-ui/core/styles";
 import reddit from "../utils/images/reddit-logo.png";
 import twitter from "../utils/images/twitter-logo.png";
-import facebook from "../utils/images/facebook-logo.png";
-import amazon from "../utils/images/amazon-logo.png";
-import forbes from "../utils/images/forbes-logo.png";
-import shopify from "../utils/images/shopify-logo.png";
-import business_insider from "../utils/images/BI-logo.png";
+import nyt from "../utils/images/nyt-logo.png";
 import { CustomizedSwitch } from "./CustomizedSwitch";
 import { UserContext } from "../context/user";
 import { updateUser } from "../actions/user";
@@ -87,74 +83,16 @@ const MentionList = () => {
       <Divider variant="middle" light />
       <ListItem className={classes.listItem}>
         <ListItemAvatar>
-          <Avatar alt="facebook" src={facebook} />
+          <Avatar alt="nyt" src={nyt} />
         </ListItemAvatar>
         <ListItemText
-          primary={<Typography variant="h4">Facebook</Typography>}
+          primary={<Typography variant="h4">The New York Times</Typography>}
         />
         <ListItemSecondaryAction>
           <CustomizedSwitch
-            checked={user.platforms.facebook}
+            checked={user.platforms.nyt}
             onChange={togglePlatform}
-            name="facebook"
-          />
-        </ListItemSecondaryAction>
-      </ListItem>
-      <Divider variant="middle" light />
-      <ListItem className={classes.listItem}>
-        <ListItemAvatar>
-          <Avatar alt="amazon" src={amazon} />
-        </ListItemAvatar>
-        <ListItemText primary={<Typography variant="h4">Amazon</Typography>} />
-        <ListItemSecondaryAction>
-          <CustomizedSwitch
-            checked={user.platforms.amazon}
-            onChange={togglePlatform}
-            name="amazon"
-          />
-        </ListItemSecondaryAction>
-      </ListItem>
-      <Divider variant="middle" light />
-      <ListItem className={classes.listItem}>
-        <ListItemAvatar>
-          <Avatar alt="forbes" src={forbes} />
-        </ListItemAvatar>
-        <ListItemText primary={<Typography variant="h4">Forbes</Typography>} />
-        <ListItemSecondaryAction>
-          <CustomizedSwitch
-            checked={user.platforms.forbes}
-            onChange={togglePlatform}
-            name="forbes"
-          />
-        </ListItemSecondaryAction>
-      </ListItem>
-      <Divider variant="middle" light />
-      <ListItem className={classes.listItem}>
-        <ListItemAvatar>
-          <Avatar alt="shopify" src={shopify} />
-        </ListItemAvatar>
-        <ListItemText primary={<Typography variant="h4">Shopify</Typography>} />
-        <ListItemSecondaryAction>
-          <CustomizedSwitch
-            checked={user.platforms.shopify}
-            onChange={togglePlatform}
-            name="shopify"
-          />
-        </ListItemSecondaryAction>
-      </ListItem>
-      <Divider variant="middle" light />
-      <ListItem className={classes.listItem}>
-        <ListItemAvatar>
-          <Avatar alt="businessinsider" src={business_insider} />
-        </ListItemAvatar>
-        <ListItemText
-          primary={<Typography variant="h4">Business Insider</Typography>}
-        />
-        <ListItemSecondaryAction>
-          <CustomizedSwitch
-            checked={user.platforms.businessinsider}
-            onChange={togglePlatform}
-            name="businessinsider"
+            name="nyt"
           />
         </ListItemSecondaryAction>
       </ListItem>
