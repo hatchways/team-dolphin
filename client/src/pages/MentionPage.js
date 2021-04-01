@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams, useHistory, useLocation } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { getOneMention } from "../hooks/getOneMention";
 import HomePage from "./HomePage";
 import {
@@ -16,23 +16,15 @@ import { REACT_APP_BASE_URL } from "../utils/constants";
 
 const MentionPage = () => {
   const { id } = useParams();
-  const history = useHistory();
-  const location = useLocation();
   const [mention, setMention] = useState({});
-  const url = `${REACT_APP_BASE_URL}${location.pathname}`;
-  const [mentionSectionUrl, setMentionSectionUrl] = useState(url);
+  const url = `${REACT_APP_BASE_URL}/mentions/${mention._id}`;
+  const [mentionUrl, setMentionUrl] = useState(url);
   const [openDialog, setOpenDialog] = useState(false);
 
   useEffect(() => {
     getOneMention(id)
       .then((data) => {
         setMention(data);
-        // localStorage.setItem(
-        //   "mentions",
-        //   JSON.stringify(location.state.mentions)
-        // );
-        // console.log("### NB mentions from MentionPage ");
-        // console.log(JSON.parse(localStorage.getItem("mentions")).length);
         setOpenDialog(true);
       })
       .catch((err) => alert("Something went wrong"));
@@ -40,19 +32,15 @@ const MentionPage = () => {
 
   const handleclick = () => {
     setOpenDialog(false);
-    // history.push("/", {
-    //   mentions: JSON.parse(localStorage.getItem("mentions")),
-    //   from: "MentionDialog",
-    // });
   };
 
   return (
     <>
       <HomePage />
-      <Dialog open={openDialog} onClick={handleclick} maxWidth="md">
+      <Dialog open={openDialog} maxWidth="md">
         <Grid container spacing={2}>
           <Grid item xs={12}>
-            <DialogTitle>
+            <DialogTitle onClick={handleclick}>
               <Typography variant="h6">{mention.title}</Typography>
             </DialogTitle>
           </Grid>
@@ -71,7 +59,7 @@ const MentionPage = () => {
                   </Link>
                 </Grid>
                 <Grid item xs={6}>
-                  <CopyToClipboard text={mentionSectionUrl}>
+                  <CopyToClipboard text={mentionUrl}>
                     <Button variant="contained" color="primary" fullWidth>
                       SHARE
                     </Button>

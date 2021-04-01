@@ -7,7 +7,11 @@ import {
   CardMedia,
   Box,
   Dialog,
+  DialogTitle,
+  DialogContent,
+  Grid,
   Button,
+  Link,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -16,6 +20,8 @@ import redditLogo from "../utils/images/reddit-logo.png";
 import twitterLogo from "../utils/images/twitter-logo.png";
 import { UserContext } from "../context/user";
 import { faWindowRestore } from "@fortawesome/free-solid-svg-icons";
+import { CopyToClipboard } from "react-copy-to-clipboard";
+import { REACT_APP_BASE_URL } from "../utils/constants";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -74,23 +80,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-/////////////////////////////
-//////// On Dev /////////////
-/////////////////////////////
-// const image = (image) => {
-//   switch (keyword) {
-//     case "default" || "self":
-//       return redditLogo;
-//     case "twitterDefault":
-//       return twitterLogo;
-//     default:
-//       return image;
-//   }
-// };
-
-/////////////////////////////
-//////// To Delete //////////
-/////////////////////////////
 const image = (image) => {
   if (image === "default" || image === "self") {
     return redditLogo;
@@ -102,14 +91,9 @@ const image = (image) => {
 const Mention = ({ mention }) => {
   const classes = useStyles();
   const history = useHistory();
-  const keyword = "DolphinCorp";
   const { searchTerm } = useContext(UserContext);
-  const regex = new RegExp(`${searchTerm}`, "i");
-  const indexK = mention.title.search(regex);
-
-  const handleClick = () => {
-    window.history.pushState({}, "", `/${mention._id}`);
-  };
+  const url = `${REACT_APP_BASE_URL}/mentions/${mention._id}`;
+  const [mentionUrl, setMentionUrl] = useState(url);
 
   const [dialogOpen, setDialogOpen] = useState(false);
   const handleClickOpen = () => {
@@ -119,22 +103,11 @@ const Mention = ({ mention }) => {
 
   const handleClose = () => {
     setDialogOpen(false);
-    console.log("### window.history ###");
-    console.log(window.history);
-    // window.history.back();
     history.push("/");
   };
-  //
+
   return (
     <>
-      {/* <Link
-        to={{
-          pathname: `/mentions/${mention._id}`,
-          state: {
-            mentions: JSON.parse(localStorage.getItem("mentions")),
-            from: "Mention",
-          },
-        }}> */}
       <Card className={classes.root} onClick={handleClickOpen}>
         <CardMedia
           image={image(mention.image)}
@@ -144,9 +117,6 @@ const Mention = ({ mention }) => {
         <CardContent className={classes.content}>
           <Box component="div" className={classes.titleBox}>
             <Typography variant="h6" gutterBottom>
-              {/* {mention.title.substring(0, indexK)}
-            <span style={{ color: "#536dfe" }}>{searchTerm}</span>
-            {mention.title.substring(indexK + searchTerm.length)} */}
               {mention.title}
             </Typography>
           </Box>
@@ -164,10 +134,39 @@ const Mention = ({ mention }) => {
         </CardContent>
         <FontAwesomeIcon icon={faSmile} className={classes.icon} size="lg" />
       </Card>
-      <Dialog open={dialogOpen} onClose={handleClose}>
-        asdsda ASDLASDKLDSALKDASK CONTENTCONTENTCONTENTCONTENTCONTENTCONTENT
+      <Dialog open={dialogOpen}>
+        <Grid container spacing={2}>
+          <Grid item xs={12}>
+            <DialogTitle onClick={handleClose}>
+              <Typography variant="h6">{mention.title}</Typography>
+            </DialogTitle>
+          </Grid>
+          <Grid item xs={12}>
+            <DialogContent>
+              <Grid item xs={12}>
+                <Typography paragraph>{mention.content}</Typography>
+              </Grid>
+
+              <Grid item xs={12} container spacing={2}>
+                <Grid item xs={6}>
+                  <Link href={mention.url} target="_blank" rel="noopener">
+                    <Button variant="contained" color="primary" fullWidth>
+                      Open link
+                    </Button>
+                  </Link>
+                </Grid>
+                <Grid item xs={6}>
+                  <CopyToClipboard text={mentionUrl}>
+                    <Button variant="contained" color="primary" fullWidth>
+                      SHARE
+                    </Button>
+                  </CopyToClipboard>
+                </Grid>
+              </Grid>
+            </DialogContent>
+          </Grid>
+        </Grid>
       </Dialog>
-      {/* </Link> */}
     </>
   );
 };
