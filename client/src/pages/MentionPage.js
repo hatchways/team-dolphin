@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useHistory } from "react-router-dom";
 import { getOneMention } from "../hooks/getOneMention";
 import HomePage from "./HomePage";
 import {
@@ -45,6 +45,7 @@ const useStyles = makeStyles((theme) => ({
 const MentionPage = () => {
   const { id } = useParams();
   const classes = useStyles();
+  const history = useHistory();
   const [mention, setMention] = useState({});
   const url = `${REACT_APP_BASE_URL}/mentions/${mention._id}`;
   const [mentionUrl, setMentionUrl] = useState(url);
@@ -61,6 +62,7 @@ const MentionPage = () => {
 
   const handleclick = () => {
     setOpenDialog(false);
+    history.push("/");
   };
 
   const image = (image) => {

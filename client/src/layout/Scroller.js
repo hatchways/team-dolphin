@@ -1,20 +1,9 @@
-import React, { useContext, useEffect } from "react";
-import { useHistory } from "react-router-dom";
+import React from "react";
 import InfiniteScroll from "react-infinite-scroller";
-import { UserContext } from "../context/user";
-import { getMentions } from "../hooks/getMentions";
 import Spinner from "./Spinner";
 import Mention from "../layout/Mention";
 
-const Scroller = ({
-  sort,
-  error,
-  loadmore,
-  hasMore,
-  setHasMore,
-  mentionDatas,
-  setMentionDatas,
-}) => {
+const Scroller = ({ error, loadmore, hasMore, mentionDatas }) => {
   return (
     <InfiniteScroll
       pageStart={1}

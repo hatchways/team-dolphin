@@ -88,9 +88,7 @@ const HomePage = () => {
               sort={sort}
               loadmore={loadMore}
               hasMore={hasMore}
-              setHasMore={setHasMore}
               mentionDatas={mentionDatas}
-              setMentionDatas={setMentionDatas}
               error={error}
             />
           )}
