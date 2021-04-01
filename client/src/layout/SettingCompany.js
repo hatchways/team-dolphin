@@ -276,6 +276,14 @@ const SettingCompany = () => {
         onClick={handleSaveReportEmail}>
         SAVE
       </Button>
+      <Button
+        variant="contained"
+        color="primary"
+        form="company-form"
+        className={classes.buttonSave}
+        onClick={() => axios.get("/api/users/sendReport")}>
+        DEMO
+      </Button>
       <Snackbar open={snackbarOpen}>
         {error ? (
           <Alert onClose={() => setSnackbarOpen(false)} severity="error">

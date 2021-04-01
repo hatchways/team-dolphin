@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
+const Mention = require("./mentionModel");
 
 const userSchema = mongoose.Schema(
   {
@@ -32,6 +33,7 @@ const userSchema = mongoose.Schema(
       forbes: { type: Boolean, required: true, default: false },
       shopify: { type: Boolean, required: true, default: false },
       businessinsider: { type: Boolean, required: true, default: false },
+      nyt: { type: Boolean, required: true, default: false },
     },
   },
   {
@@ -53,7 +55,18 @@ userSchema.pre("save", async function (next) {
 });
 
 userSchema.statics.getAllCompanies = async function () {
-  return await this.distinct("name").flat();
+  const companiesObj = await this.find({}, { _id: 0, companies: 1 });
+  return [
+    ...new Set(
+      companiesObj.reduce((acc, val) => acc.concat(val.companies), [])
+    ),
+  ];
+};
+
+userSchema.methods.getTopFiveMentions = async function () {
+  return await Mention.find({ company: this.activeCompany })
+    .sort({ popularity: -1 })
+    .limit(5);
 };
 
 module.exports = mongoose.model("User", userSchema);

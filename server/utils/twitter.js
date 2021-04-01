@@ -28,6 +28,7 @@ const searchTwitter = async (term) => {
         date: new Date(tweet.created_at),
         popularity: tweet.favorite_count,
         url: `https://twitter.com/${tweet.user.screen_name}/statuses/${tweet.id_str}`,
+        company: term,
       });
     });
     return posts;

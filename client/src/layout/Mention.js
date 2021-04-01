@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import {
   Typography,
@@ -98,20 +98,29 @@ const useStyles = makeStyles((theme) => ({
   modalButtons: {
     margin: "0.5em",
   },
+  highlight: {
+    color: theme.palette.primary.main,
+  },
 }));
 
 const image = (image) => {
-  if (image === "default" || image === "self") {
-    return redditLogo;
-  } else {
-    return image;
+  switch (image) {
+    case "default" || "self":
+      return redditLogo;
+    case "twitterDefault":
+      return twitterLogo;
+    default:
+      return image;
   }
 };
 
 const Mention = ({ mention }) => {
   const classes = useStyles();
   const history = useHistory();
-  const { searchTerm } = useContext(UserContext);
+  const { searchTerm, user } = useContext(UserContext);
+  const [keyword, setKeyword] = useState(user.activeCompany);
+  const regex = new RegExp(`${keyword}`, "i");
+  const indexK = mention.title.search(regex);
   const url = `${REACT_APP_BASE_URL}/mentions/${mention._id}`;
   const [mentionUrl, setMentionUrl] = useState(url);
 
@@ -126,6 +135,12 @@ const Mention = ({ mention }) => {
     history.push("/");
   };
 
+  useEffect(() => {
+    if (searchTerm !== "") {
+      setKeyword(searchTerm);
+    }
+  }, [searchTerm]);
+
   return (
     <>
       <Card className={classes.root} onClick={handleClickOpen}>
@@ -136,18 +151,28 @@ const Mention = ({ mention }) => {
         />
         <CardContent className={classes.content}>
           <Box component="div" className={classes.titleBox}>
-            <Typography variant="h6" align="center" gutterBottom>
-              {mention.title}
+            <Typography variant="h6" gutterBottom>
+              {indexK >= 0 ? (
+                <span>
+                  {mention.title.substring(0, indexK)}
+                  <span className={classes.highlight}>
+                    {mention.title.substring(indexK, indexK + keyword.length)}
+                  </span>
+                  {mention.title.substring(indexK + keyword.length)}
+                </span>
+              ) : (
+                mention.title
+              )}
             </Typography>
           </Box>
           <Typography
-            vairant="subtitle1"
+            variant="subtitle1"
             className={classes.subtitle}
             gutterBottom>
             {mention.platform}
           </Typography>
           <Box component="div" classes={{ root: classes.customBox }}>
-            <Typography vairant="caption" className={classes.text} gutterBottom>
+            <Typography variant="caption" className={classes.text} gutterBottom>
               {mention.content}
             </Typography>
           </Box>

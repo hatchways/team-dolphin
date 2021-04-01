@@ -1,5 +1,7 @@
 const generateToken = require("../config/generateToken");
 const User = require("../models/userModel");
+const { addMentionsToDB } = require("../utils/scraper"); // Added for Co-op Midterm Presentation
+const { sendWeeklyReport } = require("../utils/mailjet");
 const { handleIndividualCompany } = require("../utils/jobHandler");
 
 // @desc    Register a new user
@@ -111,10 +113,20 @@ const updateUser = async (req, res) => {
   }
 };
 
+// @desc    Send user's weekly report email -- DEMO PURPOSES ONLY
+// @route   GET /api/users/sendReport
+// @access  Private
+const sendReport = async (req, res) => {
+  const topMentions = await req.user.getTopFiveMentions();
+  sendWeeklyReport(req.user.reportEmail, topMentions);
+  res.sendStatus(200);
+};
+
 module.exports = {
   signUp,
   signIn,
   getUserProfile,
   updateUser,
   logout,
+  sendReport,
 };
