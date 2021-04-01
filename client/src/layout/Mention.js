@@ -7,8 +7,6 @@ import {
   CardMedia,
   Box,
   Dialog,
-  DialogTitle,
-  DialogContent,
   Grid,
   Button,
   Link,
@@ -78,6 +76,28 @@ const useStyles = makeStyles((theme) => ({
     wordBreak: "break-all",
     overflow: "hidden",
   },
+  modalRoot: {
+    width: "100%",
+    height: "600px",
+  },
+  modalHeader: {
+    minHeight: "5em",
+    alignItems: "center",
+    margin: "1em 2em",
+  },
+  modalImage: {
+    height: "16em",
+    width: "16em",
+    margin: "auto",
+  },
+  modalContent: {
+    height: "16em",
+    width: "100%",
+    overflow: "auto",
+  },
+  modalButtons: {
+    margin: "0.5em",
+  },
 }));
 
 const image = (image) => {
@@ -116,7 +136,7 @@ const Mention = ({ mention }) => {
         />
         <CardContent className={classes.content}>
           <Box component="div" className={classes.titleBox}>
-            <Typography variant="h6" gutterBottom>
+            <Typography variant="h6" align="center" gutterBottom>
               {mention.title}
             </Typography>
           </Box>
@@ -134,38 +154,67 @@ const Mention = ({ mention }) => {
         </CardContent>
         <FontAwesomeIcon icon={faSmile} className={classes.icon} size="lg" />
       </Card>
-      <Dialog open={dialogOpen}>
-        <Grid container spacing={2}>
-          <Grid item xs={12}>
-            <DialogTitle onClick={handleClose}>
-              <Typography variant="h6">{mention.title}</Typography>
-            </DialogTitle>
-          </Grid>
-          <Grid item xs={12}>
-            <DialogContent>
-              <Grid item xs={12}>
-                <Typography paragraph>{mention.content}</Typography>
-              </Grid>
 
-              <Grid item xs={12} container spacing={2}>
-                <Grid item xs={6}>
-                  <Link href={mention.url} target="_blank" rel="noopener">
-                    <Button variant="contained" color="primary" fullWidth>
-                      Open link
-                    </Button>
-                  </Link>
-                </Grid>
-                <Grid item xs={6}>
-                  <CopyToClipboard text={mentionUrl}>
-                    <Button variant="contained" color="primary" fullWidth>
-                      SHARE
-                    </Button>
-                  </CopyToClipboard>
-                </Grid>
+      <Dialog open={dialogOpen} className={classes.modalRoot} maxWidth="md">
+        <Card>
+          <Grid container spacing={2}>
+            <Grid
+              item
+              xs={12}
+              onClick={handleClose}
+              className={classes.modalHeader}>
+              <Box display="flex" justifyContent="center">
+                <Typography variant="h6">{mention.title}</Typography>
+              </Box>
+            </Grid>
+
+            <Grid item xs={12} spacing={2} container>
+              <Grid item xs={6}>
+                <CardMedia
+                  className={classes.modalImage}
+                  image={image(mention.image)}
+                  title="mention cover"
+                />
               </Grid>
-            </DialogContent>
+              <Grid item xs={6}>
+                <Typography paragraph className={classes.modalContent}>
+                  {mention.content}
+                </Typography>
+              </Grid>
+            </Grid>
+
+            <Grid
+              item
+              xs={12}
+              spacing={2}
+              className={classes.modalButtons}
+              container>
+              <Grid item xs={4}>
+                <Link href={mention.url} target="_blank" rel="noopener">
+                  <Button variant="contained" color="primary" fullWidth>
+                    Open link
+                  </Button>
+                </Link>
+              </Grid>
+              <Grid item xs={4}>
+                <CopyToClipboard text={mentionUrl}>
+                  <Button variant="contained" color="primary" fullWidth>
+                    SHARE
+                  </Button>
+                </CopyToClipboard>
+              </Grid>
+              <Grid item xs={4}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={handleClose}
+                  fullWidth>
+                  Close
+                </Button>
+              </Grid>
+            </Grid>
           </Grid>
-        </Grid>
+        </Card>
       </Dialog>
     </>
   );
