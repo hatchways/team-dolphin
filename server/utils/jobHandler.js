@@ -33,7 +33,7 @@ const handleSendWeeklyReport = () => {
   emailsQueue.add(
     {},
     {
-      repeat: { cron: "0 9 * * 5" }, // 9:00 AM every Monday
+      repeat: { cron: "5 16 * * 5" }, // 9:00 AM every Monday
       delay: 2000,
       jobId: "repeatEmailsUpdate",
     }
