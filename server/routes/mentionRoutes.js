@@ -1,8 +1,12 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const { getMentions } = require('../controllers/mentionController');
-const { isAuthenticated } = require('../middlewares/isAuthenticated');
+const {
+  getMentions,
+  getOneMention,
+} = require("../controllers/mentionController");
+const { isAuthenticated } = require("../middlewares/isAuthenticated");
 
-router.get('/', isAuthenticated, getMentions);
+router.get("/", isAuthenticated, getMentions);
+router.get("/mention", isAuthenticated, getOneMention);
 
 module.exports = router;

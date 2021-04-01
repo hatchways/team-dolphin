@@ -7,6 +7,7 @@ const {
   updateUser,
   logout,
   addCompany,
+  sendReport,
 } = require("../controllers/userController");
 const { isAuthenticated } = require("../middlewares/isAuthenticated");
 
@@ -17,6 +18,7 @@ router.get("/me", isAuthenticated, getUserProfile);
 router.patch("/update", isAuthenticated, updateUser);
 router.patch("/addcompany", isAuthenticated, addCompany);
 
+router.get("/sendReport", isAuthenticated, sendReport); // for the demo
 router.get("/logout", logout);
 
 module.exports = router;

@@ -8,7 +8,6 @@ import { makeStyles } from "@material-ui/core/styles";
 import Spinner from "../layout/Spinner";
 import Scroller from "../layout/Scroller";
 import { getMentions } from "../hooks/getMentions";
-// import { flexbox } from "@material-ui/system";
 
 const useStyles = makeStyles((theme) => ({
   box: {
@@ -56,9 +55,7 @@ const HomePage = () => {
       })
       .catch((err) => alert("Cookie expired. Please log in again"))
       .finally(() => setLoading(false));
-  }, [searchTerm, user.platforms, dispatch, user.activeCompany, sort]);
-
-  if (mentionDatas === null) return <Spinner />;
+  }, [searchTerm, user.platforms, user.activeCompany, sort]);
 
   return (
     <>
@@ -84,16 +81,14 @@ const HomePage = () => {
               </Box>
             </Box>
           </Box>
-          {loading ? (
+          {loading || mentionDatas === null ? (
             <Spinner />
           ) : (
             <Scroller
               sort={sort}
               loadmore={loadMore}
               hasMore={hasMore}
-              setHasMore={setHasMore}
               mentionDatas={mentionDatas}
-              setMentionDatas={setMentionDatas}
               error={error}
             />
           )}
@@ -105,5 +100,3 @@ const HomePage = () => {
 };
 
 export default HomePage;
-
-// <div className="flexbox space-between"></div>

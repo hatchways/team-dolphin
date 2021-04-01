@@ -1,5 +1,6 @@
 const generateToken = require("../config/generateToken");
 const User = require("../models/userModel");
+const { sendWeeklyReport } = require("../utils/mailjet");
 const { handleIndividualCompany } = require("../utils/jobHandler");
 
 // @desc    Register a new user
@@ -127,6 +128,15 @@ const addCompany = async (req, res) => {
   }
 };
 
+// @desc    Send user's weekly report email -- DEMO PURPOSES ONLY
+// @route   GET /api/users/sendReport
+// @access  Private
+const sendReport = async (req, res) => {
+  const topMentions = await req.user.getTopFiveMentions();
+  sendWeeklyReport(req.user.reportEmail, topMentions);
+  res.sendStatus(200);
+};
+
 module.exports = {
   signUp,
   signIn,
@@ -134,4 +144,5 @@ module.exports = {
   updateUser,
   logout,
   addCompany,
+  sendReport,
 };
