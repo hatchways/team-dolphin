@@ -13,7 +13,7 @@ import {
 import { Alert } from "@material-ui/lab";
 
 import { UserContext } from "../context/user";
-import { setReportEmail, updateUser } from "../actions/user";
+import { setReportEmail, updateUser, addCompany } from "../actions/user";
 import { isValidEmail } from "../pages/Signup";
 
 import axios from "axios";
@@ -97,9 +97,7 @@ const SettingCompany = () => {
     let newCompaniesArray = [...user.companies, newCompany];
 
     try {
-      await updateUser({
-        companies: newCompaniesArray,
-      });
+      await addCompany({ companies: newCompany });
       setError(null);
       setNewCompany("");
       dispatch({
