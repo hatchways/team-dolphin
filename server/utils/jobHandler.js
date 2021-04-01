@@ -104,6 +104,7 @@ const handleTaskQueues = () => {
 
   // to remove existedQueue use
   // companiesQueue.empty();
+  // scrapingQueue.empty();
 
   // job consumer
   companiesQueue.process(async function (job, done) {
