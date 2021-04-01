@@ -5,9 +5,9 @@ const { scrapeNYT } = require("../utils/nyt.js");
 
 // To be handled by BullMQ
 const addMentionsToDB = async (company, platform) => {
-  const updatePost = (posts) => {
+  const updatePost = async (posts) => {
     if (posts) {
-      posts.forEach(async (post) => {
+      for (const post of posts) {
         try {
           const bool = await Mention.exists({ url: post.url });
           if (!bool) {
@@ -16,7 +16,7 @@ const addMentionsToDB = async (company, platform) => {
         } catch (err) {
           console.log(err);
         }
-      });
+      }
     }
   };
 
@@ -34,16 +34,6 @@ const addMentionsToDB = async (company, platform) => {
         const articles = await scrapeNYT(company);
         updatePost(articles);
         break;
-      case "facebook":
-        break;
-      case "amazon":
-        break;
-      case "forbes":
-        break;
-      case "shopify":
-        break;
-      case "businessinsider":
-        break;
       default:
         console.log(`oops! ${platform} is not inside our platform`);
     }
@@ -51,5 +41,5 @@ const addMentionsToDB = async (company, platform) => {
     console.log(error.message);
   }
 };
-
+addMentionsToDB("a", "b");
 module.exports = { addMentionsToDB };

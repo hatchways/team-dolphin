@@ -34,7 +34,7 @@ const mentionSchema = mongoose.Schema({
     required: true,
   },
   sentiment: {
-    type: String,
+    type: Number,
     required: true,
   },
 });
