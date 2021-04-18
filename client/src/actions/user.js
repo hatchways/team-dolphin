@@ -8,19 +8,18 @@ export const login = async (dispatch, payload) => {
     });
 
     const res = await axios.post("/api/users/auth/signin", payload);
-    console.log("### res.data from actions-login");
+
     dispatch({
       type: "SET_USER",
       payload: {
         email: res.data.email,
         reportEmail: res.data.reportEmail,
-        companies: ["Toyota"],
-        activeCompany: ["Toyota"],
+        companies: res.data.companies,
+        activeCompany: res.data.activeCompany,
         platforms: res.data.platforms,
         likedMentions: res.data.likedMentions,
       },
     });
-    console.log("was SET_USER triggered ???");
   } catch (err) {
     dispatch({
       type: "SET_ERROR",
@@ -55,6 +54,7 @@ export const register = async (dispatch, payload) => {
         companies: res.data.companies,
         activeCompany: res.data.activeCompany,
         platforms: res.data.platforms,
+        likedMentions: res.data.likedMentions,
       },
     });
   } catch (err) {
@@ -75,15 +75,14 @@ export const authenticate = async (dispatch) => {
     const res = await axios.get("/api/users/me", {
       withCredentials: true,
     });
-    console.log("### res.data from actions-authenticate");
 
     dispatch({
       type: "SET_USER",
       payload: {
         email: res.data.email,
         reportEmail: res.data.reportEmail,
-        companies: ["Mazda"],
-        activeCompany: ["Mazda"],
+        companies: res.data.companies,
+        activeCompany: res.data.activeCompany,
         platforms: res.data.platforms,
         likedMentions: res.data.likedMentions,
       },

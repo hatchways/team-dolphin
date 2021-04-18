@@ -7,19 +7,8 @@ import Mention from "../layout/Mention";
 const Scroller = ({ error, loadmore, hasMore, mentionDatas }) => {
   const [likedMentions, setLikedMentions] = useState([]);
   const { user } = useContext(UserContext);
-  const state = useContext(UserContext);
-  console.log("### state");
-  console.log(state);
-  console.log("### user.likedMentions from scroller");
-  console.log(user.likedMentions);
-  console.log("### user.companies from scroller");
-  console.log(user.companies);
-  console.log("### user");
-  console.log(user);
 
   useEffect(() => {
-    console.log("### user");
-    console.log(user);
     if (user.likedMentions) {
       setLikedMentions([...user.likedMentions]);
     }
