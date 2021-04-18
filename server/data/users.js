@@ -10,12 +10,9 @@ const users = [
     platforms: {
       reddit: true,
       twitter: false,
-      facebook: false,
-      amazon: false,
-      forbes: false,
-      shopify: false,
-      businessinsider: false,
+      nyt: false,
     },
+    likedMentions: [""],
   },
   {
     activeCompany: "Walmart",
@@ -26,12 +23,9 @@ const users = [
     platforms: {
       reddit: true,
       twitter: false,
-      facebook: false,
-      amazon: false,
-      forbes: false,
-      shopify: false,
-      businessinsider: false,
+      nyt: false,
     },
+    likedMentions: [""],
   },
   {
     activeCompany: "Loblaws",
@@ -42,12 +36,35 @@ const users = [
     platforms: {
       reddit: true,
       twitter: false,
-      facebook: false,
-      amazon: false,
-      forbes: false,
-      shopify: false,
-      businessinsider: false,
+      nyt: false,
     },
+    likedMentions: [""],
+  },
+  {
+    activeCompany: "Westjet",
+    email: "martherobin1944@gmail.com",
+    reportEmail: "martherobin1944@gmail.com",
+    password: bcrypt.hashSync("123456", 10),
+    companies: ["Westjet"],
+    platforms: {
+      reddit: true,
+      twitter: false,
+      nyt: false,
+    },
+    likedMentions: [""],
+  },
+  {
+    activeCompany: "Astrazeneca",
+    email: "astra@astra.com",
+    reportEmail: "astra@astra.com",
+    password: bcrypt.hashSync("123456", 10),
+    companies: ["Astrazeneca"],
+    platforms: {
+      reddit: true,
+      twitter: false,
+      nyt: false,
+    },
+    likedMentions: [""],
   },
 ];
 

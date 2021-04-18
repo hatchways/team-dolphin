@@ -62,6 +62,14 @@ const reducer = (state, action) => {
         loading: false,
         error: action.payload,
       };
+    case "UPDATE_LIKED_MENTIONS":
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          likedMentions: action.payload,
+        },
+      };
     default:
       return state;
   }

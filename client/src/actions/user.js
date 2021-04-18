@@ -16,6 +16,7 @@ export const login = async (dispatch, payload) => {
         companies: res.data.companies,
         activeCompany: res.data.activeCompany,
         platforms: res.data.platforms,
+        likedMentions: res.data.likedMentions,
       },
     });
   } catch (err) {
@@ -125,6 +126,14 @@ export const updateUser = async (update) => {
 export const addCompany = async (update) => {
   try {
     await axios.patch("/api/users/addcompany", update);
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const updateLikedMentions = async (newURL) => {
+  try {
+    await axios.patch("/api/users/updatelikedmentions", newURL);
   } catch (error) {
     throw error;
   }

@@ -30,6 +30,10 @@ const userSchema = mongoose.Schema(
       twitter: { type: Boolean, required: true, default: false },
       nyt: { type: Boolean, required: true, default: false },
     },
+    likedMentions: {
+      type: Array,
+      required: true,
+    },
   },
   {
     timestamps: true,

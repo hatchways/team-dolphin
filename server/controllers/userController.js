@@ -42,6 +42,7 @@ const signUp = async (req, res) => {
         email: user.email,
         reportEmail: user.reportEmail,
         platforms: user.platforms,
+        likedMentions: user.likedMentions,
       });
     } else {
       res.status(400).json({ message: "Invalid user data" });
@@ -74,6 +75,7 @@ const signIn = async (req, res) => {
       email: user.email,
       reportEmail: user.reportEmail,
       platforms: user.platforms,
+      likedMentions: user.likedMentions,
     });
   } else {
     res.status(401).json({ message: "Invalid email or password" });
@@ -128,6 +130,22 @@ const addCompany = async (req, res) => {
   }
 };
 
+// @desc    Add company to user companies
+// @route   PATCH /api/users/updatelikedmentions
+// @access  Private
+const updatelikedmentions = async (req, res) => {
+  try {
+    const user = await User.findByIdAndUpdate(
+      req.user._id,
+      { $push: req.body },
+      { new: true }
+    );
+    res.json(user);
+  } catch (error) {
+    throw error;
+  }
+};
+
 // @desc    Send user's weekly report email -- DEMO PURPOSES ONLY
 // @route   GET /api/users/sendReport
 // @access  Private
@@ -144,5 +162,6 @@ module.exports = {
   updateUser,
   logout,
   addCompany,
+  updatelikedmentions,
   sendReport,
 };
