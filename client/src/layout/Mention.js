@@ -150,39 +150,30 @@ const Mention = ({ mention, likedMentions }) => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
 
-  const checkIfLiked = (mention) => {
-    const match = likedMentions.find((url) => url === mention.url);
-    match ? setIsLiked(true) : setIsLiked(false);
-  };
-
   const handleClickOpen = () => {
     setDialogOpen(true);
     window.history.pushState({}, "", `/mentions/${mention._id}`);
   };
 
-  const handleClickLike = async (e) => {
+  const toggleLike = async () => {
     try {
-      let updatedLikedMentions = [...likedMentions, mention.url];
-      await updateLikedMentions({ likedMentions: mention.url });
-      dispatch({
-        type: "UPDATE_LIKED_MENTIONS",
-        payload: updatedLikedMentions,
-      });
-    } catch (error) {
-      throw error;
-    }
-  };
-
-  const handleClickUnlike = async (e) => {
-    try {
-      let updatedLikedMentions = likedMentions.filter(
-        (url) => url !== mention.url
-      );
-      await updateLikedMentions({ likedMentions: mention.url });
-      dispatch({
-        type: "UPDATE_LIKED_MENTIONS",
-        payload: updatedLikedMentions,
-      });
+      if (!isLiked) {
+        let updatedLikedMentions = [...likedMentions, mention.url];
+        await updateLikedMentions({ likedMentions: mention.url });
+        dispatch({
+          type: "UPDATE_LIKED_MENTIONS",
+          payload: updatedLikedMentions,
+        });
+      } else {
+        let updatedLikedMentions = likedMentions.filter(
+          (url) => url !== mention.url
+        );
+        await updateLikedMentions({ likedMentions: mention.url });
+        dispatch({
+          type: "UPDATE_LIKED_MENTIONS",
+          payload: updatedLikedMentions,
+        });
+      }
     } catch (error) {
       throw error;
     }
@@ -191,6 +182,11 @@ const Mention = ({ mention, likedMentions }) => {
   const handleClose = () => {
     setDialogOpen(false);
     history.push("/");
+  };
+
+  const checkIfLiked = (mention) => {
+    const match = likedMentions.find((url) => url === mention.url);
+    match ? setIsLiked(true) : setIsLiked(false);
   };
 
   useEffect(() => {
@@ -311,7 +307,7 @@ const Mention = ({ mention, likedMentions }) => {
               <Grid item xs={3}>
                 <Button
                   variant="contained"
-                  onClick={isLiked ? handleClickUnlike : handleClickLike}
+                  onClick={toggleLike}
                   color={isLiked ? "secondary" : "primary"}
                   fullWidth>
                   {isLiked ? "UNLIKE" : "LIKE"}
