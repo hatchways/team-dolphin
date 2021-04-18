@@ -12,7 +12,7 @@ const users = [
       twitter: false,
       nyt: false,
     },
-    likedMentions: [""],
+    likedMentions: [],
   },
   {
     activeCompany: "Walmart",
@@ -25,7 +25,7 @@ const users = [
       twitter: false,
       nyt: false,
     },
-    likedMentions: [""],
+    likedMentions: [],
   },
   {
     activeCompany: "Loblaws",
@@ -38,7 +38,7 @@ const users = [
       twitter: false,
       nyt: false,
     },
-    likedMentions: [""],
+    likedMentions: [],
   },
   {
     activeCompany: "Westjet",
@@ -51,7 +51,7 @@ const users = [
       twitter: false,
       nyt: false,
     },
-    likedMentions: [""],
+    likedMentions: [],
   },
   {
     activeCompany: "Astrazeneca",
@@ -64,7 +64,7 @@ const users = [
       twitter: false,
       nyt: false,
     },
-    likedMentions: [""],
+    likedMentions: [],
   },
 ];
 

@@ -131,13 +131,29 @@ const addCompany = async (req, res) => {
 };
 
 // @desc    Add company to user companies
-// @route   PATCH /api/users/updatelikedmentions
+// @route   PATCH /api/users/likemention
 // @access  Private
-const updatelikedmentions = async (req, res) => {
+const likeMention = async (req, res) => {
   try {
     const user = await User.findByIdAndUpdate(
       req.user._id,
       { $push: req.body },
+      { new: true }
+    );
+    res.json(user);
+  } catch (error) {
+    throw error;
+  }
+};
+
+// @desc    Add company to user companies
+// @route   PATCH /api/users/unlikemention
+// @access  Private
+const unlikeMention = async (req, res) => {
+  try {
+    const user = await User.findByIdAndUpdate(
+      req.user._id,
+      { $pull: req.body },
       { new: true }
     );
     res.json(user);
@@ -162,6 +178,7 @@ module.exports = {
   updateUser,
   logout,
   addCompany,
-  updatelikedmentions,
+  likeMention,
+  unlikeMention,
   sendReport,
 };

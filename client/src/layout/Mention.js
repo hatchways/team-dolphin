@@ -18,7 +18,7 @@ import redditLogo from "../utils/images/reddit-logo.png";
 import twitterLogo from "../utils/images/twitter-logo.png";
 import nytLogo from "../utils/images/nyt-logo.png";
 import { UserContext } from "../context/user";
-import { updateLikedMentions } from "../actions/user";
+import { likeMention, unlikeMention } from "../actions/user";
 import { faWindowRestore, faHeart } from "@fortawesome/free-solid-svg-icons";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { REACT_APP_BASE_URL } from "../utils/constants";
@@ -159,7 +159,7 @@ const Mention = ({ mention, likedMentions }) => {
     try {
       if (!isLiked) {
         let updatedLikedMentions = [...likedMentions, mention.url];
-        await updateLikedMentions({ likedMentions: mention.url });
+        await likeMention({ likedMentions: mention.url });
         dispatch({
           type: "UPDATE_LIKED_MENTIONS",
           payload: updatedLikedMentions,
@@ -168,7 +168,7 @@ const Mention = ({ mention, likedMentions }) => {
         let updatedLikedMentions = likedMentions.filter(
           (url) => url !== mention.url
         );
-        await updateLikedMentions({ likedMentions: mention.url });
+        await unlikeMention({ likedMentions: mention.url });
         dispatch({
           type: "UPDATE_LIKED_MENTIONS",
           payload: updatedLikedMentions,
@@ -186,6 +186,12 @@ const Mention = ({ mention, likedMentions }) => {
 
   const checkIfLiked = (mention) => {
     const match = likedMentions.find((url) => url === mention.url);
+    // console.log("### checkIfLiked ###");
+    // console.log(mention.url);
+    // console.log(likedMentions);
+    // console.log(match);
+    // console.log(match ? "true" : "false");
+    // console.log("### END ###");
     match ? setIsLiked(true) : setIsLiked(false);
   };
 
@@ -228,7 +234,6 @@ const Mention = ({ mention, likedMentions }) => {
           </Typography>
           <Box component="div" classes={{ root: classes.customBox }}>
             <Typography variant="caption" className={classes.text} gutterBottom>
-              {isLiked ? "I LIKE: " : ""}
               {mention.content}
             </Typography>
           </Box>

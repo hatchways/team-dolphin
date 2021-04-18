@@ -8,17 +8,19 @@ export const login = async (dispatch, payload) => {
     });
 
     const res = await axios.post("/api/users/auth/signin", payload);
+    console.log("### res.data from actions-login");
     dispatch({
       type: "SET_USER",
       payload: {
         email: res.data.email,
         reportEmail: res.data.reportEmail,
-        companies: res.data.companies,
-        activeCompany: res.data.activeCompany,
+        companies: ["Toyota"],
+        activeCompany: ["Toyota"],
         platforms: res.data.platforms,
         likedMentions: res.data.likedMentions,
       },
     });
+    console.log("was SET_USER triggered ???");
   } catch (err) {
     dispatch({
       type: "SET_ERROR",
@@ -73,15 +75,17 @@ export const authenticate = async (dispatch) => {
     const res = await axios.get("/api/users/me", {
       withCredentials: true,
     });
+    console.log("### res.data from actions-authenticate");
 
     dispatch({
       type: "SET_USER",
       payload: {
         email: res.data.email,
         reportEmail: res.data.reportEmail,
-        companies: res.data.companies,
-        activeCompany: res.data.activeCompany,
+        companies: ["Mazda"],
+        activeCompany: ["Mazda"],
         platforms: res.data.platforms,
+        likedMentions: res.data.likedMentions,
       },
     });
   } catch (error) {
@@ -131,9 +135,17 @@ export const addCompany = async (update) => {
   }
 };
 
-export const updateLikedMentions = async (newURL) => {
+export const likeMention = async (newURL) => {
   try {
-    await axios.patch("/api/users/updatelikedmentions", newURL);
+    await axios.patch("/api/users/likemention", newURL);
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const unlikeMention = async (newURL) => {
+  try {
+    await axios.patch("/api/users/unlikemention", newURL);
   } catch (error) {
     throw error;
   }

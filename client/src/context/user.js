@@ -9,7 +9,6 @@ const initialState = {
   error: null,
   user: {},
   searchTerm: "",
-  likedMentions: [],
 };
 
 const UserProvider = ({ children }) => {

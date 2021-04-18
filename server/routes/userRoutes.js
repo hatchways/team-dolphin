@@ -7,6 +7,8 @@ const {
   updateUser,
   logout,
   addCompany,
+  likeMention,
+  unlikeMention,
   sendReport,
 } = require("../controllers/userController");
 const { isAuthenticated } = require("../middlewares/isAuthenticated");
@@ -17,7 +19,8 @@ router.get("/profile", isAuthenticated, getUserProfile);
 router.get("/me", isAuthenticated, getUserProfile);
 router.patch("/update", isAuthenticated, updateUser);
 router.patch("/addcompany", isAuthenticated, addCompany);
-router.patch("/updatelikedmentions", isAuthenticated, addCompany);
+router.patch("/likemention", isAuthenticated, likeMention);
+router.patch("/unlikemention", isAuthenticated, unlikeMention);
 
 router.get("/sendReport", isAuthenticated, sendReport); // for the demo
 router.get("/logout", logout);
