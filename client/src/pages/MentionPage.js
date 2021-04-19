@@ -51,7 +51,6 @@ const MentionPage = () => {
   const url = `${REACT_APP_BASE_URL}/mentions/${mention._id}`;
   const [mentionUrl, setMentionUrl] = useState(url);
   const [openDialog, setOpenDialog] = useState(false);
-  ////// Like mention feature //////////////
   const [mentionIsLiked, setMentionIsLiked] = useState(false);
   const { user } = useContext(UserContext);
 
@@ -130,7 +129,7 @@ const MentionPage = () => {
               <Grid item xs={3}>
                 <CopyToClipboard text={mentionUrl}>
                   <Button variant="contained" color="primary" fullWidth>
-                    SHAREE
+                    SHARE
                   </Button>
                 </CopyToClipboard>
               </Grid>

@@ -15,6 +15,9 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(6, 3, 4, 0),
     width: "80%",
   },
+  toggleBox: {
+    margin: theme.spacing(0.5),
+  },
 }));
 
 const HomePage = () => {
@@ -79,7 +82,7 @@ const HomePage = () => {
                 </Typography>
               </Box>
               <Box display="flex" flexDirection="column">
-                <Box>
+                <Box className={classes.toggleBox}>
                   <SortToggle
                     handleAlignment={handleAlignment}
                     alignment={sort}
@@ -87,7 +90,7 @@ const HomePage = () => {
                     text={["Most Recent", "Most Popular"]}
                   />
                 </Box>
-                <Box>
+                <Box className={classes.toggleBox}>
                   <SortToggle
                     handleAlignment={handleAlignment}
                     alignment={favoritesFilter}

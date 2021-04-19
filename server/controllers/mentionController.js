@@ -43,38 +43,23 @@ const getMentions = async (req, res) => {
       // Fetching Mentions pertaining to selected platforms
       // Sorting handled by MongoDB
       const fetchMentions = async (array, sorting) => {
-        if (favorites === "all") {
-          const results = await Mention.find({
-            $and: [
-              {
-                $or: [
-                  { title: { $regex: req.user.activeCompany, $options: "i" } },
-                  {
-                    content: { $regex: req.user.activeCompany, $options: "i" },
-                  },
-                ],
-              },
-              { $or: [...getPlatformsObject(array)] },
-            ],
-          }).sort(getSortOption(sorting));
-          return results;
-        } else {
-          const results = await Mention.find({
-            $and: [
-              { url: { $in: req.user.likedMentions } },
-              {
-                $or: [
-                  { title: { $regex: req.user.activeCompany, $options: "i" } },
-                  {
-                    content: { $regex: req.user.activeCompany, $options: "i" },
-                  },
-                ],
-              },
-              { $or: [...getPlatformsObject(array)] },
-            ],
-          }).sort(getSortOption(sorting));
-          return results;
-        }
+        const results = await Mention.find({
+          $and: [
+            favorites === "favorites"
+              ? { url: { $in: req.user.likedMentions } }
+              : {},
+            {
+              $or: [
+                { title: { $regex: req.user.activeCompany, $options: "i" } },
+                {
+                  content: { $regex: req.user.activeCompany, $options: "i" },
+                },
+              ],
+            },
+            { $or: [...getPlatformsObject(array)] },
+          ],
+        }).sort(getSortOption(sorting));
+        return results;
       };
       const allMentions = await fetchMentions(platformsArray, sortOption);
 

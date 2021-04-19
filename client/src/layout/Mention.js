@@ -186,12 +186,6 @@ const Mention = ({ mention, likedMentions }) => {
 
   const checkIfLiked = (mention) => {
     const match = likedMentions.find((url) => url === mention.url);
-    // console.log("### checkIfLiked ###");
-    // console.log(mention.url);
-    // console.log(likedMentions);
-    // console.log(match);
-    // console.log(match ? "true" : "false");
-    // console.log("### END ###");
     match ? setIsLiked(true) : setIsLiked(false);
   };
 
