@@ -24,6 +24,7 @@ const HomePage = () => {
   const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [sort, setSort] = useState("date");
+  const [favoritesFilter, setFavoritesFilter] = useState("all");
 
   const { dispatch, error, searchTerm, user } = useContext(UserContext);
 
@@ -33,7 +34,8 @@ const HomePage = () => {
       searchTerm,
       user.platforms,
       currentPage + 1,
-      sort
+      sort,
+      favoritesFilter
     );
     setHasMore(data.nextPage ? true : false);
     const newData = [...mentionDatas, data.mentions].flat();
@@ -42,12 +44,16 @@ const HomePage = () => {
   };
 
   const handleAlignment = (event, newAlignment) => {
-    setSort(newAlignment);
+    if (["Most Recent", "Most Popular"].includes(event.target.textContent)) {
+      setSort(newAlignment);
+    } else {
+      setFavoritesFilter(newAlignment);
+    }
   };
 
   useEffect(() => {
     setLoading(true);
-    getMentions(dispatch, searchTerm, user.platforms, 1, sort)
+    getMentions(dispatch, searchTerm, user.platforms, 1, sort, favoritesFilter)
       .then((data) => {
         setMentionDatas(data.mentions);
         setHasMore(data.nextPage ? true : false);
@@ -55,7 +61,7 @@ const HomePage = () => {
       })
       .catch((err) => alert("Cookie expired. Please log in again"))
       .finally(() => setLoading(false));
-  }, [searchTerm, user.platforms, user.activeCompany, sort]);
+  }, [searchTerm, user.platforms, user.activeCompany, sort, favoritesFilter]);
 
   return (
     <>
@@ -72,12 +78,23 @@ const HomePage = () => {
                   My mentions
                 </Typography>
               </Box>
-              <Box>
-                <SortToggle
-                  handleAlignment={handleAlignment}
-                  alignment={sort}
-                  setAlignment={setSort}
-                />
+              <Box display="flex" flexDirection="column">
+                <Box>
+                  <SortToggle
+                    handleAlignment={handleAlignment}
+                    alignment={sort}
+                    values={["date", "popularity"]}
+                    text={["Most Recent", "Most Popular"]}
+                  />
+                </Box>
+                <Box>
+                  <SortToggle
+                    handleAlignment={handleAlignment}
+                    alignment={favoritesFilter}
+                    values={["all", "favorites"]}
+                    text={["All Mentions", "Favorites"]}
+                  />
+                </Box>
               </Box>
             </Box>
           </Box>

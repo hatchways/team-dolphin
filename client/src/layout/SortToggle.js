@@ -32,7 +32,7 @@ const notselected = {
   border: "none",
 };
 
-const SortToggle = ({ handleAlignment, alignment }) => {
+const SortToggle = ({ handleAlignment, alignment, values, text }) => {
   return (
     <ToggleButtonGroup
       value={alignment}
@@ -41,16 +41,16 @@ const SortToggle = ({ handleAlignment, alignment }) => {
       style={group}
       aria-label="text alignment">
       <ToggleButton
-        value="date"
+        value={values[0]}
         aria-label="left aligned"
-        style={alignment === "date" ? selected : notselected}>
-        Most Recent
+        style={alignment === values[0] ? selected : notselected}>
+        {text[0]}
       </ToggleButton>
       <ToggleButton
-        value="popularity"
+        value={values[1]}
         aria-label="right aligned"
-        style={alignment === "popularity" ? selected : notselected}>
-        Most Popular
+        style={alignment === values[1] ? selected : notselected}>
+        {text[1]}
       </ToggleButton>
     </ToggleButtonGroup>
   );

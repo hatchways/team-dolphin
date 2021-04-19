@@ -27,7 +27,7 @@ const getSortOption = (option) => {
 
 const getMentions = async (req, res) => {
   try {
-    const { platforms, page, keyword, sort } = req.query;
+    const { platforms, page, keyword, sort, favorites } = req.query;
     if (!platforms) {
       res.status(201).json({ mentions: [] });
     } else {
@@ -43,18 +43,38 @@ const getMentions = async (req, res) => {
       // Fetching Mentions pertaining to selected platforms
       // Sorting handled by MongoDB
       const fetchMentions = async (array, sorting) => {
-        const results = await Mention.find({
-          $and: [
-            {
-              $or: [
-                { title: { $regex: req.user.activeCompany, $options: "i" } },
-                { content: { $regex: req.user.activeCompany, $options: "i" } },
-              ],
-            },
-            { $or: [...getPlatformsObject(array)] },
-          ],
-        }).sort(getSortOption(sorting));
-        return results;
+        if (favorites === "all") {
+          const results = await Mention.find({
+            $and: [
+              {
+                $or: [
+                  { title: { $regex: req.user.activeCompany, $options: "i" } },
+                  {
+                    content: { $regex: req.user.activeCompany, $options: "i" },
+                  },
+                ],
+              },
+              { $or: [...getPlatformsObject(array)] },
+            ],
+          }).sort(getSortOption(sorting));
+          return results;
+        } else {
+          const results = await Mention.find({
+            $and: [
+              { url: { $in: req.user.likedMentions } },
+              {
+                $or: [
+                  { title: { $regex: req.user.activeCompany, $options: "i" } },
+                  {
+                    content: { $regex: req.user.activeCompany, $options: "i" },
+                  },
+                ],
+              },
+              { $or: [...getPlatformsObject(array)] },
+            ],
+          }).sort(getSortOption(sorting));
+          return results;
+        }
       };
       const allMentions = await fetchMentions(platformsArray, sortOption);
 
