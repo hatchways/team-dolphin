@@ -105,13 +105,10 @@ const updateUser = async (req, res) => {
     const update = (action) => {
       switch (action) {
         case "like":
-          console.log("### like! ###");
           return { $push: req.body };
         case "unlike":
-          console.log("### unlike! ###");
           return { $pull: req.body };
         default:
-          console.log("### other! ###");
           return { $set: req.body };
       }
     };
