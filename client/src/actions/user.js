@@ -133,19 +133,3 @@ export const addCompany = async (update) => {
     throw error;
   }
 };
-
-export const likeMention = async (newURL) => {
-  try {
-    await axios.patch("/api/users/likemention", newURL);
-  } catch (error) {
-    throw error;
-  }
-};
-
-export const unlikeMention = async (newURL) => {
-  try {
-    await axios.patch("/api/users/unlikemention", newURL);
-  } catch (error) {
-    throw error;
-  }
-};

@@ -18,7 +18,7 @@ import redditLogo from "../utils/images/reddit-logo.png";
 import twitterLogo from "../utils/images/twitter-logo.png";
 import nytLogo from "../utils/images/nyt-logo.png";
 import { UserContext } from "../context/user";
-import { likeMention, unlikeMention } from "../actions/user";
+import { updateUser } from "../actions/user";
 import { faWindowRestore, faHeart } from "@fortawesome/free-solid-svg-icons";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { REACT_APP_BASE_URL } from "../utils/constants";
@@ -159,7 +159,7 @@ const Mention = ({ mention, likedMentions }) => {
     try {
       if (!isLiked) {
         let updatedLikedMentions = [...likedMentions, mention.url];
-        await likeMention({ likedMentions: mention.url });
+        await updateUser({ likedMentions: mention.url, action: "like" });
         dispatch({
           type: "UPDATE_LIKED_MENTIONS",
           payload: updatedLikedMentions,
@@ -168,7 +168,7 @@ const Mention = ({ mention, likedMentions }) => {
         let updatedLikedMentions = likedMentions.filter(
           (url) => url !== mention.url
         );
-        await unlikeMention({ likedMentions: mention.url });
+        await updateUser({ likedMentions: mention.url, action: "unlike" });
         dispatch({
           type: "UPDATE_LIKED_MENTIONS",
           payload: updatedLikedMentions,

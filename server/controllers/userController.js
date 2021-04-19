@@ -102,12 +102,21 @@ const getUserProfile = async (req, res) => {
 // @access  Private
 const updateUser = async (req, res) => {
   try {
-    const user = await User.findByIdAndUpdate(
-      req.user._id,
-      { $set: req.body },
-      { new: true }
-    );
-    res.json(user);
+    if (Object.keys(req.body)[0] === "likedMentions") {
+      const user = await User.findByIdAndUpdate(
+        req.user._id,
+        req.body.action === "like" ? { $push: req.body } : { $pull: req.body },
+        { new: true }
+      );
+      res.json(user);
+    } else {
+      const user = await User.findByIdAndUpdate(
+        req.user._id,
+        { $set: req.body },
+        { new: true }
+      );
+      res.json(user);
+    }
   } catch (error) {
     throw error;
   }
@@ -130,38 +139,6 @@ const addCompany = async (req, res) => {
   }
 };
 
-// @desc    Add company to user companies
-// @route   PATCH /api/users/likemention
-// @access  Private
-const likeMention = async (req, res) => {
-  try {
-    const user = await User.findByIdAndUpdate(
-      req.user._id,
-      { $push: req.body },
-      { new: true }
-    );
-    res.json(user);
-  } catch (error) {
-    throw error;
-  }
-};
-
-// @desc    Add company to user companies
-// @route   PATCH /api/users/unlikemention
-// @access  Private
-const unlikeMention = async (req, res) => {
-  try {
-    const user = await User.findByIdAndUpdate(
-      req.user._id,
-      { $pull: req.body },
-      { new: true }
-    );
-    res.json(user);
-  } catch (error) {
-    throw error;
-  }
-};
-
 // @desc    Send user's weekly report email -- DEMO PURPOSES ONLY
 // @route   GET /api/users/sendReport
 // @access  Private
@@ -178,7 +155,5 @@ module.exports = {
   updateUser,
   logout,
   addCompany,
-  likeMention,
-  unlikeMention,
   sendReport,
 };
