@@ -102,21 +102,26 @@ const getUserProfile = async (req, res) => {
 // @access  Private
 const updateUser = async (req, res) => {
   try {
-    if (Object.keys(req.body)[0] === "likedMentions") {
-      const user = await User.findByIdAndUpdate(
-        req.user._id,
-        req.body.action === "like" ? { $push: req.body } : { $pull: req.body },
-        { new: true }
-      );
-      res.json(user);
-    } else {
-      const user = await User.findByIdAndUpdate(
-        req.user._id,
-        { $set: req.body },
-        { new: true }
-      );
-      res.json(user);
-    }
+    const update = (action) => {
+      switch (action) {
+        case "like":
+          console.log("### like! ###");
+          return { $push: req.body };
+        case "unlike":
+          console.log("### unlike! ###");
+          return { $pull: req.body };
+        default:
+          console.log("### other! ###");
+          return { $set: req.body };
+      }
+    };
+
+    const user = await User.findByIdAndUpdate(
+      req.user._id,
+      update(req.body.action),
+      { new: true }
+    );
+    res.json(user);
   } catch (error) {
     throw error;
   }
