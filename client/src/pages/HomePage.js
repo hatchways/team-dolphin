@@ -16,7 +16,7 @@ const useStyles = makeStyles((theme) => ({
     width: "80%",
   },
   toggleBox: {
-    margin: theme.spacing(0.5),
+    margin: theme.spacing(0.3),
   },
 }));
 

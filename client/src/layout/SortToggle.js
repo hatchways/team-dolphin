@@ -5,13 +5,14 @@ import ToggleButtonGroup from "@material-ui/lab/ToggleButtonGroup";
 const group = {
   backgroundColor: "#f0f1fa",
   borderRadius: "50px",
-  padding: "5px",
+  padding: "3px",
 };
 
 const selected = {
   backgroundColor: "#657DF2",
   color: "#f0f1fa",
   borderRadius: "50px",
+  margin: "1px",
   width: "120px",
   height: "30px",
   textTransform: "none",
@@ -24,6 +25,7 @@ const notselected = {
   backgroundColor: "#f0f1fa",
   color: "#657DF2",
   borderRadius: "50px",
+  margin: "1px",
   width: "120px",
   height: "30px",
   textTransform: "none",
