@@ -157,23 +157,17 @@ const Mention = ({ mention, likedMentions }) => {
 
   const toggleLike = async () => {
     try {
-      if (!isLiked) {
-        let updatedLikedMentions = [...likedMentions, mention.url];
-        await updateUser({ likedMentions: mention.url, action: "like" });
-        dispatch({
-          type: "UPDATE_LIKED_MENTIONS",
-          payload: updatedLikedMentions,
-        });
-      } else {
-        let updatedLikedMentions = likedMentions.filter(
-          (url) => url !== mention.url
-        );
-        await updateUser({ likedMentions: mention.url, action: "unlike" });
-        dispatch({
-          type: "UPDATE_LIKED_MENTIONS",
-          payload: updatedLikedMentions,
-        });
-      }
+      let updatedLikedMentions = !isLiked
+        ? [...likedMentions, mention.url]
+        : likedMentions.filter((url) => url !== mention.url);
+      await updateUser({
+        likedMentions: mention.url,
+        action: !isLiked ? "like" : "unlike",
+      });
+      dispatch({
+        type: "UPDATE_LIKED_MENTIONS",
+        payload: updatedLikedMentions,
+      });
     } catch (error) {
       throw error;
     }
