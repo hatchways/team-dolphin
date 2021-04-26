@@ -13,7 +13,7 @@ const selected = {
   color: "#f0f1fa",
   borderRadius: "50px",
   margin: "1px",
-  width: "120px",
+  width: "105px",
   height: "30px",
   textTransform: "none",
   letterSpacing: "0.5px",
@@ -26,7 +26,7 @@ const notselected = {
   color: "#657DF2",
   borderRadius: "50px",
   margin: "1px",
-  width: "120px",
+  width: "105px",
   height: "30px",
   textTransform: "none",
   letterSpacing: "0.5px",
@@ -50,9 +50,15 @@ const SortToggle = ({ handleAlignment, alignment, values, text }) => {
       </ToggleButton>
       <ToggleButton
         value={values[1]}
-        aria-label="right aligned"
+        aria-label="centered"
         style={alignment === values[1] ? selected : notselected}>
         {text[1]}
+      </ToggleButton>
+      <ToggleButton
+        value={values[2]}
+        aria-label="right aligned"
+        style={alignment === values[2] ? selected : notselected}>
+        {text[2]}
       </ToggleButton>
     </ToggleButtonGroup>
   );

@@ -27,7 +27,7 @@ const HomePage = () => {
   const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [sort, setSort] = useState("date");
-  const [favoritesFilter, setFavoritesFilter] = useState("all");
+  const [favorites, setFavorites] = useState("yes");
 
   const { dispatch, error, searchTerm, user } = useContext(UserContext);
 
@@ -38,7 +38,7 @@ const HomePage = () => {
       user.platforms,
       currentPage + 1,
       sort,
-      favoritesFilter
+      favorites
     );
     setHasMore(data.nextPage ? true : false);
     const newData = [...mentionDatas, data.mentions].flat();
@@ -47,16 +47,33 @@ const HomePage = () => {
   };
 
   const handleAlignment = (event, newAlignment) => {
-    if (["Most Recent", "Most Popular"].includes(event.target.textContent)) {
-      setSort(newAlignment);
-    } else {
-      setFavoritesFilter(newAlignment);
+    // if (["Most Recent", "Most Popular"].includes(event.target.textContent)) {
+    //   setSort(newAlignment);
+    // } else {
+    //   setFavoritesFilter(newAlignment);
+    // }
+    switch (event.target.textContent) {
+      case "Most Popular":
+        setSort("popularity");
+        setFavorites("no");
+        break;
+      case "Favorites":
+        setSort("favorites");
+        setFavorites("yes");
+        break;
+      case "Most Recent":
+        setSort("date");
+        setFavorites("no");
+        break;
+      default:
+        setSort("date");
+        setFavorites("no");
     }
   };
 
   useEffect(() => {
     setLoading(true);
-    getMentions(dispatch, searchTerm, user.platforms, 1, sort, favoritesFilter)
+    getMentions(dispatch, searchTerm, user.platforms, 1, sort, favorites)
       .then((data) => {
         setMentionDatas(data.mentions);
         setHasMore(data.nextPage ? true : false);
@@ -64,7 +81,7 @@ const HomePage = () => {
       })
       .catch((err) => alert("Cookie expired. Please log in again"))
       .finally(() => setLoading(false));
-  }, [searchTerm, user.platforms, user.activeCompany, sort, favoritesFilter]);
+  }, [searchTerm, user.platforms, user.activeCompany, sort, favorites]);
 
   return (
     <>
@@ -86,16 +103,8 @@ const HomePage = () => {
                   <SortToggle
                     handleAlignment={handleAlignment}
                     alignment={sort}
-                    values={["date", "popularity"]}
-                    text={["Most Recent", "Most Popular"]}
-                  />
-                </Box>
-                <Box className={classes.toggleBox}>
-                  <SortToggle
-                    handleAlignment={handleAlignment}
-                    alignment={favoritesFilter}
-                    values={["all", "favorites"]}
-                    text={["All Mentions", "Favorites"]}
+                    values={["date", "favorites", "popularity"]}
+                    text={["Most Recent", "Favorites", "Most Popular"]}
                   />
                 </Box>
               </Box>

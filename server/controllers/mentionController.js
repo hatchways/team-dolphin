@@ -45,9 +45,7 @@ const getMentions = async (req, res) => {
       const fetchMentions = async (array, sorting) => {
         const results = await Mention.find({
           $and: [
-            favorites === "favorites"
-              ? { url: { $in: req.user.likedMentions } }
-              : {},
+            favorites === "yes" ? { url: { $in: req.user.likedMentions } } : {},
             {
               $or: [
                 { title: { $regex: req.user.activeCompany, $options: "i" } },
