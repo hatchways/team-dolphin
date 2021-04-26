@@ -46,29 +46,29 @@ const HomePage = () => {
     setCurrentPage(currentPage + 1);
   };
 
+  // const handleAlignment = (event, newAlignment) => {
+  //   switch (event.target.textContent) {
+  //     case "Most Popular":
+  //       setSort("popularity");
+  //       setFavorites("no");
+  //       break;
+  //     case "Favorites":
+  //       setSort("favorites");
+  //       setFavorites("yes");
+  //       break;
+  //     case "Most Recent":
+  //       setSort("date");
+  //       setFavorites("no");
+  //       break;
+  //     default:
+  //       setSort("date");
+  //       setFavorites("no");
+  //   }
+  // };
+
   const handleAlignment = (event, newAlignment) => {
-    // if (["Most Recent", "Most Popular"].includes(event.target.textContent)) {
-    //   setSort(newAlignment);
-    // } else {
-    //   setFavoritesFilter(newAlignment);
-    // }
-    switch (event.target.textContent) {
-      case "Most Popular":
-        setSort("popularity");
-        setFavorites("no");
-        break;
-      case "Favorites":
-        setSort("favorites");
-        setFavorites("yes");
-        break;
-      case "Most Recent":
-        setSort("date");
-        setFavorites("no");
-        break;
-      default:
-        setSort("date");
-        setFavorites("no");
-    }
+    newAlignment === "favorites" ? setFavorites("yes") : setFavorites("no");
+    setSort(newAlignment);
   };
 
   useEffect(() => {
