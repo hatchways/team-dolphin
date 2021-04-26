@@ -6,7 +6,7 @@ export const getMentions = async (
   platforms,
   page,
   sort,
-  favoritesFilter
+  favorites
 ) => {
   const platformsArray = Object.keys(platforms).filter((key) => platforms[key]);
 
@@ -15,7 +15,7 @@ export const getMentions = async (
   try {
     const url = `/api/mentions?platforms=${platformsString}${
       keyword ? "&keyword=" + keyword : ""
-    }&page=${page}&sort=${sort}&favorites=${favoritesFilter}`;
+    }&page=${page}&sort=${sort}&favorites=${favorites}`;
 
     const res = await axios.get(url);
     return res.data;

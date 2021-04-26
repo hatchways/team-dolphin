@@ -45,26 +45,8 @@ const handleSendWeeklyReport = () => {
   });
 };
 
-const handleIndividualCompany = (company) => {
-  const individualQueue = new Queue("company enqueue", process.env.REDIS_URL);
-
-  for (var platform in User.schema.obj.platforms) {
-    individualQueue.add({ company: company, platform: platform });
-  }
-  // individualQueue.empty();
-
-  individualQueue.process(async function (job, done) {
-    try {
-      await addMentionsToDB(job.data.company, job.data.platform);
-      done(new Error(`${job.data.company} and ${job.data.platform} error`));
-    } catch (err) {
-      console.log(err);
-    }
-  });
-};
-
 const handleTaskQueues = () => {
-  const companiesQueue = new Queue("componies enqueue", process.env.REDIS_URL);
+  const companiesQueue = new Queue("companies enqueue", process.env.REDIS_URL);
 
   const scrapingQueue = new Queue("scraping", process.env.REDIS_URL);
 
@@ -108,8 +90,5 @@ const handleTaskQueues = () => {
   });
 };
 
-module.exports = {
-  handleTaskQueues,
-  handleIndividualCompany,
-  handleSendWeeklyReport,
-};
+handleTaskQueues();
+handleSendWeeklyReport();

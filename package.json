@@ -1,14 +1,22 @@
 {
-  "name": "server",
+  "name": "mentioncrawler",
   "version": "0.0.0",
+  "description": "MERN app fetching mentions about your company",
+  "main": "app.js",
   "private": true,
   "scripts": {
-    "dev": "nodemon ./bin/www",
-    "debug": "nodemon  --inspect ./bin/www",
+    "server": "nodemon server/bin/www",
+    "start": "node server/bin/www",
+    "client": "npm start --prefix client",
+    "debug": "nodemon  --inspect server/bin/www",
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
     "test": "NODE_ENV=test ./node_modules/.bin/mocha --exit --timeout 30000",
-    "data:import": "node seeder",
-    "data:destroy": "node seeder -d"
+    "data:import": "node server/seeder",
+    "data:destroy": "node server/seeder -d",
+    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix client && npm run build --prefix client"
   },
+  "author": "Philippe, Aidan, Alan",
+  "license": "MIT",
   "dependencies": {
     "axios": "^0.21.1",
     "bcryptjs": "^2.4.3",
@@ -18,13 +26,11 @@
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
-    "express-async-handler": "^1.1.4",
     "http-errors": "~1.8.0",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.11.19",
     "morgan": "^1.10.0",
     "node-mailjet": "^3.3.1",
-    "nodemon": "^2.0.6",
     "puppeteer": "^8.0.0",
     "redis": "^3.0.2",
     "sentiment": "^5.0.2",
@@ -33,6 +39,8 @@
   "devDependencies": {
     "chai": "^4.2.0",
     "chai-http": "^4.3.0",
-    "mocha": "^8.2.1"
+    "concurrently": "^6.0.2",
+    "mocha": "^8.2.1",
+    "nodemon": "^2.0.6"
   }
 }
