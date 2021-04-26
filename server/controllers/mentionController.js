@@ -32,7 +32,7 @@ const getMentions = async (req, res) => {
       res.status(201).json({ mentions: [] });
     } else {
       const platformsArray = platforms.split(",");
-      const sortOption = sort ? sort : "date";
+      const sortOption = sort === "favorites" ? "date" : sort;
       const dataPage = page ? parseInt(req.query.page) : 1;
       const limit = 20;
       const startIndex = (dataPage - 1) * limit;

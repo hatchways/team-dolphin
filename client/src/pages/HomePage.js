@@ -27,7 +27,7 @@ const HomePage = () => {
   const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [sort, setSort] = useState("date");
-  const [favorites, setFavorites] = useState("yes");
+  const [favorites, setFavorites] = useState("no");
 
   const { dispatch, error, searchTerm, user } = useContext(UserContext);
 
@@ -45,26 +45,6 @@ const HomePage = () => {
     setMentionDatas(newData);
     setCurrentPage(currentPage + 1);
   };
-
-  // const handleAlignment = (event, newAlignment) => {
-  //   switch (event.target.textContent) {
-  //     case "Most Popular":
-  //       setSort("popularity");
-  //       setFavorites("no");
-  //       break;
-  //     case "Favorites":
-  //       setSort("favorites");
-  //       setFavorites("yes");
-  //       break;
-  //     case "Most Recent":
-  //       setSort("date");
-  //       setFavorites("no");
-  //       break;
-  //     default:
-  //       setSort("date");
-  //       setFavorites("no");
-  //   }
-  // };
 
   const handleAlignment = (event, newAlignment) => {
     newAlignment === "favorites" ? setFavorites("yes") : setFavorites("no");
