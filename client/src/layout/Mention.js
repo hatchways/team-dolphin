@@ -18,7 +18,8 @@ import redditLogo from "../utils/images/reddit-logo.png";
 import twitterLogo from "../utils/images/twitter-logo.png";
 import nytLogo from "../utils/images/nyt-logo.png";
 import { UserContext } from "../context/user";
-import { faWindowRestore } from "@fortawesome/free-solid-svg-icons";
+import { updateUser } from "../actions/user";
+import { faWindowRestore, faHeart } from "@fortawesome/free-solid-svg-icons";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { REACT_APP_BASE_URL } from "../utils/constants";
 
@@ -77,6 +78,24 @@ const useStyles = makeStyles((theme) => ({
     wordBreak: "break-all",
     overflow: "hidden",
   },
+  iconsBox: {
+    marginLeft: "auto",
+    display: "flex",
+    flexDirection: "column",
+    height: "100%",
+  },
+  heartIcon: {
+    alignSelf: "start",
+    padding: theme.spacing(2),
+    marginLeft: "auto",
+    color: "red",
+  },
+  hiddenHeartIcon: {
+    alignSelf: "start",
+    padding: theme.spacing(2),
+    marginLeft: "auto",
+    color: "transparent",
+  },
   modalRoot: {
     width: "100%",
     height: "600px",
@@ -119,20 +138,39 @@ const image = (image) => {
   }
 };
 
-const Mention = ({ mention }) => {
+const Mention = ({ mention, likedMentions }) => {
   const classes = useStyles();
   const history = useHistory();
-  const { searchTerm, user } = useContext(UserContext);
+  const { searchTerm, user, dispatch } = useContext(UserContext);
   const [keyword, setKeyword] = useState(user.activeCompany);
   const regex = new RegExp(`${keyword}`, "i");
   const indexK = mention.title.search(regex);
   const url = `${REACT_APP_BASE_URL}/mentions/${mention._id}`;
   const [mentionUrl, setMentionUrl] = useState(url);
-
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [isLiked, setIsLiked] = useState(false);
+
   const handleClickOpen = () => {
     setDialogOpen(true);
     window.history.pushState({}, "", `/mentions/${mention._id}`);
+  };
+
+  const toggleLike = async () => {
+    try {
+      let updatedLikedMentions = !isLiked
+        ? [...likedMentions, mention.url]
+        : likedMentions.filter((url) => url !== mention.url);
+      await updateUser({
+        likedMentions: mention.url,
+        action: !isLiked ? "like" : "unlike",
+      });
+      dispatch({
+        type: "UPDATE_LIKED_MENTIONS",
+        payload: updatedLikedMentions,
+      });
+    } catch (error) {
+      throw error;
+    }
   };
 
   const handleClose = () => {
@@ -140,11 +178,17 @@ const Mention = ({ mention }) => {
     history.push("/");
   };
 
+  const checkIfLiked = (mention) => {
+    const match = likedMentions.find((url) => url === mention.url);
+    match ? setIsLiked(true) : setIsLiked(false);
+  };
+
   useEffect(() => {
     if (searchTerm !== "") {
       setKeyword(searchTerm);
     }
-  }, [searchTerm]);
+    checkIfLiked(mention);
+  }, [searchTerm, likedMentions]);
 
   return (
     <>
@@ -182,17 +226,27 @@ const Mention = ({ mention }) => {
             </Typography>
           </Box>
         </CardContent>
-        <FontAwesomeIcon
-          icon={
-            mention.sentiment > 0
-              ? faSmile
-              : mention.sentiment < 0
-              ? faFrown
-              : faMeh
-          }
-          className={classes.icon}
-          size="lg"
-        />
+        <Box
+          component="div"
+          justifyContent="space-between"
+          classes={{ root: classes.iconsBox }}>
+          <FontAwesomeIcon
+            icon={
+              mention.sentiment > 0
+                ? faSmile
+                : mention.sentiment < 0
+                ? faFrown
+                : faMeh
+            }
+            className={classes.icon}
+            size="lg"
+          />
+          <FontAwesomeIcon
+            icon={faHeart}
+            className={isLiked ? classes.heartIcon : classes.hiddenHeartIcon}
+            size="lg"
+          />
+        </Box>
       </Card>
 
       <Dialog open={dialogOpen} className={classes.modalRoot} maxWidth="md">
@@ -229,21 +283,30 @@ const Mention = ({ mention }) => {
               spacing={2}
               className={classes.modalButtons}
               container>
-              <Grid item xs={4}>
+              <Grid item xs={3}>
                 <Link href={mention.url} target="_blank" rel="noopener">
                   <Button variant="contained" color="primary" fullWidth>
                     Open link
                   </Button>
                 </Link>
               </Grid>
-              <Grid item xs={4}>
+              <Grid item xs={3}>
                 <CopyToClipboard text={mentionUrl}>
                   <Button variant="contained" color="primary" fullWidth>
                     SHARE
                   </Button>
                 </CopyToClipboard>
               </Grid>
-              <Grid item xs={4}>
+              <Grid item xs={3}>
+                <Button
+                  variant="contained"
+                  onClick={toggleLike}
+                  color={isLiked ? "secondary" : "primary"}
+                  fullWidth>
+                  {isLiked ? "UNLIKE" : "LIKE"}
+                </Button>
+              </Grid>
+              <Grid item xs={3}>
                 <Button
                   variant="contained"
                   color="primary"

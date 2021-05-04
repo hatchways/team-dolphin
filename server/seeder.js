@@ -28,11 +28,12 @@ const connectDB = async () => {
 connectDB();
 
 const importData = async () => {
-  const mentions1 = await searchRecursive("Loblaws");
-  const mentions2 = await searchRecursive("Airbus");
-  const mentions3 = await searchRecursive("Pfizer");
-  const mentions4 = await searchRecursive("Astrazeneca");
-  const mentions5 = await searchRecursive("Walmart");
+  const mentions1 = await searchRecursive("Airbus");
+  const mentions2 = await searchRecursive("Walmart");
+  const mentions3 = await searchRecursive("Loblaws");
+  const mentions4 = await searchRecursive("Westjet");
+  const mentions5 = await searchRecursive("Astrazeneca");
+
   try {
     await User.deleteMany();
     console.log("##### Users deleted!");
@@ -41,15 +42,15 @@ const importData = async () => {
     await User.insertMany(users);
     console.log("##### Users inserted!");
     await Mention.insertMany(mentions1);
-    console.log("##### Loblaws Mentions inserted!");
+    console.log("##### Airbus Mentions inserted from Reddit!");
     await Mention.insertMany(mentions2);
-    console.log("##### Airbus Mentions inserted!");
+    console.log("##### Walmart Mentions inserted from Reddit!");
     await Mention.insertMany(mentions3);
-    console.log("##### Pfizer Mentions inserted!");
+    console.log("##### Loblaws Mentions inserted from Reddit!");
     await Mention.insertMany(mentions4);
-    console.log("##### Astrazeneca Mentions inserted!");
+    console.log("##### Westjet Mentions inserted from Reddit!");
     await Mention.insertMany(mentions5);
-    console.log("##### Walmart Mentions inserted!");
+    console.log("##### Astrazeneca Mentions inserted from Reddit!");
     console.log("##### All Data Imported!");
     process.exit();
   } catch (error) {

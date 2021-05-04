@@ -27,12 +27,12 @@ const getSortOption = (option) => {
 
 const getMentions = async (req, res) => {
   try {
-    const { platforms, page, keyword, sort } = req.query;
+    const { platforms, page, keyword, sort, favorites } = req.query;
     if (!platforms) {
       res.status(201).json({ mentions: [] });
     } else {
       const platformsArray = platforms.split(",");
-      const sortOption = sort ? sort : "date";
+      const sortOption = sort === "favorites" ? "date" : sort;
       const dataPage = page ? parseInt(req.query.page) : 1;
       const limit = 20;
       const startIndex = (dataPage - 1) * limit;
@@ -45,10 +45,13 @@ const getMentions = async (req, res) => {
       const fetchMentions = async (array, sorting) => {
         const results = await Mention.find({
           $and: [
+            favorites === "yes" ? { url: { $in: req.user.likedMentions } } : {},
             {
               $or: [
                 { title: { $regex: req.user.activeCompany, $options: "i" } },
-                { content: { $regex: req.user.activeCompany, $options: "i" } },
+                {
+                  content: { $regex: req.user.activeCompany, $options: "i" },
+                },
               ],
             },
             { $or: [...getPlatformsObject(array)] },

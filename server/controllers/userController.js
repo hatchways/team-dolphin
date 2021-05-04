@@ -42,6 +42,7 @@ const signUp = async (req, res) => {
         email: user.email,
         reportEmail: user.reportEmail,
         platforms: user.platforms,
+        likedMentions: user.likedMentions,
       });
     } else {
       res.status(400).json({ message: "Invalid user data" });
@@ -74,6 +75,7 @@ const signIn = async (req, res) => {
       email: user.email,
       reportEmail: user.reportEmail,
       platforms: user.platforms,
+      likedMentions: user.likedMentions,
     });
   } else {
     res.status(401).json({ message: "Invalid email or password" });
@@ -100,9 +102,20 @@ const getUserProfile = async (req, res) => {
 // @access  Private
 const updateUser = async (req, res) => {
   try {
+    const update = (action) => {
+      switch (action) {
+        case "like":
+          return { $push: req.body };
+        case "unlike":
+          return { $pull: req.body };
+        default:
+          return { $set: req.body };
+      }
+    };
+
     const user = await User.findByIdAndUpdate(
       req.user._id,
-      { $set: req.body },
+      update(req.body.action),
       { new: true }
     );
     res.json(user);

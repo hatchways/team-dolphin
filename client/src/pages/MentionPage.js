@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useParams, useHistory } from "react-router-dom";
+import { UserContext } from "../context/user";
 import { getOneMention } from "../hooks/getOneMention";
 import HomePage from "./HomePage";
 import {
@@ -50,11 +51,19 @@ const MentionPage = () => {
   const url = `${REACT_APP_BASE_URL}/mentions/${mention._id}`;
   const [mentionUrl, setMentionUrl] = useState(url);
   const [openDialog, setOpenDialog] = useState(false);
+  const [mentionIsLiked, setMentionIsLiked] = useState(false);
+  const { user } = useContext(UserContext);
+
+  const checkIfLiked = (mention) => {
+    const isLiked = user.likedMentions.find((m) => m.url === mention.url);
+    return isLiked ? setMentionIsLiked(true) : setMentionIsLiked(false);
+  };
 
   useEffect(() => {
     getOneMention(id)
       .then((data) => {
         setMention(data);
+        checkIfLiked(data);
         setOpenDialog(true);
       })
       .catch((err) => alert("Something went wrong"));
@@ -110,21 +119,29 @@ const MentionPage = () => {
               spacing={2}
               className={classes.modalButtons}
               container>
-              <Grid item xs={4}>
+              <Grid item xs={3}>
                 <Link href={mention.url} target="_blank" rel="noopener">
                   <Button variant="contained" color="primary" fullWidth>
                     Open link
                   </Button>
                 </Link>
               </Grid>
-              <Grid item xs={4}>
+              <Grid item xs={3}>
                 <CopyToClipboard text={mentionUrl}>
                   <Button variant="contained" color="primary" fullWidth>
                     SHARE
                   </Button>
                 </CopyToClipboard>
               </Grid>
-              <Grid item xs={4}>
+              <Grid item xs={3}>
+                <Button
+                  variant="contained"
+                  color={mentionIsLiked ? "secondary" : "primary"}
+                  fullWidth>
+                  {mentionIsLiked ? "UNLIKE" : "LIKE"}
+                </Button>
+              </Grid>
+              <Grid item xs={3}>
                 <Button
                   variant="contained"
                   color="primary"

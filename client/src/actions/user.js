@@ -8,6 +8,7 @@ export const login = async (dispatch, payload) => {
     });
 
     const res = await axios.post("/api/users/auth/signin", payload);
+
     dispatch({
       type: "SET_USER",
       payload: {
@@ -16,6 +17,7 @@ export const login = async (dispatch, payload) => {
         companies: res.data.companies,
         activeCompany: res.data.activeCompany,
         platforms: res.data.platforms,
+        likedMentions: res.data.likedMentions,
       },
     });
   } catch (err) {
@@ -52,6 +54,7 @@ export const register = async (dispatch, payload) => {
         companies: res.data.companies,
         activeCompany: res.data.activeCompany,
         platforms: res.data.platforms,
+        likedMentions: res.data.likedMentions,
       },
     });
   } catch (err) {
@@ -81,6 +84,7 @@ export const authenticate = async (dispatch) => {
         companies: res.data.companies,
         activeCompany: res.data.activeCompany,
         platforms: res.data.platforms,
+        likedMentions: res.data.likedMentions,
       },
     });
   } catch (error) {

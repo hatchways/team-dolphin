@@ -15,6 +15,9 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(6, 3, 4, 0),
     width: "80%",
   },
+  toggleBox: {
+    margin: theme.spacing(0.3),
+  },
 }));
 
 const HomePage = () => {
@@ -24,6 +27,7 @@ const HomePage = () => {
   const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [sort, setSort] = useState("date");
+  const [favorites, setFavorites] = useState("no");
 
   const { dispatch, error, searchTerm, user } = useContext(UserContext);
 
@@ -33,7 +37,8 @@ const HomePage = () => {
       searchTerm,
       user.platforms,
       currentPage + 1,
-      sort
+      sort,
+      favorites
     );
     setHasMore(data.nextPage ? true : false);
     const newData = [...mentionDatas, data.mentions].flat();
@@ -42,12 +47,13 @@ const HomePage = () => {
   };
 
   const handleAlignment = (event, newAlignment) => {
+    newAlignment === "favorites" ? setFavorites("yes") : setFavorites("no");
     setSort(newAlignment);
   };
 
   useEffect(() => {
     setLoading(true);
-    getMentions(dispatch, searchTerm, user.platforms, 1, sort)
+    getMentions(dispatch, searchTerm, user.platforms, 1, sort, favorites)
       .then((data) => {
         setMentionDatas(data.mentions);
         setHasMore(data.nextPage ? true : false);
@@ -55,7 +61,7 @@ const HomePage = () => {
       })
       .catch((err) => alert("Cookie expired. Please log in again"))
       .finally(() => setLoading(false));
-  }, [searchTerm, user.platforms, user.activeCompany, sort]);
+  }, [searchTerm, user.platforms, user.activeCompany, sort, favorites]);
 
   return (
     <>
@@ -72,12 +78,15 @@ const HomePage = () => {
                   My mentions
                 </Typography>
               </Box>
-              <Box>
-                <SortToggle
-                  handleAlignment={handleAlignment}
-                  alignment={sort}
-                  setAlignment={setSort}
-                />
+              <Box display="flex" flexDirection="column">
+                <Box className={classes.toggleBox}>
+                  <SortToggle
+                    handleAlignment={handleAlignment}
+                    alignment={sort}
+                    values={["date", "favorites", "popularity"]}
+                    text={["Most Recent", "Favorites", "Most Popular"]}
+                  />
+                </Box>
               </Box>
             </Box>
           </Box>

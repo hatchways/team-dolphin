@@ -5,14 +5,15 @@ import ToggleButtonGroup from "@material-ui/lab/ToggleButtonGroup";
 const group = {
   backgroundColor: "#f0f1fa",
   borderRadius: "50px",
-  padding: "5px",
+  padding: "3px",
 };
 
 const selected = {
   backgroundColor: "#657DF2",
   color: "#f0f1fa",
   borderRadius: "50px",
-  width: "120px",
+  margin: "1px",
+  width: "105px",
   height: "30px",
   textTransform: "none",
   letterSpacing: "0.5px",
@@ -24,7 +25,8 @@ const notselected = {
   backgroundColor: "#f0f1fa",
   color: "#657DF2",
   borderRadius: "50px",
-  width: "120px",
+  margin: "1px",
+  width: "105px",
   height: "30px",
   textTransform: "none",
   letterSpacing: "0.5px",
@@ -32,7 +34,7 @@ const notselected = {
   border: "none",
 };
 
-const SortToggle = ({ handleAlignment, alignment }) => {
+const SortToggle = ({ handleAlignment, alignment, values, text }) => {
   return (
     <ToggleButtonGroup
       value={alignment}
@@ -41,16 +43,22 @@ const SortToggle = ({ handleAlignment, alignment }) => {
       style={group}
       aria-label="text alignment">
       <ToggleButton
-        value="date"
+        value={values[0]}
         aria-label="left aligned"
-        style={alignment === "date" ? selected : notselected}>
-        Most Recent
+        style={alignment === values[0] ? selected : notselected}>
+        {text[0]}
       </ToggleButton>
       <ToggleButton
-        value="popularity"
+        value={values[1]}
+        aria-label="centered"
+        style={alignment === values[1] ? selected : notselected}>
+        {text[1]}
+      </ToggleButton>
+      <ToggleButton
+        value={values[2]}
         aria-label="right aligned"
-        style={alignment === "popularity" ? selected : notselected}>
-        Most Popular
+        style={alignment === values[2] ? selected : notselected}>
+        {text[2]}
       </ToggleButton>
     </ToggleButtonGroup>
   );
